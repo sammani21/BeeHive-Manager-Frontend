@@ -6,7 +6,6 @@ import {
   Typography,
   Button,
   Box,
-  Grid,
   TextField,
   Alert,
   IconButton,
@@ -114,7 +113,7 @@ const Login: React.FC = () => {
             variant="h4"
             component="h1"
             gutterBottom
-            sx={{ fontWeight: "bold", color: "#333333" }}
+            sx={{ fontWeight: "bold", color: "#000000" }}
           >
             Welcome Back
           </Typography>
@@ -122,12 +121,12 @@ const Login: React.FC = () => {
           <Typography
             variant="subtitle1"
             gutterBottom
-            sx={{ color: "#666666" }}
+            sx={{ color: "#000000" }}
           >
             Login into your account
           </Typography>
 
-          <form onSubmit={handleSubmit} >
+          <form onSubmit={handleSubmit}>
             <TextField
               required
               type="text"
