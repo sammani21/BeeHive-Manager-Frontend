@@ -1,143 +1,129 @@
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import "../App.css";
-import axios, { AxiosResponse } from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { Typography, TextField, Button, Alert, Grid, Box } from "@mui/material";
-import BusImage from "../assets/busimage.jpg";
+//import axios, { AxiosResponse } from "axios";
+//import { Link, useNavigate } from "react-router-dom";
+import {
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  Box,
+} from "@mui/material";
+import BusImage from "../assets/Beeimage.png";
+import { auth } from "../firebaseConfig";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const ForgotPassword: React.FC = () => {
-  const [username, setUsername] = useState<string>("");
+
   const [email, setEmail] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const navigate = useNavigate();
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  //const navigate = useNavigate();
 
-  axios.defaults.withCredentials = false;
+  //axios.defaults.withCredentials = false;
 
-  // Function to handle form submission
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:3000/api/v1/user/forgotPassword", {
-        email,
-        username,
-      })
-      .then((res: AxiosResponse<{ status: boolean }>) => {
-        if (res.data.status) {
-          console.log("Email sent");
-          alert("Check your email for the password reset link.");
-          navigate("/login");
-        } else {
-          setErrorMessage("Incorrect username or email.");
-        }
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-        if (err.response.data.message === "User is not registered.") {
-          setErrorMessage("User is not registered. Please sign up.");
-        } else {
-          setErrorMessage("Invalid username or email. Please try again.");
-        }
-      });
+  
+
+  const handlePasswordReset = async () => {
+    if (!email) {
+      setError("Please enter your email.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setMessage("Password reset email sent. Check your inbox.");
+      setError(null);
+    } catch (error: any) {
+      setError("Failed to send reset email. Please try again.");
+      setMessage(null);
+    }
   };
 
   return (
-    <div className="sign-up-container">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        height: "100vh",
+        width: "100vw",
+        backgroundColor: "#EDE8F5",
+      }}
+    >
       <Box
         sx={{
+          flex: 1,
+          backgroundImage: `url(${BusImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          display: { xs: "none", md: "block" },
+        }}
+      />
+
+      <Box
+        sx={{
+          flex: 1,
           display: "flex",
-          flexDirection: "row",
-          height: "100vh",
-          width: "100vw",
-          backgroundColor: "#EDE8F5",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: { xs: "20px", md: "40px" },
         }}
       >
         <Box
           sx={{
-            flex: 1,
-            backgroundImage: `url(${BusImage})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            position: "relative",
-            minHeight: "100vh",
-            "@media (min-width: 200vh)": {
-              flex: 0.4,
-            },
-          }}
-        ></Box>
-
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            flex: 1,
-            padding: "20px",
-            "@media (min-width: 600px)": {
-              flex: 0.5,
-            },
+            width: "100%",
+            maxWidth: "400px",
+            textAlign: "center",
           }}
         >
-          <form className="sign-up-form" onSubmit={handleSubmit}>
-            <Typography
-              variant="h4"
-              component="h1"
-              gutterBottom
-              className="typoColor"
-            >
-              Forgot Password
-            </Typography>
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#000000" }}
+          >
+            Forgot Password
+          </Typography>
 
-            <TextField
-              required
-              type="text"
-              id="username"
-              label="Username"
-              variant="filled"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              margin="normal"
-              className="textfiledStyle"
-              fullWidth
-            />
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            sx={{ color: "#000000", mb: 4 }}
+          >
+            Enter your details to reset your password
+          </Typography>
 
-            <TextField
-              required
-              type="email"
-              id="email"
-              label="Email"
-              variant="filled"
-              onChange={(e) => setEmail(e.target.value)}
-              margin="normal"
-              className="textfiledStyle"
-              fullWidth
-            />
+          
 
-            {errorMessage && (
-              <Alert severity="error" sx={{ marginY: 2 }}>
-                {errorMessage}
-              </Alert>
-            )}
+          
+          <TextField
+        label="Enter Your Email"
+        variant="outlined"
+        fullWidth
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        sx={{ mb: 4 }}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handlePasswordReset}
+        fullWidth
+        sx={{ backgroundColor: "#FFB700", "&:hover": { backgroundColor: "#CC9200" } }}
+      >
+        Send Reset Email
+      </Button>
 
-            <Button
-              type="submit"
-              color="primary"
-              size="large"
-              variant="contained"
-              className="button-instance"
-              fullWidth
-              sx={{ marginY: 2 }}
-            >
-              SUBMIT
-            </Button>
+      {message && <Alert severity="success" sx={{ mt: 2 }}>{message}</Alert>}
+      {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+    </Box>
 
-            <Typography variant="body2" gutterBottom>
-              <Link to="/login">Back to Login</Link>
-            </Typography>
-          </form>
-        </Grid>
+         
+        </Box>
       </Box>
-    </div>
+
   );
 };
 

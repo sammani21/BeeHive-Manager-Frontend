@@ -1,6 +1,5 @@
 import { useState, FormEvent } from "react";
 import "../App.css";
-import axios, { AxiosResponse } from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Typography,
@@ -10,72 +9,56 @@ import {
   Alert,
   IconButton,
   InputAdornment,
+  Divider,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import BusImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
+import { auth, googleProvider } from "../firebaseConfig";
+import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { FcGoogle } from "react-icons/fc";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const navigate = useNavigate();
 
-  const isStrongPassword = (password: string): boolean => {
-    const uppercaseRegex = /[A-Z]/;
-    const lowercaseRegex = /[a-z]/;
-    const numberRegex = /[0-9]/;
-    const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
-    return (
-      password.length >= 8 &&
-      uppercaseRegex.test(password) &&
-      lowercaseRegex.test(password) &&
-      numberRegex.test(password) &&
-      specialCharacterRegex.test(password)
-    );
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!isStrongPassword(password)) {
-      setErrorMessage(
-        "Password should contain at least 8 characters, including uppercase letters, lowercase letters, numbers, and special characters"
-      );
-      return;
+    try {
+      // Firebase email and password login
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("User logged in:", userCredential.user);
+
+      // Navigate to dashboard
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Login Error:", error);
+      setErrorMessage(error.message || "Invalid email or password. Please try again.");
     }
+  };
 
-    axios
-      .post("http://localhost:3000/api/v1/user/login", {
-        username,
-        password,
-      })
-      .then((res: AxiosResponse<{ status: boolean; token: string }>) => {
-        if (res.data.status) {
-          console.log("User logged in successfully");
-          localStorage.setItem("token", res.data.token);
-          navigate("/dashboard");
-        }
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-
-        if (err.response.data.message === "User is not registered") {
-          setErrorMessage("You need to sign up before logging in!");
-        } else {
-          setErrorMessage("Invalid username or password. Please try again.");
-        }
-      });
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google Login Success:", result.user);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      setErrorMessage("Failed to log in with Google");
+    }
   };
 
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection: { xs: "column", md: "row" }, // Stack vertically on small screens, side by side on larger screens
+        flexDirection: { xs: "column", md: "row" },
         height: "100vh",
         width: "100vw",
         backgroundColor: "#EDE8F5",
@@ -88,7 +71,7 @@ const Login: React.FC = () => {
           backgroundImage: `url(${BusImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          display: { xs: "none", md: "block" }, // Hide on small screens
+          display: { xs: "none", md: "block" },
         }}
       />
 
@@ -109,35 +92,55 @@ const Login: React.FC = () => {
             textAlign: "center",
           }}
         >
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            sx={{ fontWeight: "bold", color: "#000000" }}
-          >
+          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: "bold", color: "#000000" }}>
             Welcome Back
           </Typography>
 
-          <Typography
-            variant="subtitle1"
-            gutterBottom
-            sx={{ color: "#000000" }}
-          >
+          <Typography variant="subtitle1" gutterBottom sx={{ color: "#000000", mb: 2 }}>
             Login into your account
           </Typography>
 
-          <form onSubmit={handleSubmit}>
+          {/* Google Login */}
+          <Button
+            onClick={handleGoogleLogin}
+            color="secondary"
+            size="large"
+            variant="contained"
+            fullWidth
+            sx={{
+              marginBottom: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#ffffff",
+              color: "#000000",
+              fontWeight: "bold",
+              "&:hover": { backgroundColor: "#f5f5f5" },
+            }}
+            startIcon={<FcGoogle />}
+          >
+            Log in with Google
+          </Button>
+
+          <Divider sx={{ my: 2 }}>
+            <Typography variant="body2" sx={{ color: "#666666" }}>
+              Or continue with
+            </Typography>
+          </Divider>
+
+          {/* Email/Password Login Form */}
+          <form onSubmit={handleSubmit} style={{ maxHeight: "380px", maxWidth: "260px"}}>
             <TextField
               required
-              type="text"
-              id="username"
-              label="Username"
+              type="email"
+              id="email"
+              label="Email"
               variant="outlined"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               margin="normal"
               fullWidth
-              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px", mt: -2 }}
             />
 
             <TextField
@@ -154,11 +157,7 @@ const Login: React.FC = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      onMouseDown={(e) => e.preventDefault()}
-                      edge="end"
-                    >
+                    <IconButton onClick={() => setShowPassword(!showPassword)} onMouseDown={(e) => e.preventDefault()} edge="end">
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
@@ -168,24 +167,13 @@ const Login: React.FC = () => {
 
             {password && <PasswordStrengthMeter password={password} />}
 
-            <Typography
-              variant="body2"
-              align="right"
-              sx={{ marginY: 1, color: "#ff4444" }}
-            >
-              <Link
-                to="/forgotPassword"
-                style={{ color: "#ff4444", textDecoration: "none" }}
-              >
+            <Typography variant="body2" align="right" sx={{ marginY: 1, color: "#ff4444" }}>
+              <Link to="/forgotPassword" style={{ color: "#ff4444", textDecoration: "none" }}>
                 Recover Password
               </Link>
             </Typography>
 
-            {errorMessage && (
-              <Alert severity="error" sx={{ marginY: 2 }}>
-                {errorMessage}
-              </Alert>
-            )}
+            {errorMessage && <Alert severity="error" sx={{ marginY: 2 }}>{errorMessage}</Alert>}
 
             <Button
               type="submit"
@@ -206,12 +194,9 @@ const Login: React.FC = () => {
               Login
             </Button>
 
-            <Typography variant="body2" sx={{ color: "#666666" }}>
+            <Typography variant="body2" sx={{ color: "#666666", mb: -4 }}>
               Don't have an account?{" "}
-              <Link
-                to="/signup"
-                style={{ color: "#FFB700", textDecoration: "none" }}
-              >
+              <Link to="/signup" style={{ color: "#FFB700", textDecoration: "none" }}>
                 Sign Up
               </Link>
             </Typography>

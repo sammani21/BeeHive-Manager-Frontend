@@ -7,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
+//import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -37,6 +37,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import Axios, { AxiosResponse } from 'axios';
+import BHMLogo from '../assets/BHM_logo.jpg';
 
 const drawerWidth = 240;
 
@@ -67,6 +68,8 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
+  backgroundColor: '#FFFFFF', // Set AppBar background color to white
+  color: '#000000',
   transition: theme.transitions.create(['margin', 'width'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -175,9 +178,7 @@ export default function NavigationBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            ROMODO
-          </Typography>
+          <img src={BHMLogo} alt="BHM Logo" style={{ height: '40px' }} />
           <div style={{ marginLeft: 'auto' }}>
             <IconButton
               size="large"
@@ -272,6 +273,7 @@ export default function NavigationBar() {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            backgroundColor: '#FFB700', 
           },
         }}
         variant="persistent"
