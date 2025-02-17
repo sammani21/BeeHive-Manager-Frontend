@@ -32,9 +32,7 @@ export interface Driver {
   dob: Date;
   contactNo: string;
   email: string;
-  licenseNo: string;
-  licenseExpireDate: Date;
-  medicalIssues: string;
+  
 }
 
 // Define props interface for NewDriver component
@@ -48,9 +46,7 @@ interface NewDriverProps {
   dob: Date;
   contactNo: string;
   email: string;
-  licenseNo: string;
-  licenseExpireDate: Date;
-  medicalIssues: string;
+  
   open: () => void;
   close: () => void;
   getAll: () => void;
@@ -66,7 +62,7 @@ const emailRegex = new RegExp(
 const nameRegex = /[A-Za-z.]{3,}/;
 const nicRegex = /^(?:19|20)?\d{2}[0-9]{10}|[0-9]{9}[x|X|v|V]$/;
 const contactRegex = /^(?:7|0|(?:\+94))[0-9]{9,10}$/;
-const licenseReges = /^[a-zA-Z0-9]{6,10}$/;
+
 
 function NewDriver(props: NewDriverProps) {
   // State variables for form fields
@@ -78,12 +74,8 @@ function NewDriver(props: NewDriverProps) {
   const [nic, setNIC] = React.useState<string>(props.nic);
   const [email, setEmail] = React.useState<string>(props.email);
   const [contactNo, setContactNo] = React.useState<string>(props.contactNo);
-  const [licenseNo, setLicenseNo] = React.useState<string>(props.licenseNo);
-  const [lExDate, setLExDate] = React.useState<Date>(props.licenseExpireDate);
+ 
   const [gender, setGender] = React.useState<string>(props.gender);
-  const [mediCondition, setMediCondition] = React.useState<string>(
-    props.medicalIssues
-  );
   
 
   // Update state variables when props change
@@ -96,10 +88,9 @@ function NewDriver(props: NewDriverProps) {
     setNIC(props.nic);
     setEmail(props.email);
     setContactNo(props.contactNo);
-    setLicenseNo(props.licenseNo);
-    setLExDate(props.licenseExpireDate);
+    
     setGender(props.gender);
-    setMediCondition(props.medicalIssues);
+   
   }, [
     props.id,
     //props.no,
@@ -108,11 +99,11 @@ function NewDriver(props: NewDriverProps) {
     props.nic,
     props.email,
     props.contactNo,
-    props.licenseNo,
+    
     props.gender,
-    props.medicalIssues,
+    
     props.dob,
-    props.licenseExpireDate,
+    
     props.isUpdate,
   ]);
 
@@ -164,15 +155,7 @@ function NewDriver(props: NewDriverProps) {
       return false;
     }
 
-    if (!licenseReges.test(licenseNo)) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Check License Number",
-      });
-      return false;
-    }
-
+    
     if (gender.length === 0) {
       Swal.fire({
         icon: "error",
@@ -182,24 +165,9 @@ function NewDriver(props: NewDriverProps) {
       return false;
     }
 
-    if (lExDate === null) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "License Expiry Date is required",
-      });
-      return false;
-    }
+    
 
-    if (mediCondition.length === 0) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Medical Issues is required",
-      });
-      return false;
-    }
-
+    
     if (dOfBirth === null) {
       Swal.fire({
         icon: "error",
@@ -225,9 +193,7 @@ function NewDriver(props: NewDriverProps) {
         dob: dOfBirth,
         contactNo: contactNo,
         email: email,
-        licenseNo: licenseNo,
-        licenseExpireDate: lExDate,
-        medicalIssues: mediCondition,
+        
       };
 
       axios
@@ -267,9 +233,7 @@ function NewDriver(props: NewDriverProps) {
         dob: dOfBirth,
         contactNo: contactNo,
         email: email,
-        licenseNo: licenseNo,
-        licenseExpireDate: lExDate,
-        medicalIssues: mediCondition,
+        
       };
       axios
         .put(`http://localhost:3000/api/v1/driver/${id}`, driver)
@@ -306,10 +270,9 @@ function NewDriver(props: NewDriverProps) {
     setFName("");
     setLName("");
     setContactNo("");
-    setLicenseNo("");
-    setLExDate(new Date());
+    
     setGender("");
-    setMediCondition("");
+   
     setNIC("");
     setEmail("");
   };
@@ -323,7 +286,7 @@ function NewDriver(props: NewDriverProps) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Driver Details"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Add New Bee Keeper"}</DialogTitle>
         <DialogContent>
           <br />
           <DialogContentText id="alert-dialog-description">
@@ -394,28 +357,7 @@ function NewDriver(props: NewDriverProps) {
                   required
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="License Number"
-                  variant="outlined"
-                  fullWidth
-                  value={licenseNo}
-                  placeholder="ex: Bxxxxxxxxx"
-                  onChange={(event) => setLicenseNo(event.target.value)}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label={"License Expiry Date"}
-                    value={dayjs(lExDate)}
-                    onChange={(v: any) => setLExDate(v)}
-                    minDate={dayjs()}
-                  />
-                </LocalizationProvider>
-              </Grid>
+              
 
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -434,15 +376,7 @@ function NewDriver(props: NewDriverProps) {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Medical Conditions"
-                  variant="outlined"
-                  fullWidth
-                  value={mediCondition}
-                  onChange={(event) => setMediCondition(event.target.value)}
-                />
-              </Grid>
+              
             </Grid>
           </DialogContentText>
         </DialogContent>

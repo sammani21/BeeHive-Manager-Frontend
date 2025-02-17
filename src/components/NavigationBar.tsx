@@ -1,64 +1,71 @@
 //NavigationBar.tsx
-import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
+import * as React from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
 //import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PersonIcon from '@mui/icons-material/Person';
-import DriveEtaIcon from '@mui/icons-material/DriveEta';
-import PeopleIcon from '@mui/icons-material/People';
-import ArticleIcon from '@mui/icons-material/Article';
-import TimeToLeaveIcon from '@mui/icons-material/TimeToLeave';
-import ChatIcon from '@mui/icons-material/Chat';
-import SettingsIcon from '@mui/icons-material/Settings';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import Badge from '@mui/material/Badge';
-import Popover from '@mui/material/Popover';
-import Menu from '@mui/material/Menu';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import Axios, { AxiosResponse } from 'axios';
-import BHMLogo from '../assets/BHM_logo.jpg';
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import DriveEtaIcon from "@mui/icons-material/DriveEta";
+import PeopleIcon from "@mui/icons-material/People";
+import ArticleIcon from "@mui/icons-material/Article";
+import TimeToLeaveIcon from "@mui/icons-material/TimeToLeave";
+import ChatIcon from "@mui/icons-material/Chat";
+import SettingsIcon from "@mui/icons-material/Settings";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import Badge from "@mui/material/Badge";
+import Popover from "@mui/material/Popover";
+import Menu from "@mui/material/Menu";
+import Collapse from "@mui/material/Collapse";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+//import Axios, { AxiosResponse } from 'axios';
+import BHMLogo from "../assets/BHM_logo.jpg";
+import { getAuth, signOut } from "firebase/auth";
 
 const drawerWidth = 240;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  transition: theme.transitions.create('margin', {
+  transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
-    transition: theme.transitions.create('margin', {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
   }),
-  
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -66,38 +73,39 @@ interface AppBarProps extends MuiAppBarProps {
 }
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
-  backgroundColor: '#000000', // Set AppBar background color to white
-  color: '#FFFFFF',
-  transition: theme.transitions.create(['margin', 'width'], {
+  backgroundColor: "#000000", // Set AppBar background color to white
+  color: "#FFFFFF",
+  transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(['margin', 'width'], {
+    transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+  justifyContent: "flex-end",
 }));
 
 export default function NavigationBar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [notificationAnchorEl, setNotificationAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [notificationAnchorEl, setNotificationAnchorEl] =
+    React.useState<HTMLElement | null>(null);
   const [openReports, setOpenReports] = React.useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = React.useState(false);
   const navigate = useNavigate();
@@ -116,7 +124,7 @@ export default function NavigationBar() {
 
   const handleNestedItemClick = (nestedItemText: string) => {
     // Navigate to the respective route based on nestedItemText
-    console.log('Navigating to:', nestedItemText);
+    console.log("Navigating to:", nestedItemText);
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -139,7 +147,7 @@ export default function NavigationBar() {
 
   const handleDrawerItemClick = (section: string) => {
     // Handle navigation logic based on the clicked section
-    console.log('Navigating to:', section);
+    console.log("Navigating to:", section);
   };
 
   const handleLogout = () => {
@@ -151,21 +159,21 @@ export default function NavigationBar() {
   };
 
   const confirmLogout = () => {
-    Axios.get("http://localhost:3000/api/v1/user/logout")
-      .then((res: AxiosResponse<{ status: boolean }>) => {
-        if (res.data.status) {
-          console.log("User logged out successfully");
-          localStorage.removeItem("token");
-          navigate("/login");
-        }
+    const auth = getAuth();
+
+    signOut(auth)
+      .then(() => {
+        console.log("User logged out successfully");
+        localStorage.removeItem("token"); // Remove token if stored
+        navigate("/login"); // Redirect to login page
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.error("Logout failed:", error);
       });
   };
 
   return (
-    <Box sx={{ display: 'flex', height:'100' }}>
+    <Box sx={{ display: "flex", height: "100" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -174,12 +182,12 @@ export default function NavigationBar() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            sx={{ mr: 2, ...(open && { display: "none" }) }}
           >
             <MenuIcon />
           </IconButton>
-          <img src={BHMLogo} alt="BHM Logo" style={{ height: '40px' }} />
-          <div style={{ marginLeft: 'auto' }}>
+          <img src={BHMLogo} alt="BHM Logo" style={{ height: "40px" }} />
+          <div style={{ marginLeft: "auto" }}>
             <IconButton
               size="large"
               color="inherit"
@@ -195,12 +203,12 @@ export default function NavigationBar() {
               anchorEl={notificationAnchorEl}
               onClose={handleNotificationClose}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
             >
               <List>
@@ -229,20 +237,24 @@ export default function NavigationBar() {
               id="menu-appbar"
               anchorEl={anchorEl}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <ListItem button onClick={handleClose}>
+              <ListItemButton
+                component={Link}
+                to="/manage-profile"
+                onClick={handleClose}
+              >
                 <ListItemText primary="Manage Profile" />
-              </ListItem>
+              </ListItemButton>
               <ListItem button onClick={handleLogout}>
                 <ListItemText primary="Logout" />
               </ListItem>
@@ -270,10 +282,10 @@ export default function NavigationBar() {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: 'border-box',
-            backgroundColor: '#FFB700', 
+            boxSizing: "border-box",
+            backgroundColor: "#FFB700",
           },
         }}
         variant="persistent"
@@ -282,74 +294,137 @@ export default function NavigationBar() {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItemButton component={Link} to="/dashboard" onClick={() => handleDrawerItemClick('Dashboard')}>
-            <ListItemIcon><DashboardIcon /></ListItemIcon>
+          <ListItemButton
+            component={Link}
+            to="/dashboard"
+            onClick={() => handleDrawerItemClick("Dashboard")}
+          >
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItemButton>
 
-          <ListItemButton component={Link} to="/drivers" onClick={() => handleDrawerItemClick('Drivers')}>
-            <ListItemIcon><PersonIcon /></ListItemIcon>
-            <ListItemText primary="Drivers" />
+          <ListItemButton
+            component={Link}
+            to="/drivers"
+            onClick={() => handleDrawerItemClick("Drivers")}
+          >
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="Bee Keepers" />
           </ListItemButton>
 
-          <ListItemButton component={Link} to="/vehicles" onClick={() => handleDrawerItemClick('Vehicles')}>
-            <ListItemIcon><DriveEtaIcon /></ListItemIcon>
+          <ListItemButton
+            component={Link}
+            to="/vehicles"
+            onClick={() => handleDrawerItemClick("Vehicles")}
+          >
+            <ListItemIcon>
+              <DriveEtaIcon />
+            </ListItemIcon>
             <ListItemText primary="Vehicles" />
           </ListItemButton>
 
-          <ListItemButton component={Link} to="/passengers" onClick={() => handleDrawerItemClick('Passengers')}>
-            <ListItemIcon><PeopleIcon /></ListItemIcon>
+          <ListItemButton
+            component={Link}
+            to="/passengers"
+            onClick={() => handleDrawerItemClick("Passengers")}
+          >
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
             <ListItemText primary="Passengers" />
           </ListItemButton>
 
           <ListItemButton onClick={handleReportsClick}>
-            <ListItemIcon><ArticleIcon /></ListItemIcon>
+            <ListItemIcon>
+              <ArticleIcon />
+            </ListItemIcon>
             <ListItemText primary="Reports" />
             {openReports ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
 
           <Collapse in={openReports} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton component={Link} to="/reports/vehicle-details" sx={{ pl: 4 }} onClick={() => handleNestedItemClick('Vehicle Report')}>
-                <ListItemIcon><StarOutlineIcon /></ListItemIcon>
+              <ListItemButton
+                component={Link}
+                to="/reports/vehicle-details"
+                sx={{ pl: 4 }}
+                onClick={() => handleNestedItemClick("Vehicle Report")}
+              >
+                <ListItemIcon>
+                  <StarOutlineIcon />
+                </ListItemIcon>
                 <ListItemText primary="Vehicles Report" />
               </ListItemButton>
 
-              <ListItemButton component={Link} to="/reports/passenger-details" sx={{ pl: 4 }} onClick={() => handleNestedItemClick('Passenger Details')}>
-                <ListItemIcon><StarOutlineIcon /></ListItemIcon>
+              <ListItemButton
+                component={Link}
+                to="/reports/passenger-details"
+                sx={{ pl: 4 }}
+                onClick={() => handleNestedItemClick("Passenger Details")}
+              >
+                <ListItemIcon>
+                  <StarOutlineIcon />
+                </ListItemIcon>
                 <ListItemText primary="Passengers Report" />
               </ListItemButton>
 
-              <ListItemButton component={Link} to="/reports/driver-details" sx={{ pl: 4 }}  onClick={() => handleNestedItemClick('Driver Details')}>
-                <ListItemIcon><StarOutlineIcon /></ListItemIcon>
+              <ListItemButton
+                component={Link}
+                to="/reports/driver-details"
+                sx={{ pl: 4 }}
+                onClick={() => handleNestedItemClick("Driver Details")}
+              >
+                <ListItemIcon>
+                  <StarOutlineIcon />
+                </ListItemIcon>
                 <ListItemText primary="Drivers Report" />
               </ListItemButton>
 
-              <ListItemButton component={Link} to="/reports/issues-details" sx={{ pl: 4 }}  onClick={() => handleNestedItemClick('Issues Details')}>
-                <ListItemIcon><StarOutlineIcon /></ListItemIcon>
+              <ListItemButton
+                component={Link}
+                to="/reports/issues-details"
+                sx={{ pl: 4 }}
+                onClick={() => handleNestedItemClick("Issues Details")}
+              >
+                <ListItemIcon>
+                  <StarOutlineIcon />
+                </ListItemIcon>
                 <ListItemText primary="Issues Report" />
               </ListItemButton>
-              
             </List>
           </Collapse>
 
-          <ListItemButton onClick={() => handleDrawerItemClick('Trips')}>
-            <ListItemIcon><TimeToLeaveIcon /></ListItemIcon>
+          <ListItemButton onClick={() => handleDrawerItemClick("Trips")}>
+            <ListItemIcon>
+              <TimeToLeaveIcon />
+            </ListItemIcon>
             <ListItemText primary="Trips" />
           </ListItemButton>
 
-          <ListItemButton onClick={() => handleDrawerItemClick('ChatBox')}>
-            <ListItemIcon><ChatIcon /></ListItemIcon>
-            <ListItemText primary="ChatBox" />
-          </ListItemButton>
+          <ListItemButton component={Link} to="/chatbox">
+  <ListItemIcon>
+    <ChatIcon />
+  </ListItemIcon>
+  <ListItemText primary="ChatBox" />
+</ListItemButton>
 
-          <ListItemButton onClick={() => handleDrawerItemClick('Settings')}>
-            <ListItemIcon><SettingsIcon /></ListItemIcon>
+          <ListItemButton onClick={() => handleDrawerItemClick("Settings")}>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
             <ListItemText primary="Settings" />
           </ListItemButton>
         </List>

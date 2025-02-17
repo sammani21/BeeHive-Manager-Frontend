@@ -29,9 +29,7 @@ const columns: readonly Column[] = [
   { id: "dob", label: "Date of Birth", minWidth: 170 },
   { id: "contactNo", label: "Contact No", minWidth: 170 },
   { id: "email", label: "Email", minWidth: 170 },
-  { id: "licenseNo", label: "License No", minWidth: 170 },
-  { id: "licenseExpireDate", label: "Expiry Date", minWidth: 170 },
-  { id: "medicalIssues", label: "Medical Issues", minWidth: 170 },
+  
   { id: "createdAt", label: "Registered Date", minWidth: 170 },
   { id: "updatedAt", label: "Updated Date", minWidth: 170 },
   { id: "availability", label: "Availability", minWidth: 170 },
@@ -47,9 +45,7 @@ interface Data {
   dob: string;
   contactNo: string;
   email: string;
-  licenseNo: string;
-  licenseExpireDate: string;
-  medicalIssues: string;
+  
   createdAt: string;
   updatedAt: string;
   availability: boolean;
@@ -168,9 +164,7 @@ const DriverTable: React.FC<DriverTableProps> = ({
                     <TableCell>{formatDate(row.dob)}</TableCell>
                     <TableCell>{row.contactNo}</TableCell>
                     <TableCell>{row.email}</TableCell>
-                    <TableCell>{row.licenseNo}</TableCell>
-                    <TableCell>{formatDate(row.licenseExpireDate)}</TableCell>
-                    <TableCell>{row.medicalIssues}</TableCell>
+                    
                     <TableCell>
                       <Typography variant="body2">{formatDateTime(row.createdAt).date}</Typography>
                     </TableCell>

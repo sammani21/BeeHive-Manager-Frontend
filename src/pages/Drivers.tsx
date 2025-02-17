@@ -44,7 +44,7 @@ export const StyledTableCell = styled(TableCell)(
     }
   ) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#9A82DB",
+      backgroundColor: "#FFD700",
       color: "#000000",
       fontWeight: "bold",
     },
@@ -77,10 +77,9 @@ const Drivers: React.FC = () => {
   const [nic, setNIC] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [contactNo, setContactNo] = React.useState<string>("");
-  const [licenseNo, setLicenseNo] = React.useState<string>("");
-  const [lExDate, setLExDate] = React.useState<Date>(new Date());
+ 
   const [gender, setGender] = React.useState<string>("");
-  const [mediCondition, setMediCondition] = React.useState<string>("");
+ 
   const [no, setNo] = React.useState<string>("");
   const [drivers, setDrivers] = React.useState<Driver[]>([]);
   const [alldrivers, setAllDrivers] = React.useState<Driver[]>([]);
@@ -102,7 +101,7 @@ const Drivers: React.FC = () => {
   const getAllDrivers = () => {
     setDrivers([]);
     setAllDrivers([]);
-    console.log("Fetching all drivers...");
+    console.log("Fetching all bee keepers...");
 
     fetch("http://localhost:3000/api/v1/driver")
       .then((res) => res.json())
@@ -111,8 +110,8 @@ const Drivers: React.FC = () => {
         setAllDrivers(data.data);
       })
       .catch((error) => {
-        console.error("Error fetching drivers:", error);
-        setErrorMessage("Error fetching drivers");
+        console.error("Error fetching bee keepers:", error);
+        setErrorMessage("Error fetching bee keepers");
       });
   };
 
@@ -130,7 +129,7 @@ const Drivers: React.FC = () => {
   // Function to handle delete button click
   const handleDeleteClick = () => {
     if (selected.length === 0) {
-      setErrorMessage("Please select a driver to delete");
+      setErrorMessage("Please select a bee keeper to delete");
     } else {
       setIsConfirmationDialogOpen(true);
     }
@@ -144,7 +143,7 @@ const Drivers: React.FC = () => {
       .delete(`http://localhost:3000/api/v1/driver/${d._id}`)
       .then((r) => {
         if (r.status === 204) {
-          alert("Driver deleted successfully");
+          alert("Bee keeper deleted successfully");
           setSelected([]);
           setDrivers([]);
           getAllDrivers();
@@ -158,7 +157,7 @@ const Drivers: React.FC = () => {
   // Function to handle update button click
   const handleUpdateClick = () => {
     if (selected.length === 0) {
-      setErrorMessage("Please select a driver to update");
+      setErrorMessage("Please select a bee keeper to update");
     } else {
       const d = drivers.filter((v) => v._id === selected[0])[0];
       if (d) {
@@ -170,10 +169,9 @@ const Drivers: React.FC = () => {
         setNIC(d.nic);
         setEmail(d.email);
         setContactNo(d.contactNo);
-        setLicenseNo(d.licenseNo);
-        setLExDate(new Date(d.licenseExpireDate));
+        
         setGender(d.gender);
-        setMediCondition(d.medicalIssues);
+        
       }
     }
   };
@@ -194,11 +192,10 @@ const Drivers: React.FC = () => {
     setFName("");
     setLName("");
     setContactNo("");
-    setLicenseNo("");
-    setLExDate(new Date());
+    
     setDOfBirth(new Date());
     setGender("");
-    setMediCondition("");
+   
     setNIC("");
     setEmail("");
   };
@@ -209,7 +206,7 @@ const Drivers: React.FC = () => {
 
     if (alldrivers.length === 0) {
       setDrivers([]);
-      setErrorMessage("No drivers in the database.");
+      setErrorMessage("No bee keepers in the database.");
       return;
     }
 
@@ -227,8 +224,7 @@ const Drivers: React.FC = () => {
           return driver?.email?.toLowerCase().includes(searchTerm);
         case "contactNo":
           return driver?.contactNo?.toLowerCase().includes(searchTerm);
-        case "licenseNo":
-          return driver?.licenseNo?.toLowerCase().includes(searchTerm);
+        
         case "gender":
           return driver?.gender?.toLowerCase().includes(searchTerm);
         default:
@@ -291,7 +287,7 @@ const Drivers: React.FC = () => {
         }}
       >
         <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Driver Details Management
+          Bee Keepers
         </DialogTitle>
 
         <div>
@@ -302,13 +298,13 @@ const Drivers: React.FC = () => {
               onChange={(e) => setSearchCategory(e.target.value)}
               label="Search by"
             >
-              <MenuItem value="no">Driver Number</MenuItem>
+              <MenuItem value="no">Bee Keeper ID</MenuItem>
               <MenuItem value="firstName">First Name</MenuItem>
               <MenuItem value="lastName">Last Name</MenuItem>
               <MenuItem value="nic">NIC</MenuItem>
               <MenuItem value="email">Email</MenuItem>
               <MenuItem value="contactNo">Contact No</MenuItem>
-              <MenuItem value="licenseNo">License No</MenuItem>
+             
               <MenuItem value="gender">Gender</MenuItem>
             </Select>
           </FormControl>
@@ -335,7 +331,7 @@ const Drivers: React.FC = () => {
       <div style={{ height: "400px", overflow: "auto" }}>
         <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
           <Table aria-label="simple table" stickyHeader>
-            <TableHead>
+          <TableHead>
               <TableRow>
                 <StyledTableCell align="center">No</StyledTableCell>
                 <StyledTableCell align="center">Date of Joined</StyledTableCell>
@@ -346,12 +342,8 @@ const Drivers: React.FC = () => {
                 <StyledTableCell align="center">DOB</StyledTableCell>
                 <StyledTableCell align="center">Contact No</StyledTableCell>
                 <StyledTableCell align="center">Email</StyledTableCell>
-                <StyledTableCell align="center">License No</StyledTableCell>
-                <StyledTableCell align="center">
-                  License Exp. date
-                </StyledTableCell>
-                <StyledTableCell align="center">Medical Issues</StyledTableCell>
-                <StyledTableCell align="center">Availability  (Short Term)</StyledTableCell>
+                
+                <StyledTableCell align="center">Availability</StyledTableCell>
                 <StyledTableCell align="center">Status</StyledTableCell>
               </TableRow>
             </TableHead>
@@ -385,11 +377,8 @@ const Drivers: React.FC = () => {
                     </TableCell>
                     <TableCell align="right">{row.contactNo}</TableCell>
                     <TableCell align="right">{row.email}</TableCell>
-                    <TableCell align="right">{row.licenseNo}</TableCell>
-                    <TableCell align="right">
-                      {new Date(row.licenseExpireDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell align="right">{row.medicalIssues}</TableCell>
+                    
+                    
                     <TableCell align="right">
                       <Switch
                         checked={row.availability}
@@ -425,7 +414,7 @@ const Drivers: React.FC = () => {
       >
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
-          <div>Are you sure you want to delete this driver?</div>
+          <div>Are you sure you want to delete Bee Keeper?</div>
         </DialogContent>
         <DialogActions>
           <Button
@@ -452,16 +441,13 @@ const Drivers: React.FC = () => {
         dob={dOfBirth}
         contactNo={contactNo}
         email={email}
-        licenseNo={licenseNo}
-        licenseExpireDate={lExDate}
-        medicalIssues={mediCondition}
+
         getAll={getAllDrivers}
         id={selected[0]}
         isOpen={isNewDriverModalOpen}
         isUpdate={isUpdate}
         close={closeDialog}
-        open={openDialog}
-      />
+        open={openDialog} />
       <br />
       <Button
         variant="outlined"
