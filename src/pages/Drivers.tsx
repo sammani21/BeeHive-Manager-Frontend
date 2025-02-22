@@ -25,10 +25,12 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  IconButton,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import NewDriver, { Driver } from "../components/NewDriver";
 import axios from "axios";
@@ -57,13 +59,13 @@ export const StyledTableCell = styled(TableCell)(
 
 // CustomSwitch component for custom styling of switches
 const CustomSwitch = styled(Switch)(({ theme }) => ({
-  '& .MuiSwitch-switchBase.Mui-checked': {
+  "& .MuiSwitch-switchBase.Mui-checked": {
     color: theme.palette.error.main,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: `rgba(255, 0, 0, 0.1)`,
     },
   },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
     backgroundColor: theme.palette.error.main,
   },
 }));
@@ -77,9 +79,9 @@ const Drivers: React.FC = () => {
   const [nic, setNIC] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [contactNo, setContactNo] = React.useState<string>("");
- 
+
   const [gender, setGender] = React.useState<string>("");
- 
+
   const [no, setNo] = React.useState<string>("");
   const [drivers, setDrivers] = React.useState<Driver[]>([]);
   const [alldrivers, setAllDrivers] = React.useState<Driver[]>([]);
@@ -127,7 +129,7 @@ const Drivers: React.FC = () => {
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // Function to handle delete button click
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (row: Driver) => {
     if (selected.length === 0) {
       setErrorMessage("Please select a bee keeper to delete");
     } else {
@@ -155,7 +157,7 @@ const Drivers: React.FC = () => {
   };
 
   // Function to handle update button click
-  const handleUpdateClick = () => {
+  const handleUpdateClick = (row: Driver) => {
     if (selected.length === 0) {
       setErrorMessage("Please select a bee keeper to update");
     } else {
@@ -169,9 +171,8 @@ const Drivers: React.FC = () => {
         setNIC(d.nic);
         setEmail(d.email);
         setContactNo(d.contactNo);
-        
+
         setGender(d.gender);
-        
       }
     }
   };
@@ -192,10 +193,10 @@ const Drivers: React.FC = () => {
     setFName("");
     setLName("");
     setContactNo("");
-    
+
     setDOfBirth(new Date());
     setGender("");
-   
+
     setNIC("");
     setEmail("");
   };
@@ -224,7 +225,7 @@ const Drivers: React.FC = () => {
           return driver?.email?.toLowerCase().includes(searchTerm);
         case "contactNo":
           return driver?.contactNo?.toLowerCase().includes(searchTerm);
-        
+
         case "gender":
           return driver?.gender?.toLowerCase().includes(searchTerm);
         default:
@@ -242,13 +243,15 @@ const Drivers: React.FC = () => {
   // Function to handle status change
   const handleStatusChange = (id: string, isActive: boolean) => {
     axios
-      .put(`http://localhost:3000/api/v1/driver/${id}/status`, { isActive: !isActive })
+      .put(`http://localhost:3000/api/v1/driver/${id}/status`, {
+        isActive: !isActive,
+      })
       .then((response) => {
         console.log(
           `Driver ${isActive ? "deactivated" : "activated"}:`,
           response
         );
-        getAllDrivers(); 
+        getAllDrivers();
       })
       .catch((error) => {
         console.error(
@@ -278,7 +281,7 @@ const Drivers: React.FC = () => {
     <Container maxWidth="xl" sx={{ marginTop: "-60px", width: "91vw" }}>
       <br />
       <br />
-      <NavigationBar/>
+      <NavigationBar />
       <div
         style={{
           display: "flex",
@@ -290,13 +293,23 @@ const Drivers: React.FC = () => {
           Bee Keepers
         </DialogTitle>
 
-        <div>
-          <FormControl sx={{ minWidth: 150, marginRight: "10px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            padding: "10px 0",
+          }}
+        >
+          <FormControl sx={{ minWidth: 150 }}>
             <InputLabel>Search by</InputLabel>
             <Select
               value={searchCategory}
               onChange={(e) => setSearchCategory(e.target.value)}
               label="Search by"
+              sx={{ borderRadius: "8px" }}
             >
               <MenuItem value="no">Bee Keeper ID</MenuItem>
               <MenuItem value="firstName">First Name</MenuItem>
@@ -304,22 +317,46 @@ const Drivers: React.FC = () => {
               <MenuItem value="nic">NIC</MenuItem>
               <MenuItem value="email">Email</MenuItem>
               <MenuItem value="contactNo">Contact No</MenuItem>
-             
               <MenuItem value="gender">Gender</MenuItem>
             </Select>
           </FormControl>
 
           <TextField
-            placeholder="Search"
+            placeholder="Search..."
             onChange={handleSearch}
+            sx={{
+              borderRadius: "8px",
+              minWidth: "250px",
+              "& .MuiInputBase-root": { paddingRight: "10px" },
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <SearchIcon color="action" />
                 </InputAdornment>
               ),
             }}
           />
+
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              borderRadius: "8px",
+              textTransform: "none",
+              backgroundColor: "#FFB700",
+                "&:hover": {
+                  backgroundColor: "#CC9200",
+                },
+            }}
+            onClick={() => {
+              setIsNewDriverModalOpen(true);
+              setIsUpdate(false);
+              clearFields();
+            }}
+          >
+            Add New
+          </Button>
         </div>
       </div>
       {errorMessage && (
@@ -331,7 +368,7 @@ const Drivers: React.FC = () => {
       <div style={{ height: "400px", overflow: "auto" }}>
         <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
           <Table aria-label="simple table" stickyHeader>
-          <TableHead>
+            <TableHead>
               <TableRow>
                 <StyledTableCell align="center">No</StyledTableCell>
                 <StyledTableCell align="center">Date of Joined</StyledTableCell>
@@ -342,9 +379,9 @@ const Drivers: React.FC = () => {
                 <StyledTableCell align="center">DOB</StyledTableCell>
                 <StyledTableCell align="center">Contact No</StyledTableCell>
                 <StyledTableCell align="center">Email</StyledTableCell>
-                
                 <StyledTableCell align="center">Availability</StyledTableCell>
                 <StyledTableCell align="center">Status</StyledTableCell>
+                <StyledTableCell align="center">Actions</StyledTableCell>
               </TableRow>
             </TableHead>
 
@@ -377,8 +414,7 @@ const Drivers: React.FC = () => {
                     </TableCell>
                     <TableCell align="right">{row.contactNo}</TableCell>
                     <TableCell align="right">{row.email}</TableCell>
-                    
-                    
+
                     <TableCell align="right">
                       <Switch
                         checked={row.availability}
@@ -400,7 +436,14 @@ const Drivers: React.FC = () => {
                         label={row.isActive ? "Active" : "Inactive"}
                       />
                     </TableCell>
-                    
+                    <TableCell align="center">
+                  <IconButton onClick={() => handleUpdateClick(row)}>
+                    <EditIcon color="primary" />
+                  </IconButton>
+                  <IconButton onClick={() => handleDeleteClick(row)}>
+                    <DeleteIcon color="error" />
+                  </IconButton>
+                </TableCell>
                   </TableRow>
                 );
               })}
@@ -441,13 +484,13 @@ const Drivers: React.FC = () => {
         dob={dOfBirth}
         contactNo={contactNo}
         email={email}
-
         getAll={getAllDrivers}
         id={selected[0]}
         isOpen={isNewDriverModalOpen}
         isUpdate={isUpdate}
         close={closeDialog}
-        open={openDialog} />
+        open={openDialog}
+      />
       <br />
       <Button
         variant="outlined"
@@ -480,8 +523,6 @@ const Drivers: React.FC = () => {
         Delete
       </Button>
     </Container>
-
-    
   );
 };
 

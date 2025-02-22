@@ -218,7 +218,7 @@ const Vehicles: React.FC = () => {
         }}
       >
         <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Vehicle Details Management
+          Hive Details Management
         </DialogTitle>
 
         <div>

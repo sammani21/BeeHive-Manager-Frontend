@@ -333,7 +333,7 @@ export default function NavigationBar() {
             <ListItemIcon>
               <DriveEtaIcon />
             </ListItemIcon>
-            <ListItemText primary="Vehicles" />
+            <ListItemText primary="Hives" />
           </ListItemButton>
 
           <ListItemButton
@@ -344,7 +344,7 @@ export default function NavigationBar() {
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
-            <ListItemText primary="Passengers" />
+            <ListItemText primary="Products" />
           </ListItemButton>
 
           <ListItemButton onClick={handleReportsClick}>
@@ -366,7 +366,7 @@ export default function NavigationBar() {
                 <ListItemIcon>
                   <StarOutlineIcon />
                 </ListItemIcon>
-                <ListItemText primary="Vehicles Report" />
+                <ListItemText primary="Hive Report" />
               </ListItemButton>
 
               <ListItemButton
@@ -378,7 +378,7 @@ export default function NavigationBar() {
                 <ListItemIcon>
                   <StarOutlineIcon />
                 </ListItemIcon>
-                <ListItemText primary="Passengers Report" />
+                <ListItemText primary="Products Report" />
               </ListItemButton>
 
               <ListItemButton
@@ -390,7 +390,7 @@ export default function NavigationBar() {
                 <ListItemIcon>
                   <StarOutlineIcon />
                 </ListItemIcon>
-                <ListItemText primary="Drivers Report" />
+                <ListItemText primary="Bee Keeper Report" />
               </ListItemButton>
 
               <ListItemButton
@@ -402,7 +402,7 @@ export default function NavigationBar() {
                 <ListItemIcon>
                   <StarOutlineIcon />
                 </ListItemIcon>
-                <ListItemText primary="Issues Report" />
+                <ListItemText primary="Recommondation Report" />
               </ListItemButton>
             </List>
           </Collapse>
@@ -421,12 +421,12 @@ export default function NavigationBar() {
   <ListItemText primary="ChatBox" />
 </ListItemButton>
 
-          <ListItemButton onClick={() => handleDrawerItemClick("Settings")}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItemButton>
+<ListItemButton component={Link} to="/manage-profile">
+  <ListItemIcon>
+    <ChatIcon />
+  </ListItemIcon>
+  <ListItemText primary="Profile" />
+</ListItemButton>
         </List>
       </Drawer>
       <Main open={open}>

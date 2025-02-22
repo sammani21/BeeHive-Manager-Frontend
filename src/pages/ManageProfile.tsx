@@ -97,30 +97,40 @@ const ManageProfile: React.FC = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImageFile(e.target.files[0]);
+      const file = e.target.files[0];
+    setImageFile(file);
+    handleUploadImage(file);
     }
   };
 
-  const handleUploadImage = () => {
-    if (!imageFile || !user) return;
-
-    const storageRef = ref(storage, `profileImages/${user.uid}`);
-    const uploadTask = uploadBytesResumable(storageRef, imageFile);
-
-    uploadTask.on(
-      "state_changed",
-      null,
-      () => setError("Image upload failed!"),
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        await updateProfile(user, { photoURL: downloadURL });
-        setPhotoURL(downloadURL);
-        setMessage("Profile picture updated!");
-        setImageFile(null);
-      }
-    );
+  const handleUploadImage = async (file: File) => {
+    if (!user) return;
+  
+    try {
+      const storageRef = ref(storage, `profileImages/${user.uid}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+  
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => setError(`Image upload failed: ${error.message}`),
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          await updateProfile(user, { photoURL: downloadURL });
+          
+          // Update state to reflect new profile picture
+          setPhotoURL(downloadURL);
+          setMessage("Profile picture updated successfully!");
+  
+          // Force Firebase user refresh to reflect the new image
+          await auth.currentUser?.reload();
+        }
+      );
+    } catch (error) {
+      setError(`Upload error: ${error}`);
+    }
   };
-
+  
   return (
     <ThemeProvider theme={theme}>
       <NavigationBar />
@@ -152,7 +162,7 @@ const ManageProfile: React.FC = () => {
                         boxShadow: 3,
                         "&:hover": { backgroundColor: "lightgray" },
                       }}
-                      onClick={handleUploadImage}
+                      
                     >
                       <Edit fontSize="small" />
                     </IconButton>

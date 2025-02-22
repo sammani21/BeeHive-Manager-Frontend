@@ -20,10 +20,10 @@ const PieChart: React.FC<PieChartProps> = ({
   noOfUnavailableDrivers,
 }) => {
   const chartData = {
-    labels: [ 'No Of Available Drivers', 'No of Unavailable Drivers'],
+    labels: [ 'Available Bee Keepers', 'Unavailable Bee Keepers'],
     datasets: [
       {
-        label: 'Details of Drivers',
+        label: 'Details of Bee Keepers',
         data: [ noOfAvailableDrivers, noOfUnavailableDrivers],
         backgroundColor: [
           // Indigo
@@ -35,7 +35,7 @@ const PieChart: React.FC<PieChartProps> = ({
           'rgba(54, 162, 235, 1)',
          
         ],
-        borderWidth: 2,
+        borderWidth: 1,
       },
     ],
   };

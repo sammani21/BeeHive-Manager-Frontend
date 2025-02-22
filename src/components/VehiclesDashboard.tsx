@@ -1,4 +1,3 @@
-// Components/Vehicles.js
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
@@ -26,31 +25,53 @@ const BarChart: React.FC<BarChartProps> = ({
         ];
         chartInstance.current.update();
       } else {
+        const ctx = chartRef.current.getContext('2d');
+
+        if (!ctx) return;
+
+        const gradientTotal = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientTotal.addColorStop(0, 'rgba(75, 0, 130, 0.8)');
+        gradientTotal.addColorStop(1, 'rgba(75, 0, 130, 0.3)');
+
+        const gradientInService = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientInService.addColorStop(0, 'rgba(255, 193, 7, 0.8)');
+        gradientInService.addColorStop(1, 'rgba(255, 193, 7, 0.3)');
+
+        const gradientOutOfService = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientOutOfService.addColorStop(0, 'rgba(233, 30, 99, 0.8)');
+        gradientOutOfService.addColorStop(1, 'rgba(233, 30, 99, 0.3)');
+
         chartInstance.current = new Chart(chartRef.current, {
           type: 'bar',
           data: {
-            labels: ['Total Vehicles', 'In Service Vehicles', 'Out of Service Vehicles'],
-            datasets: [{
-              data: [noOfTotalVehicles, noOfInServiceVehicles, noOfOutOfServiceVehicles],
-              backgroundColor: [
-                'rgba(75, 0, 130, 0.6)',    // Indigo
-                'rgba(255, 193, 7, 0.6)',   // Amber
-                'rgba(233, 30, 99, 0.6)',   // Pink
-              ],
-              borderColor: [
-                'rgba(255, 193, 7, 1)',   // Amber
-                'rgba(233, 30, 99, 1)',   // Pink
-                'rgba(75, 0, 130, 1)',    // Indigo
-
-                
-              ],
-              borderWidth: 2,
-            }]
+            labels: ['Total Hives', 'Active Hives', 'Inactive Hives'],
+            datasets: [
+              {
+                data: [noOfTotalVehicles, noOfInServiceVehicles, noOfOutOfServiceVehicles],
+                backgroundColor: [gradientTotal, gradientInService, gradientOutOfService],
+                borderColor: ['rgba(75, 0, 130, 1)', 'rgba(255, 193, 7, 1)', 'rgba(233, 30, 99, 1)'],
+                borderWidth: 2,
+                borderRadius: 8,
+                barThickness: 60,
+                hoverBackgroundColor: ['rgba(75, 0, 130, 1)', 'rgba(255, 193, 7, 1)', 'rgba(233, 30, 99, 1)'],
+                hoverBorderColor: '#fff',
+                hoverBorderWidth: 2,
+              },
+            ],
           },
           options: {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
               legend: {
-                display: false, // Hides the legend
+                display: false,
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                titleFont: { size: 14, weight: 'bold' },
+                bodyFont: { size: 12 },
+                padding: 10,
+                cornerRadius: 5,
               },
             },
             scales: {
@@ -58,16 +79,26 @@ const BarChart: React.FC<BarChartProps> = ({
                 beginAtZero: true,
                 ticks: {
                   stepSize: 1,
+                  color: '#333',
+                  font: { size: 12 },
+                },
+                grid: {
+                  color: 'rgba(0,0,0,0.1)',
+                },
+              },
+              x: {
+                ticks: {
+                  color: '#333',
+                  font: { size: 14, weight: 'bold' },
+                },
+                grid: {
+                  display: false,
                 },
               },
             },
-            layout: {
-              padding: {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-              },
+            animation: {
+              duration: 1000,
+              easing: 'easeInOutBounce',
             },
           },
         });
@@ -77,16 +108,14 @@ const BarChart: React.FC<BarChartProps> = ({
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
-        chartInstance.current = null; // Ensure the chart instance is nullified
-       
+        chartInstance.current = null;
       }
     };
   }, [noOfTotalVehicles, noOfInServiceVehicles, noOfOutOfServiceVehicles]);
 
-  // Ensure the canvas stretches to fill its parent div
   return (
-    <div style={{  height: "310px",width:"450px"}}>
-      <canvas ref={chartRef} style={{ width: '100px', height: '200px' }} />
+    <div style={{ height: '320px', width: '450px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <canvas ref={chartRef} />
     </div>
   );
 };

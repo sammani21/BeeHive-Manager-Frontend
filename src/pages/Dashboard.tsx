@@ -213,15 +213,15 @@ const DashboardPage: React.FC = () => {
       <div style={{ minHeight: "100vh", backgroundColor: "#ffffff" }}>
         <NavigationBar />
         <Container maxWidth="lg">
-          <Typography variant="h1" sx={{ marginBottom: "1rem", textAlign: "center" }}>
-            Dashboard
-          </Typography>
+        <Typography variant="h4" fontWeight="bold" textAlign="left" color="primary">
+              Dashboard
+            </Typography>
           <Grid container spacing={2} sx={{ marginTop: "2rem", marginBottom: "2rem", justifyContent: "center" }}>
             <Grid item xs={12} sm={6} md={4} lg={3} sx={{ marginRight: "50px" , marginLeft: "100px"}}>
               <Card sx={{ height: "400px", width :"550px" , display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Vehicle Status
+                    Hive Status
                   </Typography>
                   <BarChart
                     noOfTotalVehicles={totalVehicles}
@@ -235,14 +235,14 @@ const DashboardPage: React.FC = () => {
               <Card sx={{ height: "400px", width :"550px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Driver Status
+                   Bee Keeper Status
                   </Typography>
                   <PieChart
                     noOfAvailableDrivers={noOfAvailableDrivers}
                     noOfUnavailableDrivers={noOfUnavailableDrivers}
                   />
                   <Typography variant="body1">
-                    <b>Number of Total Drivers: {noOfTotalDrivers}</b>
+                    <b>Number of Total Bee Keepers: {noOfTotalDrivers}</b>
                   </Typography>
                 </CardContent>
               </Card>
@@ -251,7 +251,7 @@ const DashboardPage: React.FC = () => {
               <Card sx={{ height: "400px", width :"550px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Trip Status
+                    Recommendation Status
                   </Typography>
                   <DoughnutChart
                     numberOfTotalTrips={numberOfTotalTrips}
@@ -259,7 +259,7 @@ const DashboardPage: React.FC = () => {
                     cancelledTrips={cancelledTrips}
                   />
                   <Typography variant="body1">
-                    <b>Number of Total Trips: {numberOfTotalTrips}</b>
+                    <b>Number of Total Recommendations: {numberOfTotalTrips}</b>
                   </Typography>
                 </CardContent>
               </Card>
@@ -268,7 +268,7 @@ const DashboardPage: React.FC = () => {
               <Card sx={{ height: "400px", width :"550px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Issue Comparison
+                    Production Comparison
                   </Typography>
                   <ComparisonBarChart
                     years={years}
@@ -282,7 +282,7 @@ const DashboardPage: React.FC = () => {
               <Card sx={{ height: "530px", width: "900px" ,display: "flex", flexDirection: "column", justifyContent: "space-between",  background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Daily Completed Trips
+                    High Performing Bee Keepers
                   </Typography>
                   <LineChartForNoOfTripsDashboard completedTripCounts={completedTripCounts} />
                 </CardContent>

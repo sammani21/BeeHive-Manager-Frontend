@@ -38,7 +38,7 @@ export const StyledTableCell = styled(TableCell)(
     }
   ) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#9A82DB",
+      backgroundColor: "#FFD700",
       color: "#000000",
     },
     [`&.${tableCellClasses.body}`]: {
@@ -65,7 +65,7 @@ const Passengers: React.FC = () => {
   const getAllPassengers = () => {
     setPassengers([]);
     setAllPassengers([]);
-    console.log("Fetching all passengers...");
+    console.log("Fetching all Products...");
 
     fetch("http://localhost:3000/api/v1/passenger")
       .then((res) => res.json())
@@ -74,8 +74,8 @@ const Passengers: React.FC = () => {
         setAllPassengers(data.data);
       })
       .catch((error) => {
-        console.error("Error fetching passengers:", error);
-        setErrorMessage("Error fetching passengers");
+        console.error("Error fetching products:", error);
+        setErrorMessage("Error fetching products");
       });
   };
 
@@ -84,12 +84,12 @@ const Passengers: React.FC = () => {
     axios
       .put(`http://localhost:3000/api/v1/passenger/${id}`, { action })
       .then((response) => {
-        console.log(`Passenger ${action}d:`, response);
+        console.log(`Product ${action}d:`, response);
         getAllPassengers(); // Refresh the passenger list
       })
       .catch((error) => {
-        console.error(`Error ${action}ing passenger:`, error);
-        setErrorMessage(`Error ${action}ing passenger`);
+        console.error(`Error ${action}ing products:`, error);
+        setErrorMessage(`Error ${action}ing products`);
       });
   };
 
@@ -117,7 +117,7 @@ const Passengers: React.FC = () => {
   setPassengers(filteredPassengers);
 
   if (filteredPassengers.length === 0) {
-    setErrorMessage("Cannot find the passenger in this category.");
+    setErrorMessage("Cannot find the products in this category.");
   } else {
     setErrorMessage("");
   }
@@ -158,7 +158,7 @@ const Passengers: React.FC = () => {
         }}
       >
         <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Passenger Details Management
+          Products Details Management
         </DialogTitle>
         
         <div>
