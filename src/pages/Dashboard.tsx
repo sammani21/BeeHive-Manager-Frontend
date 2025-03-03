@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
  import NavigationBar from "../components/NavigationBar";
 import ComparisonBarChart from "../components/IssuesDashboard";
-import BarChart from "../components/VehiclesDashboard";
-import PieChart from "../components/DriversDashboard";
-import DoughnutChart from "../components/TripsDashboard";
-import LineChartForNoOfTripsDashboard from "../components/LineChartForNoOfTripsDashboard";
+import BarChart from "../components/HivesDashboard";
+import PieChart from "../components/BeekeepersDashboard";
+import DoughnutChart from "../components/RecommendationsDashboard";
+//import LineChartForNoOfTripsDashboard from "../components/LineChartForNoOfTripsDashboard";
 import { format } from "date-fns";
 
 
@@ -217,8 +217,8 @@ const DashboardPage: React.FC = () => {
               Dashboard
             </Typography>
           <Grid container spacing={2} sx={{ marginTop: "2rem", marginBottom: "2rem", justifyContent: "center" }}>
-            <Grid item xs={12} sm={6} md={4} lg={3} sx={{ marginRight: "50px" , marginLeft: "100px"}}>
-              <Card sx={{ height: "400px", width :"550px" , display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ height: "400px", width :"320px" , display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     Hive Status
@@ -231,8 +231,8 @@ const DashboardPage: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={3} sx={{ marginRight: "160px" , marginLeft: "250px" }}>
-              <Card sx={{ height: "400px", width :"550px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
+            <Grid item xs={12} sm={6} md={4} >
+              <Card sx={{ height: "400px", width :"320px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                    Bee Keeper Status
@@ -247,8 +247,8 @@ const DashboardPage: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={3} sx={{marginRight: "50px" , marginLeft: "100px" }}>
-              <Card sx={{ height: "400px", width :"550px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
+            <Grid item xs={12} sm={6} md={4} >
+              <Card sx={{ height: "400px", width :"320px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     Recommendation Status
@@ -264,8 +264,8 @@ const DashboardPage: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={3} sx={{ marginRight: "160px" , marginLeft: "250px" }}>
-              <Card sx={{ height: "400px", width :"550px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
+            <Grid item xs={12} sm={6} md={4} >
+              <Card sx={{ height: "400px", width :"320px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     Production Comparison
@@ -278,16 +278,17 @@ const DashboardPage: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={3} sx={{ marginRight: "400px" }}>
-              <Card sx={{ height: "530px", width: "900px" ,display: "flex", flexDirection: "column", justifyContent: "space-between",  background: "#f0f0f0", borderRadius: "30px" }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    High Performing Bee Keepers
-                  </Typography>
-                  <LineChartForNoOfTripsDashboard completedTripCounts={completedTripCounts} />
-                </CardContent>
-              </Card>
-            </Grid>
+
+            {/* <Grid item xs={12} sm={6} md={4} lg={3} sx={{ marginRight: "400px" }}>
+  <Card sx={{ height: "530px", width: "900px" ,display: "flex", flexDirection: "column", justifyContent: "space-between",  background: "#f0f0f0", borderRadius: "30px" }}>
+    <CardContent>
+      <Typography variant="h6" gutterBottom>
+        High Performing Bee Keepers
+      </Typography>
+      <LineChartForNoOfTripsDashboard completedTripCounts={completedTripCounts} />
+    </CardContent>
+  </Card>
+</Grid> */}
             
           </Grid>
         </Container>

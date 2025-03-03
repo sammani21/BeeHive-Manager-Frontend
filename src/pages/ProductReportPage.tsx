@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import DatePickerValue from "../components/DatePickerValue"; // Adjust path as per your structure
-import PassengersTable from "../components/PassengerTable"; // Adjust path as per your structure
+import PassengersTable from "../components/ProductsTable"; // Adjust path as per your structure
  import NavigationBar from "../components/NavigationBar"; // Adjust path as per your structure
 import PrintButton from "../components/DownloadButton"; // Adjust path as per your structure
 import { DialogTitle } from "@mui/material";

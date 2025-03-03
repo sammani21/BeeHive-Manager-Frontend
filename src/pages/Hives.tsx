@@ -28,9 +28,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import NewVehilce, { Vehicle } from "../components/NewVehicle";
+import NewVehilce, { Vehicle } from "../components/NewHives";
 import axios from "axios";
-import { StyledTableCell } from "./Drivers";
+import { StyledTableCell } from "./BeeKeepers";
 import Swal from "sweetalert2";
 import NavigationBar from "../components/NavigationBar";
 // Define the Vehicles component

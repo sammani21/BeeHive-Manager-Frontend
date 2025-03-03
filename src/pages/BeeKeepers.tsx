@@ -31,8 +31,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import NewDriver, { Driver } from "../components/NewDriver";
+//import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import NewDriver, { Driver } from "../components/NewBeekeeper";
 import axios from "axios";
 import { textAlign } from "@mui/system";
 //import { set } from "react-hook-form";
@@ -492,7 +492,7 @@ const Drivers: React.FC = () => {
         open={openDialog}
       />
       <br />
-      <Button
+      {/*<Button
         variant="outlined"
         startIcon={<AddIcon />}
         onClick={() => {
@@ -521,7 +521,7 @@ const Drivers: React.FC = () => {
         onClick={handleDeleteClick}
       >
         Delete
-      </Button>
+      </Button>*/}
     </Container>
   );
 };

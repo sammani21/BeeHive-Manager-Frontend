@@ -24,7 +24,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import ArticleIcon from "@mui/icons-material/Article";
 import TimeToLeaveIcon from "@mui/icons-material/TimeToLeave";
 import ChatIcon from "@mui/icons-material/Chat";
-import SettingsIcon from "@mui/icons-material/Settings";
+//import SettingsIcon from "@mui/icons-material/Settings";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
@@ -411,7 +411,7 @@ export default function NavigationBar() {
             <ListItemIcon>
               <TimeToLeaveIcon />
             </ListItemIcon>
-            <ListItemText primary="Trips" />
+            <ListItemText primary="Recommendation" />
           </ListItemButton>
 
           <ListItemButton component={Link} to="/chatbox">
@@ -423,7 +423,7 @@ export default function NavigationBar() {
 
 <ListItemButton component={Link} to="/manage-profile">
   <ListItemIcon>
-    <ChatIcon />
+  <PersonIcon />
   </ListItemIcon>
   <ListItemText primary="Profile" />
 </ListItemButton>

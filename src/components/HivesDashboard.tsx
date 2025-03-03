@@ -114,7 +114,7 @@ const BarChart: React.FC<BarChartProps> = ({
   }, [noOfTotalVehicles, noOfInServiceVehicles, noOfOutOfServiceVehicles]);
 
   return (
-    <div style={{ height: '320px', width: '450px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ height: '280px', width: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <canvas ref={chartRef} />
     </div>
   );

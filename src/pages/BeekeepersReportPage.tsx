@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import DatePickerValue from "../components/DatePickerValue"; // Importing custom DatePicker component
-import DriverTable from "../components/DriverTable"; // Importing DriverTable component
+import DriverTable from "../components/BeekeepersTable"; // Importing DriverTable component
  import NavigationBar from "../components/NavigationBar"; // Importing NavigationBar component
 import PrintButton from "../components/DownloadButton"; // Importing DownloadButton component
 import { DialogTitle } from "@mui/material";
