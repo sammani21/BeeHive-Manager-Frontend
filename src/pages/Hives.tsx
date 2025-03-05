@@ -229,12 +229,12 @@ const Vehicles: React.FC = () => {
           onChange={(e) => setSearchCategory(e.target.value)}
           label="Search by"
         >
-          <MenuItem value="id">Vehicle ID</MenuItem>
-          <MenuItem value="no">Vehicle Number</MenuItem>
-          <MenuItem value="type">Type</MenuItem>
-          <MenuItem value="chassisNo">Chassis Number</MenuItem>
-          <MenuItem value="brand">Brand</MenuItem>
-          <MenuItem value="fuelType">Fuel Type</MenuItem>
+          <MenuItem value="id">Hive ID</MenuItem>
+          <MenuItem value="no">Owner ID</MenuItem>
+          <MenuItem value="type">Location</MenuItem>
+          <MenuItem value="chassisNo">Population</MenuItem>
+          <MenuItem value="brand">Status</MenuItem>
+          <MenuItem value="fuelType">Products</MenuItem>
         </Select>
       </FormControl>
 
@@ -266,15 +266,15 @@ const Vehicles: React.FC = () => {
           <Table aria-label="simple table" stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableCell align="center">Vehicle ID</StyledTableCell>
-                <StyledTableCell align="right">Vehicle no.</StyledTableCell>
-                <StyledTableCell align="right">Type</StyledTableCell>
-                <StyledTableCell align="right">Chassis no.</StyledTableCell>
-                <StyledTableCell align="right">Production Year</StyledTableCell>
-                <StyledTableCell align="right">AC/Non AC</StyledTableCell>
+                <StyledTableCell align="center">Hive ID</StyledTableCell>
+                <StyledTableCell align="right">Owner ID</StyledTableCell>
+                <StyledTableCell align="right">Location</StyledTableCell>
+                <StyledTableCell align="right">Population</StyledTableCell>
+                <StyledTableCell align="right">Established Year</StyledTableCell>
+                <StyledTableCell align="right">Status</StyledTableCell>
                 <StyledTableCell align="right">Brand</StyledTableCell>
-                <StyledTableCell align="right">Fuel Type</StyledTableCell>
-                <StyledTableCell align="right">No.of Seats</StyledTableCell>
+                <StyledTableCell align="right">Products</StyledTableCell>
+                
                 <StyledTableCell align="right">Availability</StyledTableCell>
               </TableRow>
             </TableHead>
@@ -335,7 +335,7 @@ const Vehicles: React.FC = () => {
       >
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
-          <div>Are you sure you want to delete this driver?</div>
+          <div>Are you sure you want to delete this hive?</div>
         </DialogContent>
         <DialogActions>
           <Button
@@ -375,7 +375,7 @@ const Vehicles: React.FC = () => {
 
 
       {/* Buttons to create, update or delete vehicle */}
-      <Button
+      {/*<Button
         variant="outlined"
         startIcon={<AddIcon />}
         onClick={() => {
@@ -403,7 +403,7 @@ const Vehicles: React.FC = () => {
         onClick={() => handleDeleteClick()}
       >
         Delete
-      </Button>
+      </Button>*/}
       
     </Container>
   );

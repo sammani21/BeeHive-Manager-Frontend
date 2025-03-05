@@ -34,13 +34,13 @@ interface IssuesTableProps {
 
 // Define the columns for the table
 const columns = [
-  { id: "incidentType", label: "Name of the Issues", minWidth: 170 },
-  { id: "type", label: "Types of Issues", minWidth: 100 },
+  { id: "incidentType", label: "Recommendation ID", minWidth: 170 },
+  { id: "type", label: "Types of Recommendation", minWidth: 100 },
   { id: "description", label: "Description", minWidth: 170 },
-  { id: "rerouting", label: "Rerouting", minWidth: 100 },
-  { id: "reroutingNewVehicleNo", label: "Rerouting New Vehicle No", minWidth: 170 },
+  { id: "rerouting", label: "Action", minWidth: 100 },
+  //{ id: "reroutingNewVehicleNo", label: "Rerouting New Vehicle No", minWidth: 170 },
   
-  { id: "createdAt", label: "Registered Date", minWidth: 170 },
+  { id: "createdAt", label: "Recommended Date", minWidth: 170 },
 ];
 
 // Define the data interface for table rows

@@ -40,7 +40,7 @@ const DriverReport: React.FC = () => {
       <NavigationBar /> 
 
       <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Bee Keeper Details Report
+          Bee Keepers Report
         </DialogTitle>
 
         <br />

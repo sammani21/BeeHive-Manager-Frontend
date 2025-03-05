@@ -1,331 +1,164 @@
-import { useState, useEffect, useRef } from "react";
-import { getAuth } from "firebase/auth";
-import { db } from "../firebaseConfig";
+import React, { useState, useEffect, useRef, FormEvent, ChangeEvent } from "react";
+import { db, auth } from "../firebaseConfig";
 import {
   collection,
   addDoc,
+  where,
+  serverTimestamp,
+  onSnapshot,
   query,
   orderBy,
-  onSnapshot,
-  serverTimestamp,
- 
-  deleteDoc,
-  updateDoc,
-  doc,
+  QueryDocumentSnapshot,
+  DocumentData,
 } from "firebase/firestore";
-import {
-  Container,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  List,
-  ListItem,
-  Avatar,
-  IconButton,
-  Box,
-  Paper,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Grid,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import NavigationBar from "../components/NavigationBar";
 
-const ChatBox: React.FC = () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const [messages, setMessages] = useState<
-    { id: string; text: string; sender: string; timestamp: any }[]
-  >([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [editedMessage, setEditedMessage] = useState("");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
-    null
-  );
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+import "../styles/Chat.css";
+import { TextField, Button, Paper, Typography, Box } from "@mui/material";
+import { formatDistanceToNow } from "date-fns";
+import SendIcon from "@mui/icons-material/Send";
+
+// Define the props type
+interface ChatProps {
+  room: string;
+}
+
+// Define the shape of a message
+interface Message {
+  id: string;
+  text: string;
+  createdAt: Date | null;
+  user: string;
+  room: string;
+}
+
+export const ChatBox: React.FC<ChatProps> = ({ room }) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState<string>("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const messagesRef = collection(db, "messages");
 
   useEffect(() => {
-    const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setMessages(
-        querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as any)
-      );
+    const queryMessages = query(
+      messagesRef,
+      where("room", "==", room),
+      orderBy("createdAt")
+    );
+
+    const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
+      const messages: Message[] = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({
+        id: doc.id,
+        text: doc.data().text,
+        createdAt: doc.data().createdAt?.toDate() ?? null,
+        user: doc.data().user,
+        room: doc.data().room,
+      }));
+
+      setMessages(messages);
+      scrollToBottom();
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [room]); // Add 'room' to dependency array to avoid stale closures
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  // Send New Message
-  const sendMessage = async () => {
     if (newMessage.trim() === "") return;
-    await addDoc(collection(db, "messages"), {
+
+    await addDoc(messagesRef, {
       text: newMessage,
-      sender: user?.displayName || "Anonymous",
-      timestamp: serverTimestamp(),
+      createdAt: serverTimestamp(),
+      user: auth.currentUser?.displayName || "Anonymous",
+      room,
     });
+
     setNewMessage("");
   };
 
-  // Delete Message
-  const confirmDeleteMessage = (id: string) => {
-    setSelectedMessageId(id);
-    setConfirmDeleteOpen(true);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(event.target.value);
   };
 
-  const deleteMessage = async () => {
-    if (selectedMessageId) {
-      await deleteDoc(doc(db, "messages", selectedMessageId));
-      setConfirmDeleteOpen(false);
-      setSelectedMessageId(null);
-    }
-  };
-
-  // Start Editing Message
-  const startEditing = (id: string, text: string) => {
-    setEditingMessageId(id);
-    setEditedMessage(text);
-    setAnchorEl(null);
-  };
-
-  // Save Edited Message
-  const saveEditedMessage = async (id: string) => {
-    await updateDoc(doc(db, "messages", id), {
-      text: editedMessage,
-    });
-    setEditingMessageId(null);
-  };
-
-  const handleMenuOpen = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    id: string
-  ) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedMessageId(id);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedMessageId(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", backgroundColor: "#ffffff" }}>
       <NavigationBar />
-      <Grid container spacing={1} >
-        <Grid item xs={3}>
-          <Box sx={{ background: "#FFD700", padding: 2, borderRadius: 2 , minWidth: 200 }}>
-            <Typography variant="h6">Chat History</Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar />
-                <span>John Doe</span>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar />
-                <span>Kumar Singh</span>
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={9}>
-      <Typography variant="h4" sx={{ textAlign: "left", mb: 3 }}>
-        Chat Box
-      </Typography>
-      <Card
-        sx={{
-          p: 3,
-          borderRadius: "20px",
-          background: "#f9f9f9",
-          boxShadow: 3,
-        }}
-      >
-        <CardContent>
-          <List
+      
+      {/* Chat Header */}
+      <Paper elevation={3} sx={{ padding: 2, textAlign: "left", backgroundColor: "#FFB700", color: "#fff" }}>
+        <Typography variant="h6">Welcome to: {room.toUpperCase()}</Typography>
+      </Paper>
+
+      {/* Messages Container */}
+      <Box sx={{ flex: 1, overflowY: "auto", padding: 2 }}>
+        {messages.map((message) => (
+          <Box
+            key={message.id}
             sx={{
-              maxHeight: 400,
-              overflowY: "auto",
-              background: "#fff",
-              p: 2,
-              borderRadius: "10px",
-              boxShadow: 2,
+              display: "flex",
+              flexDirection: message.user === auth.currentUser?.displayName ? "row-reverse" : "row",
+              alignItems: "center",
+              marginBottom: "10px",
             }}
           >
-            {messages.map((msg) => (
-              <ListItem
-                key={msg.id}
-                sx={{
-                  display: "flex",
-                  justifyContent:
-                    msg.sender === user?.displayName
-                      ? "flex-end"
-                      : "flex-start",
-                }}
-              >
-                {msg.sender !== user?.displayName && (
-                  <Avatar sx={{ width: 32, height: 32, mr: 1 }}>
-                    {msg.sender.charAt(0)}
-                  </Avatar>
-                )}
-                <Paper
-                  elevation={2}
-                  sx={{
-                    p: 1.5,
-                    borderRadius: "12px",
-                    maxWidth: "75%",
-                    backgroundColor:
-                      msg.sender === user?.displayName ? "#1976d2" : "#e0e0e0",
-                    color: msg.sender === user?.displayName ? "white" : "black",
-                    position: "relative",
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
-                    {msg.sender}
-                  </Typography>
-
-                  {editingMessageId === msg.id ? (
-                    <>
-                      <TextField
-                        value={editedMessage}
-                        onChange={(e) => setEditedMessage(e.target.value)}
-                        fullWidth
-                        size="small"
-                        sx={{ backgroundColor: "white", borderRadius: "8px" }}
-                      />
-                      <Box sx={{ display: "flex", mt: 1 }}>
-                        <IconButton
-                          onClick={() => saveEditedMessage(msg.id)}
-                          color="success"
-                        >
-                          <CheckIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => setEditingMessageId(null)}
-                          color="error"
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                      </Box>
-                    </>
-                  ) : (
-                    <Typography variant="body2">{msg.text}</Typography>
-                  )}
-
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      fontSize: "0.75rem",
-                      opacity: 0.7,
-                      textAlign: "right",
-                      display: "block",
-                      mt: 0.5,
-                    }}
-                  >
-                    {msg.timestamp?.toDate
-                      ? new Date(msg.timestamp.toDate()).toLocaleTimeString()
-                      : "Sending..."}
-                  </Typography>
-
-                  {/* Three-Dot Menu */}
-                  {msg.sender === user?.displayName && (
-                    <Box sx={{ position: "absolute", top: 4, right: 4 }}>
-                      <IconButton
-                        size="small"
-                        onClick={(e) => handleMenuOpen(e, msg.id)}
-                      >
-                        <MoreVertIcon sx={{ color: "white" }} />
-                      </IconButton>
-                      <Menu
-                        anchorEl={anchorEl}
-                        open={selectedMessageId === msg.id}
-                        onClose={handleMenuClose}
-                      >
-                        <MenuItem
-                          onClick={() => startEditing(msg.id, msg.text)}
-                        >
-                          <EditIcon sx={{ mr: 1 }} /> Edit
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => confirmDeleteMessage(msg.id)}
-                          sx={{ color: "red" }}
-                        >
-                          <DeleteIcon sx={{ mr: 1 }} /> Delete
-                        </MenuItem>
-                      </Menu>
-                    </Box>
-                  )}
-                </Paper>
-              </ListItem>
-            ))}
-            <div ref={chatEndRef} />
-          </List>
-
-          {/* Message Input Field */}
-          <Box sx={{ display: "flex", mt: 2 }}>
-            <TextField
-              label="Type a message..."
-              fullWidth
-              variant="outlined"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            <Paper
               sx={{
-                background: "white",
-                borderRadius: "8px",
-              }}
-            />
-            <Button
-              onClick={sendMessage}
-              variant="contained"
-              sx={{
-                ml: 2,
-                backgroundColor: "#1976d2",
-                "&:hover": { backgroundColor: "#165a9b" },
+                padding: "10px",
+                backgroundColor: message.user === auth.currentUser?.displayName ? "#FFB700" : "#E3F2FD",
+                color: message.user === auth.currentUser?.displayName ? "#fff" : "#000",
+                borderRadius: "15px",
+                maxWidth: "60%",
+                textAlign: "left",
               }}
             >
-              <SendIcon />
-            </Button>
+              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                {message.user}
+              </Typography>
+              <Typography variant="body2">{message.text}</Typography>
+              <Typography variant="caption" sx={{ opacity: 0.7 }}>
+                {message.createdAt ? formatDistanceToNow(new Date(message.createdAt), { addSuffix: true }) : "Just now"}
+              </Typography>
+            </Paper>
           </Box>
-        </CardContent>
-      </Card>
-      </Grid>
-      </Grid>
-      
-      {/* Confirmation Dialog */}
-      <Dialog
-        open={confirmDeleteOpen}
-        onClose={() => setConfirmDeleteOpen(false)}
-      >
-        <DialogTitle>Delete Message?</DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to delete this message?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setConfirmDeleteOpen(false)}>Cancel</Button>
-          <Button onClick={deleteMessage} color="error">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        ))}
+        <div ref={messagesEndRef} />
+      </Box>
 
-    </Container>
+      {/* Input Field */}
+      <Paper
+        sx={{
+          padding: "10px",
+          display: "flex",
+          alignItems: "center",
+          backgroundColor: "#fff",
+          position: "sticky",
+          bottom: 0,
+          width: "100%",
+        }}
+      >
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Type your message..."
+          value={newMessage}
+          onChange={handleChange}
+          sx={{ marginRight: 1 }}
+        />
+        <Button
+  variant="contained"
+  color="primary"
+  onClick={handleSubmit as any}
+  sx={{ minWidth: "50px", padding: "10px" ,backgroundColor: "#FFB700" }}
+>
+  <SendIcon />
+</Button>
+      </Paper>
+    </Box>
   );
 };
 

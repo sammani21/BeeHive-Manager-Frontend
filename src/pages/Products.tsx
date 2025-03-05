@@ -169,11 +169,11 @@ const Passengers: React.FC = () => {
       onChange={(e) => setSearchCategory(e.target.value)}
       label="Search by"
     >
-      <MenuItem value="firstName">First Name</MenuItem>
-      <MenuItem value="lastName">Last Name</MenuItem>
-      <MenuItem value="nic">NIC</MenuItem>
+      <MenuItem value="firstName">Product ID</MenuItem>
+      <MenuItem value="lastName">Product Type</MenuItem>
+      {/*<MenuItem value="nic">NIC</MenuItem>
       <MenuItem value="email">Email</MenuItem>
-      <MenuItem value="gender">Gender</MenuItem>
+      <MenuItem value="gender">Gender</MenuItem>*/}
     </Select>
   </FormControl>
 
@@ -207,17 +207,17 @@ const Passengers: React.FC = () => {
           <Table aria-label="simple table" stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableCell align="center">First Name</StyledTableCell>
-                <StyledTableCell align="center">Last Name</StyledTableCell>
-                <StyledTableCell align="center">NIC No</StyledTableCell>
-                <StyledTableCell align="center">Email</StyledTableCell>
-                <StyledTableCell align="center">Gender</StyledTableCell>
-                <StyledTableCell align="center">Contact No</StyledTableCell>
+                <StyledTableCell align="center">Product ID</StyledTableCell>
+                <StyledTableCell align="center">Hive ID</StyledTableCell>
+                <StyledTableCell align="center">Type</StyledTableCell>
+                <StyledTableCell align="center">Quantity</StyledTableCell>
+                <StyledTableCell align="center">Quality</StyledTableCell>
+                {/*<StyledTableCell align="center">Contact No</StyledTableCell>
                 <StyledTableCell align="center">Birthday</StyledTableCell>
                 <StyledTableCell align="center">Is Internal</StyledTableCell>
                 <StyledTableCell align="center">Company Name</StyledTableCell>
                 <StyledTableCell align="center">Service No</StyledTableCell>
-                <StyledTableCell align="center">Actions</StyledTableCell>
+                <StyledTableCell align="center">Actions</StyledTableCell>*/}
               </TableRow>
             </TableHead>
             <TableBody>

@@ -30,8 +30,8 @@ const columns: readonly Column[] = [
   { id: "contactNo", label: "Contact No", minWidth: 170 },
   { id: "email", label: "Email", minWidth: 170 },
   
-  { id: "createdAt", label: "Registered Date", minWidth: 170 },
-  { id: "updatedAt", label: "Updated Date", minWidth: 170 },
+  //{ id: "createdAt", label: "Registered Date", minWidth: 170 },
+  //{ id: "updatedAt", label: "Updated Date", minWidth: 170 },
   { id: "availability", label: "Availability", minWidth: 170 },
 ];
 

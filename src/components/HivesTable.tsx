@@ -32,17 +32,17 @@ interface VehicleTableProps {
 
 // Define the columns for the table
 const columns = [
-  { id: "no", label: "Vehicle No", minWidth: 170 },
-  { id: "type", label: "Vehicle Type", minWidth: 100 },
-  { id: "chassisNo", label: "Chassis No", minWidth: 170 },
-  { id: "brand", label: "Brand", minWidth: 170 },
-  { id: "fuelType", label: "Fuel Type", minWidth: 170 },
-  { id: "noOfSeats", label: "No of Seats", minWidth: 170 },
+  { id: "no", label: "Hive ID", minWidth: 170 },
+  { id: "type", label: "Owner ID", minWidth: 100 },
+  { id: "chassisNo", label: "Location", minWidth: 170 },
+  { id: "brand", label: "Population", minWidth: 170 },
+  { id: "fuelType", label: "Established Year", minWidth: 170 },
+  { id: "noOfSeats", label: "Brand", minWidth: 170 },
   { id: "productionYear", label: "Production Year", minWidth: 170 },
-  { id: "acNonAc", label: "AC/Non-AC", minWidth: 170 },
+  { id: "acNonAc", label: "Products", minWidth: 170 },
   { id: "availability", label: "Availability", minWidth: 170 },
-  { id: "createdAt", label: "Registered Date",  minWidth: 170 },
-  { id: "updatedAt", label: "Updated Date", minWidth: 170 },
+  //{ id: "createdAt", label: "Registered Date",  minWidth: 170 },
+  //{ id: "updatedAt", label: "Updated Date", minWidth: 170 },
 ];
 
 // Define the data interface for table rows

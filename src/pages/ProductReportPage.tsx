@@ -23,7 +23,7 @@ const PassengersReport = () => {
     <div style={{ height: "100vh", width: "100vw", display: "flex", flexDirection: "column", alignItems: "center", overflow: "auto" }}>
       <NavigationBar />
       <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Passenger Details Report
+          Production Report
         </DialogTitle>
         <br />
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -33,8 +33,9 @@ const PassengersReport = () => {
         <div style={{ marginRight: "10px" }}>
           <DatePickerValue label="End Date" selectedDate={endDate} onDateChange={handleEndDateChange} />
         </div>
-        <div style={{ position: "relative", marginRight: "10px", marginLeft: "20px" }}>
-          <PrintButton tableRef={tableRef} />
+        <div style={{ position: "relative", marginRight: "10px", marginLeft: "20px"  }} >
+          <PrintButton
+           tableRef={tableRef} />
         </div>
       </div>
       <br />

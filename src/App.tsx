@@ -1,5 +1,5 @@
 // App.tsx
-import * as React from "react";
+import React, {useState} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Signupf1 from "./pages/Signupf1";
@@ -22,9 +22,19 @@ import Drivers from "./pages/BeeKeepers";
 import DashboardPage from "./pages/Dashboard";
 import ManageProfile from "./pages/ManageProfile";
 import ChatBox from "./pages/ChatBox";
+import ChatRoomSelection from "./components/ChatRoomSelection"; // ✅ Import the new component
+
+
 
 // Main App component
 const App: React.FC = () => {
+
+ 
+  const [isInChat, setIsInChat] = useState<boolean>(false);
+  const [room, setRoom] = useState<string>("");
+
+
+
   return (
     <>
       <BrowserRouter>
@@ -55,8 +65,13 @@ const App: React.FC = () => {
 
           <Route path="/drivers" element={<Drivers />} />
           <Route path="/manage-profile" element={<ManageProfile />} />
-		  <Route path="/chatbox" element={<ChatBox />} />
-        </Routes>
+		 {/* Chatbox Route */}
+     <Route
+          path="/chatbox"
+          element={isInChat ? <ChatBox room={room} /> : <ChatRoomSelection room={room} setRoom={setRoom} setIsInChat={setIsInChat} />}
+        />
+      </Routes>
+        
       </BrowserRouter>
     </>
   );

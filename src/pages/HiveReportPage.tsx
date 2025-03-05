@@ -40,7 +40,7 @@ const VehicleReport: React.FC = () => {
       <NavigationBar />
 
       <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Vehicle Details Report
+         Hive Details Report
         </DialogTitle>
 
 <br />

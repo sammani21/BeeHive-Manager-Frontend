@@ -35,8 +35,15 @@ const PrintButton: React.FC<PrintButtonProps> = ({ tableRef }) => {
     <div>
       <Button 
         variant="contained" 
+        
         startIcon={<DownloadIcon />} // Change to CloudDownloadIcon
         onClick={handleDownloadPDF} 
+        sx={{
+          backgroundColor: "#FFB700",
+          "&:hover": {
+            backgroundColor: "#CC9200",
+          },
+        }}
         /*sx={{ 
           backgroundColor: (theme) => theme.palette.secondary.main,
           color: 'black',

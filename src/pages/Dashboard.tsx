@@ -12,7 +12,7 @@ import {
   createTheme,
 } from "@mui/material";
  import NavigationBar from "../components/NavigationBar";
-import ComparisonBarChart from "../components/IssuesDashboard";
+import ComparisonBarChart from "../components/ProductsDashboard";
 import BarChart from "../components/HivesDashboard";
 import PieChart from "../components/BeekeepersDashboard";
 import DoughnutChart from "../components/RecommendationsDashboard";

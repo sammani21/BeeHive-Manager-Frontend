@@ -25,7 +25,7 @@ const IssuesReport = () => {
     <div style={{ height: "100vh", width: "100vw", display: "flex", flexDirection: "column", alignItems: "center", overflow: "auto" }}>
       <NavigationBar />
       <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Issue Details Report
+          Recommendations Report
         </DialogTitle>
         <br />
       <div style={{ display: "flex", alignItems: "center" }}>

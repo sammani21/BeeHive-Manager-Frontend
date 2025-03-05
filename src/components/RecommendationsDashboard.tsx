@@ -24,7 +24,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({
 
 
     const chartData = {
-      labels: ['Scheduled Trips', 'Cancelled Trips'],
+      labels: ['Actionable Recommendations', 'Rejected Recommendations'],
       datasets: [
         {
           label: 'Trips',

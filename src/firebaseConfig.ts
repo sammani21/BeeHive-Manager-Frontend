@@ -5,6 +5,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getMessaging, onMessage } from "firebase/messaging";
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyDA4GAY3NT7WPyjd0ye0MMAheTojpNnd1I",
     authDomain: "beehive-manager-de852.firebaseapp.com",
