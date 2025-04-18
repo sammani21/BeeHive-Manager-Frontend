@@ -286,7 +286,7 @@ function NewDriver(props: NewDriverProps) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Add New Bee Keeper"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{" Bee Keeper"}</DialogTitle>
         <DialogContent>
           <br />
           <DialogContentText id="alert-dialog-description">

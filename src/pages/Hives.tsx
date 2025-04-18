@@ -42,7 +42,7 @@ const Vehicles: React.FC = () => {
   const [selectedFuelType, setSelectedFuelType] = React.useState<string>("");
   const [vehicleNo, setVehicleNo] = React.useState<string>("");
   const [chassisNo, setChassisNo] = React.useState<string>("");
-  const [brand, setBrand] = React.useState<string>("");
+  //const [brand, setBrand] = React.useState<string>("");
   const [noOfSeats, setNoOfSeats] = React.useState<number>(0);
   const [vehicles, setVehicles] = React.useState<Vehicle[]>([]);
   const [allVehicles, setAllVehicles] = React.useState<Vehicle[]>([]);
@@ -92,7 +92,7 @@ const Vehicles: React.FC = () => {
       setChassisNo(v.chassisNo);
       setIsNewDriverModalOpen(true);
       setVehicleNo(v.no);
-      setBrand(v.brand);
+      //setBrand(v.brand);
       setSelectedCondition(v.ac ? "AC" : "Non AC");
       setNoOfSeats(v.noOfSeats);
       setSelectedFuelType(v.fuelType);
@@ -159,7 +159,7 @@ const Vehicles: React.FC = () => {
   const clearFields = () => {
     setVehicleNo("");
     setChassisNo("");
-    setBrand("");
+    //setBrand("");
     setNoOfSeats(0);
     setSelectedFuelType("");
     setSelectedCondition("");
@@ -272,7 +272,7 @@ const Vehicles: React.FC = () => {
                 <StyledTableCell align="right">Population</StyledTableCell>
                 <StyledTableCell align="right">Established Year</StyledTableCell>
                 <StyledTableCell align="right">Status</StyledTableCell>
-                <StyledTableCell align="right">Brand</StyledTableCell>
+               {/* <StyledTableCell align="right">Brand</StyledTableCell>*/}
                 <StyledTableCell align="right">Products</StyledTableCell>
                 
                 <StyledTableCell align="right">Availability</StyledTableCell>
@@ -295,10 +295,10 @@ const Vehicles: React.FC = () => {
                     sx={{ cursor: "pointer" }}
                   >
                     {/* Table cells */}
-                    <TableCell component="th" scope="row">
+                    <TableCell align="center" component="th" scope="row">
                       {row.id}
                     </TableCell>
-                    <TableCell component="th" scope="row">
+                    <TableCell align="right" component="th" scope="row">
                       {row.no}
                     </TableCell>
                     <TableCell align="right">{row.type}</TableCell>
@@ -307,11 +307,11 @@ const Vehicles: React.FC = () => {
                       {new Date(row.productionYear).getFullYear()}
                     </TableCell>
                     <TableCell align="right">
-                      {row.ac ? "AC" : "Non AC"}
+                      {row.ac ? "Active" : "Inative"}
                     </TableCell>
-                    <TableCell align="right">{row.brand}</TableCell>
+                    {/*<TableCell align="right">{row.brand}</TableCell>*/}
                     <TableCell align="right">{row.fuelType}</TableCell>
-                    <TableCell align="right">{row.noOfSeats}</TableCell>
+                    {/*<TableCell align="right">{row.noOfSeats}</TableCell>*/}
                     <TableCell align="right">
                       <Switch
                         checked={row.availability}
@@ -360,7 +360,7 @@ const Vehicles: React.FC = () => {
         isOpen={isNewDriverModalOpen}
         isUpdate={isUpdate}
         year={selectedYear}
-        brand={brand}
+        //brand={brand}
         selVehType={selectedVehType}
         selCondition={selectedCondition}
         selFuelType={selectedFuelType}
@@ -369,8 +369,7 @@ const Vehicles: React.FC = () => {
         noOfSeats={noOfSeats}
         close={closeDialog}
         open={openDialog}
-        getAll={getAllVehicles}
-      />
+        getAll={getAllVehicles} brand={""}      />
       <br />
 
 

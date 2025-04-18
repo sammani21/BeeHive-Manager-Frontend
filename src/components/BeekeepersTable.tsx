@@ -165,12 +165,12 @@ const DriverTable: React.FC<DriverTableProps> = ({
                     <TableCell>{row.contactNo}</TableCell>
                     <TableCell>{row.email}</TableCell>
                     
-                    <TableCell>
+                   {/*} <TableCell>
                       <Typography variant="body2">{formatDateTime(row.createdAt).date}</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">{formatDateTime(row.updatedAt).date}</Typography>
-                    </TableCell>
+                    </TableCell>*/}
                     <TableCell>{row.availability ? 'Available' : 'Not Available'}</TableCell>
                   </TableRow>
                 );

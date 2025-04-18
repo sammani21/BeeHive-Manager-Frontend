@@ -35,7 +35,7 @@ const columns = [
   { id: "no", label: "Hive ID", minWidth: 170 },
   { id: "type", label: "Owner ID", minWidth: 100 },
   { id: "chassisNo", label: "Location", minWidth: 170 },
-  { id: "brand", label: "Population", minWidth: 170 },
+  //{ id: "brand", label: "Population", minWidth: 170 },
   { id: "fuelType", label: "Established Year", minWidth: 170 },
   { id: "noOfSeats", label: "Brand", minWidth: 170 },
   { id: "productionYear", label: "Production Year", minWidth: 170 },
@@ -51,7 +51,7 @@ interface Vehicle {
   no: string; // Ensure this matches the schema property name
   type: string;
   chassisNo: string;
-  brand: string;
+  //brand: string;
   fuelType: string;
   noOfSeats: number;
   productionYear: number;
@@ -144,14 +144,14 @@ const VehicleTable: React.FC<VehicleTableProps> = ({ tableRef, startDate, endDat
       <TableCell>{vehicle.no}</TableCell>
       <TableCell>{vehicle.type}</TableCell>
       <TableCell>{vehicle.chassisNo}</TableCell>
-      <TableCell>{vehicle.brand}</TableCell>
+      {/*<TableCell>{vehicle.brand}</TableCell>*/}
       <TableCell>{vehicle.fuelType}</TableCell>
       <TableCell>{vehicle.noOfSeats}</TableCell>
       <TableCell>{vehicle.productionYear}</TableCell>
       <TableCell>{vehicle.ac ? "AC" : "Non-AC"}</TableCell>
       <TableCell>{vehicle.availability ? "Yes" : "No"}</TableCell>
-      <TableCell><Typography variant="body2">{formatDate(vehicle.createdAt).date}</Typography></TableCell>
-      <TableCell><Typography variant="body2">{formatDate(vehicle.updatedAt).date}</Typography></TableCell>
+      {/*<TableCell><Typography variant="body2">{formatDate(vehicle.createdAt).date}</Typography></TableCell>
+      <TableCell><Typography variant="body2">{formatDate(vehicle.updatedAt).date}</Typography></TableCell>*/}
     </TableRow>
   ))}
 </TableBody>

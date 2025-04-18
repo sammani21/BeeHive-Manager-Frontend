@@ -19,8 +19,8 @@ import {
   styled,
   tableCellClasses,
   Alert,
-  Switch,
-  FormControlLabel,
+  //Switch,
+  //FormControlLabel,
   Button,
   Select,
   MenuItem,
@@ -228,6 +228,7 @@ const Passengers: React.FC = () => {
                   <TableCell align="center">{row.nicNo}</TableCell>
                   <TableCell align="center">{row.email}</TableCell>
                   <TableCell align="center">{row.gender}</TableCell>
+                  {/*
                   <TableCell align="center">{row.contactNo}</TableCell>
                   <TableCell align="center">
                     {new Date(row.birthday).toLocaleDateString()}
@@ -255,6 +256,7 @@ const Passengers: React.FC = () => {
                       labelPlacement="start"
                     />
                   </TableCell>
+                  */}
                 </TableRow>
               ))}
             </TableBody>
