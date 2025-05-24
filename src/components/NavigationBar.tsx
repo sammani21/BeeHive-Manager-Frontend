@@ -22,7 +22,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import DriveEtaIcon from "@mui/icons-material/Hive";
 import PeopleIcon from "@mui/icons-material/Storefront";
 import ArticleIcon from "@mui/icons-material/Article";
-import TimeToLeaveIcon from "@mui/icons-material/Recommend";
+//import TimeToLeaveIcon from "@mui/icons-material/Recommend";
 import ChatIcon from "@mui/icons-material/Chat";
 //import SettingsIcon from "@mui/icons-material/Settings";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
@@ -407,26 +407,30 @@ export default function NavigationBar() {
             </List>
           </Collapse>
 
-          <ListItemButton onClick={() => handleDrawerItemClick("Trips")}>
+          <ListItemButton
+            component={Link}
+            to="/recommendation"
+            onClick={() => handleDrawerItemClick("Recommendation")}
+          >
             <ListItemIcon>
-              <TimeToLeaveIcon />
+              <PersonIcon />
             </ListItemIcon>
             <ListItemText primary="Recommendation" />
           </ListItemButton>
 
           <ListItemButton component={Link} to="/chatbox">
-  <ListItemIcon>
-    <ChatIcon />
-  </ListItemIcon>
-  <ListItemText primary="ChatBox" />
-</ListItemButton>
+            <ListItemIcon>
+              <ChatIcon />
+            </ListItemIcon>
+            <ListItemText primary="ChatBox" />
+          </ListItemButton>
 
-<ListItemButton component={Link} to="/manage-profile">
-  <ListItemIcon>
-  <PersonIcon />
-  </ListItemIcon>
-  <ListItemText primary="Profile" />
-</ListItemButton>
+          <ListItemButton component={Link} to="/manage-profile">
+            <ListItemIcon>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItemButton>
         </List>
       </Drawer>
       <Main open={open}>

@@ -23,6 +23,7 @@ import DashboardPage from "./pages/Dashboard";
 import ManageProfile from "./pages/ManageProfile";
 import ChatBox from "./pages/ChatBox";
 import ChatRoomSelection from "./components/ChatRoomSelection"; // ✅ Import the new component
+import Recommendation from "./pages/Recommendation";
 
 
 
@@ -70,6 +71,7 @@ const App: React.FC = () => {
           path="/chatbox"
           element={isInChat ? <ChatBox room={room} /> : <ChatRoomSelection room={room} setRoom={setRoom} setIsInChat={setIsInChat} />}
         />
+        <Route path="/recommendation" element={<Recommendation />} />
       </Routes>
         
       </BrowserRouter>

@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 
 // Define interface for Driver
 export interface Driver {
-  isActive: any;
+  isActive: boolean;
   date: string | number | Date;
   availability: boolean;
   _id?: string;
