@@ -9,15 +9,13 @@ import {
   Alert,
   IconButton,
   InputAdornment,
-  Divider,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import BusImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
-import { auth, googleProvider } from "../firebaseConfig";
-import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
-import { FcGoogle } from "react-icons/fc";
+import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -37,20 +35,10 @@ const Login: React.FC = () => {
 
       // Navigate to dashboard
       navigate("/dashboard");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Login Error:", error);
       setErrorMessage(error.message || "Invalid email or password. Please try again.");
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log("Google Login Success:", result.user);
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Google Login Error:", error);
-      setErrorMessage("Failed to log in with Google");
     }
   };
 
@@ -100,36 +88,8 @@ const Login: React.FC = () => {
             Login into your account
           </Typography>
 
-          {/* Google Login */}
-          <Button
-            onClick={handleGoogleLogin}
-            color="secondary"
-            size="large"
-            variant="contained"
-            fullWidth
-            sx={{
-              marginBottom: 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#ffffff",
-              color: "#000000",
-              fontWeight: "bold",
-              "&:hover": { backgroundColor: "#f5f5f5" },
-            }}
-            startIcon={<FcGoogle />}
-          >
-            Log in with Google
-          </Button>
-
-          <Divider sx={{ my: 2 }}>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
-              Or continue with
-            </Typography>
-          </Divider>
-
           {/* Email/Password Login Form */}
-          <form onSubmit={handleSubmit} style={{ maxHeight: "380px", maxWidth: "260px"}}>
+          <form onSubmit={handleSubmit} style={{ maxHeight: "380px", maxWidth: "260px" }}>
             <TextField
               required
               type="email"
