@@ -9,21 +9,22 @@ import {
   Alert,
   IconButton,
   InputAdornment,
-  Divider,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import BusImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
-import { auth, googleProvider } from "../firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { FcGoogle } from "react-icons/fc";
+import { auth } from "../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup: React.FC = () => {
   const [company, setCompany] = useState("");
+  const [adminId, setAdminId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
@@ -50,24 +51,19 @@ const Signup: React.FC = () => {
       return;
     }
 
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       console.log("User registered successfully");
       navigate("/login");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Signup Error:", error);
       setErrorMessage(error.message || "Failed to create an account");
-    }
-  };
-
-  const handleGoogleSignup = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log("Google Sign-Up Success:", result.user);
-      navigate("/login");
-    } catch (error) {
-      console.error("Google Sign-Up Error:", error);
-      setErrorMessage("Failed to sign up with Google");
     }
   };
 
@@ -82,24 +78,93 @@ const Signup: React.FC = () => {
           <Typography variant="subtitle1" gutterBottom sx={{ color: "#000000" }}>
             Getting started is easy
           </Typography>
-          <Button onClick={handleGoogleSignup} color="secondary" size="large" variant="contained" fullWidth sx={{ marginBottom: 2, backgroundColor: "#ffffff", color: "#000000", fontWeight: "bold", "&:hover": { backgroundColor: "#f5f5f5" } }} startIcon={<FcGoogle />}>
-            Sign up with Google
-          </Button>
-          <Divider sx={{ my: 2 }}>
-            <Typography variant="body2" sx={{ color: "#666666" }}>
-              Or continue with
-            </Typography>
-          </Divider>
-          <form onSubmit={handleSubmit} style={{ maxHeight: "380px", maxWidth: "260px"}}>
-            <TextField required type="text" label="Full Name" variant="outlined" value={company} onChange={(e) => setCompany(e.target.value)} margin="normal" fullWidth sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px", mt: -4}} />
-            <TextField required type="email" label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)} margin="normal" fullWidth sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }} />
-            <TextField required type={showPassword ? "text" : "password"} label="Password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} margin="normal" fullWidth sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }} InputProps={{ endAdornment: (<InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)}>{showPassword ? <Visibility /> : <VisibilityOff />}</IconButton></InputAdornment>) }} />
+          <form onSubmit={handleSubmit} style={{ maxHeight: "450px", maxWidth: "260px" }}>
+            <TextField
+              required
+              type="text"
+              label="Full Name"
+              variant="outlined"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px", mt: -2 }}
+            />
+            <TextField
+              required
+              type="text"
+              label="Admin ID"
+              variant="outlined"
+              value={adminId}
+              onChange={(e) => setAdminId(e.target.value)}
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+            />
+            <TextField
+              required
+              type="email"
+              label="Email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+            />
+            <TextField
+              required
+              type={showPassword ? "text" : "password"}
+              label="Password"
+              variant="outlined"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              required
+              type={showConfirmPassword ? "text" : "password"}
+              label="Confirm Password"
+              variant="outlined"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                      {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
             {password && <PasswordStrengthMeter password={password} />}
             {errorMessage && <Alert severity="error" sx={{ marginY: 2 }}>{errorMessage}</Alert>}
-            <Button type="submit" color="primary" size="large" variant="contained" fullWidth sx={{ marginY: 2, backgroundColor: "#FFB700", "&:hover": { backgroundColor: "#CC9200" }, fontWeight: "bold", fontSize: "1rem" }}>
+            <Button
+              type="submit"
+              color="primary"
+              size="large"
+              variant="contained"
+              fullWidth
+              sx={{ marginY: 2, backgroundColor: "#FFB700", "&:hover": { backgroundColor: "#CC9200" }, fontWeight: "bold", fontSize: "1rem" }}
+            >
               Sign Up
             </Button>
-            <Typography variant="body2" sx={{ color: "#666666", mb: -5}}>
+            <Typography variant="body2" sx={{ color: "#666666", mb: -5 }}>
               Already have an account? <Link to="/login" style={{ color: "#FFB700", textDecoration: "none" }}>Login</Link>
             </Typography>
           </form>
