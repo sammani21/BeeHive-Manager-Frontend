@@ -9,7 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import dayjs from 'dayjs';
-import Typography from '@mui/material/Typography';
+//import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
 // Define the interface for column configuration
@@ -52,7 +52,7 @@ interface Data {
 }
 
 // Define the props interface for the DriverTable component
-interface DriverTableProps {
+interface BeekeeperTableProps {
   tableRef: React.RefObject<HTMLTableElement>;
   startDate: Date | null;
   endDate: Date | null;
@@ -70,22 +70,22 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 // Define the DriverTable component
-const DriverTable: React.FC<DriverTableProps> = ({
+const BeekeeperTable: React.FC<BeekeeperTableProps> = ({
   tableRef,
   startDate,
   endDate,
 }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [drivers, setDrivers] = React.useState<Data[]>([]);
+  const [beekeepers, setDrivers] = React.useState<Data[]>([]);
 
   // Fetch driver data from the server when the component mounts
   useEffect(() => {
-    fetchDrivers();
+    fetchBeekeepers();
 
     // Fetch data every 5 seconds
     const interval = setInterval(() => {
-      fetchDrivers();
+      fetchBeekeepers();
     }, 5000);
 
     // Cleanup interval to prevent memory leaks
@@ -93,18 +93,18 @@ const DriverTable: React.FC<DriverTableProps> = ({
   }, []);
 
   // Function to fetch driver data from the server
-  const fetchDrivers = () => {
+  const fetchBeekeepers = () => {
     axios
-      .get("http://localhost:3000/api/drivers")
+      .get("http://localhost:3000/api/beekeepers")
       .then((response) => setDrivers(response.data))
       .catch((err) => {
-        console.error("Error fetching drivers:", err);
+        console.error("Error fetching Beekeepers:", err);
         // Handle error state in your component (e.g., set an error flag, show an error message)
       });
   };
 
   // Filter rows based on the selected date range
-  const filteredRows = drivers.filter((row) => {
+  const filteredRows = beekeepers.filter((row) => {
     const registeredDate = dayjs(row.createdAt);
     return (
       (!startDate || registeredDate >= dayjs(startDate)) &&
@@ -191,4 +191,4 @@ const DriverTable: React.FC<DriverTableProps> = ({
   );
 };
 
-export default DriverTable;
+export default BeekeeperTable;

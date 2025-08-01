@@ -9,21 +9,21 @@ Chart.register(ArcElement, Tooltip, Legend);
 
 interface PieChartProps {
   
-  noOfAvailableDrivers: number;
-  noOfUnavailableDrivers: number;
+  noOfAvailableBeekeepers: number;
+  noOfUnavailableBeekeepers: number;
 }
 
 const PieChart: React.FC<PieChartProps> = ({
   
-  noOfAvailableDrivers,
-  noOfUnavailableDrivers,
+  noOfAvailableBeekeepers,
+  noOfUnavailableBeekeepers,
 }) => {
   const chartData = {
     labels: [ 'Available Bee Keepers', 'Unavailable Bee Keepers'],
     datasets: [
       {
         label: 'Details of Bee Keepers',
-        data: [ noOfAvailableDrivers, noOfUnavailableDrivers],
+        data: [ noOfAvailableBeekeepers, noOfUnavailableBeekeepers],
         backgroundColor: [
           // Indigo
                'rgba(255, 193, 7, 0.6)',  // Violet

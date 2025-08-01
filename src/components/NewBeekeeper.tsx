@@ -17,8 +17,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 
-// Define interface for Driver
-export interface Driver {
+// Define interface for Beekeeper
+export interface Beekeeper {
   isActive: boolean;
   date: string | number | Date;
   availability: boolean;
@@ -32,11 +32,10 @@ export interface Driver {
   dob: Date;
   contactNo: string;
   email: string;
-  
 }
 
-// Define props interface for NewDriver component
-interface NewDriverProps {
+// Define props interface for NewBeekeeper component
+interface NewBeekeeperProps {
   isOpen: boolean;
   no: string;
   firstName: string;
@@ -46,7 +45,6 @@ interface NewDriverProps {
   dob: Date;
   contactNo: string;
   email: string;
-  
   open: () => void;
   close: () => void;
   getAll: () => void;
@@ -58,58 +56,45 @@ interface NewDriverProps {
 const emailRegex = new RegExp(
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 );
-//const numberRegex = /D[0-9]{3,}/;
 const nameRegex = /[A-Za-z.]{3,}/;
 const nicRegex = /^(?:19|20)?\d{2}[0-9]{10}|[0-9]{9}[x|X|v|V]$/;
 const contactRegex = /^(?:7|0|(?:\+94))[0-9]{9,10}$/;
 
-
-function NewDriver(props: NewDriverProps) {
+function NewBeekeeper(props: NewBeekeeperProps) {
   // State variables for form fields
   const [id, setId] = React.useState<string>(props.id);
-  //const [no, setNo] = React.useState<string>(props.no);
   const [fName, setFName] = React.useState<string>(props.firstName);
   const [lName, setLName] = React.useState<string>(props.lastName);
   const [dOfBirth, setDOfBirth] = React.useState<Date>(props.dob);
   const [nic, setNIC] = React.useState<string>(props.nic);
   const [email, setEmail] = React.useState<string>(props.email);
   const [contactNo, setContactNo] = React.useState<string>(props.contactNo);
- 
   const [gender, setGender] = React.useState<string>(props.gender);
-  
 
   // Update state variables when props change
   React.useEffect(() => {
     setId(props.id);
-    //setNo(props.no);
     setFName(props.firstName);
     setLName(props.lastName);
     setDOfBirth(props.dob);
     setNIC(props.nic);
     setEmail(props.email);
     setContactNo(props.contactNo);
-    
     setGender(props.gender);
-   
   }, [
     props.id,
-    //props.no,
     props.firstName,
     props.lastName,
     props.nic,
     props.email,
     props.contactNo,
-    
     props.gender,
-    
     props.dob,
-    
     props.isUpdate,
   ]);
 
   // Function to check form field validation
   const checkValidation = (): boolean => {
-    
     if (!nameRegex.test(fName)) {
       Swal.fire({
         icon: "error",
@@ -155,7 +140,6 @@ function NewDriver(props: NewDriverProps) {
       return false;
     }
 
-    
     if (gender.length === 0) {
       Swal.fire({
         icon: "error",
@@ -165,9 +149,6 @@ function NewDriver(props: NewDriverProps) {
       return false;
     }
 
-    
-
-    
     if (dOfBirth === null) {
       Swal.fire({
         icon: "error",
@@ -180,12 +161,10 @@ function NewDriver(props: NewDriverProps) {
     return true;
   };
 
-  // Function to handle adding a new driver
-  const handleAddDriver = () => {
-    
+  // Function to handle adding a new beekeeper
+  const handleAddBeekeeper = () => {
     if (checkValidation()) {
-      const driver = {
-        //no: no,
+      const beekeeper = {
         firstName: fName,
         lastName: lName,
         nic: nic,
@@ -193,16 +172,15 @@ function NewDriver(props: NewDriverProps) {
         dob: dOfBirth,
         contactNo: contactNo,
         email: email,
-        
       };
 
       axios
-        .post("http://localhost:3000/api/v1/driver", driver)
+        .post("http://localhost:3000/api/v1/beekeeper", beekeeper)
         .then((response) => {
           if (response.status === 201) {
             Swal.fire({
               title: "Good job!",
-              text: "Driver added successfully!",
+              text: "Bee keeper added successfully!",
               icon: "success",
             });
             props.close();
@@ -210,7 +188,7 @@ function NewDriver(props: NewDriverProps) {
             props.getAll();
           }
         })
-        .catch((/*error*/) => {
+        .catch(() => {
           Swal.fire({
             title: "Oops...",
             text: "Something went wrong !",
@@ -220,12 +198,10 @@ function NewDriver(props: NewDriverProps) {
     }
   };
 
-  // Function to handle updating a driver
-  const handleUpdateVehicle = () => {
-
+  // Function to handle updating a beekeeper
+  const handleUpdateBeekeeper = () => {
     if (checkValidation()) {
-      const driver = {
-        //no: no,
+      const beekeeper = {
         firstName: fName,
         lastName: lName,
         nic: nic,
@@ -233,17 +209,14 @@ function NewDriver(props: NewDriverProps) {
         dob: dOfBirth,
         contactNo: contactNo,
         email: email,
-        
       };
       axios
-        .put(`http://localhost:3000/api/v1/driver/${id}`, driver)
+        .put(`http://localhost:3000/api/v1/beekeeper/${id}`, beekeeper)
         .then((response) => {
-          console.log(response);
-
           if (response.status === 200) {
             Swal.fire({
               title: "Good job!",
-              text: "Driver update successfully!",
+              text: "Bee keeper updated successfully!",
               icon: "success",
             });
             props.close();
@@ -251,7 +224,7 @@ function NewDriver(props: NewDriverProps) {
             props.getAll();
           }
         })
-        .catch((/*error */) => {
+        .catch(() => {
           Swal.fire({
             title: "Oops...",
             text: "Something went wrong !",
@@ -263,23 +236,17 @@ function NewDriver(props: NewDriverProps) {
 
   // Clear all fields
   const clearFields = () => {
-    
-
     setId("");
-    //setNo("");
     setFName("");
     setLName("");
     setContactNo("");
-    
     setGender("");
-   
     setNIC("");
     setEmail("");
   };
-  
+
   return (
     <div>
-      {/* Dialog component for adding or updating driver */}
       <Dialog
         open={props.isOpen}
         onClose={() => props.close()}
@@ -290,9 +257,6 @@ function NewDriver(props: NewDriverProps) {
         <DialogContent>
           <br />
           <DialogContentText id="alert-dialog-description">
-            {/* Form fields for adding or updating driver */}
-            {/* Display input fields using Grid layout */}
-
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -320,7 +284,7 @@ function NewDriver(props: NewDriverProps) {
                     label={"Date of Birth"}
                     value={dayjs(dOfBirth)}
                     onChange={(v: any) => setDOfBirth(v)}
-                    maxDate={dayjs()} 
+                    maxDate={dayjs()}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -357,7 +321,6 @@ function NewDriver(props: NewDriverProps) {
                   required
                 />
               </Grid>
-              
 
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -376,18 +339,15 @@ function NewDriver(props: NewDriverProps) {
                   ))}
                 </TextField>
               </Grid>
-              
             </Grid>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          {/* Button to add or update driver */}
           <Button
-            onClick={props.isUpdate ? handleUpdateVehicle : handleAddDriver}
+            onClick={props.isUpdate ? handleUpdateBeekeeper : handleAddBeekeeper}
           >
             {props.isUpdate ? "Update" : "Add"}
           </Button>
-          {/* Button to cancel operation */}
           <Button onClick={() => props.close()}>Cancel</Button>
         </DialogActions>
       </Dialog>
@@ -395,4 +355,4 @@ function NewDriver(props: NewDriverProps) {
   );
 }
 
-export default NewDriver;
+export default NewBeekeeper;

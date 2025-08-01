@@ -14,7 +14,6 @@ import {
   styled,
   tableCellClasses,
   TextField,
-  //IconButton,
   InputAdornment,
   DialogContent,
   DialogActions,
@@ -31,31 +30,23 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-//import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import NewDriver, { Driver } from "../components/NewBeekeeper";
+import NewBeekeeper, { Beekeeper } from "../components/NewBeekeeper";
 import axios from "axios";
 import { textAlign } from "@mui/system";
-//import { set } from "react-hook-form";
 import NavigationBar from "../components/NavigationBar";
 
 // StyledTableCell component for custom styling of table cells
-export const StyledTableCell = styled(TableCell)(
-  (
-    {
-      /*theme*/
-    }
-  ) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#FFD700",
-      color: "#000000",
-      fontWeight: "bold",
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-      textAlign,
-    },
-  })
-);
+export const StyledTableCell = styled(TableCell)(() => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#FFD700",
+    color: "#000000",
+    fontWeight: "bold",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    textAlign,
+  },
+}));
 
 // CustomSwitch component for custom styling of switches
 const CustomSwitch = styled(Switch)(({ theme }) => ({
@@ -70,8 +61,8 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-// Drivers functional component
-const Drivers: React.FC = () => {
+// Beekeepers functional component
+const Beekeepers: React.FC = () => {
   // State variables
   const [fName, setFName] = React.useState<string>("");
   const [lName, setLName] = React.useState<string>("");
@@ -83,43 +74,42 @@ const Drivers: React.FC = () => {
   const [gender, setGender] = React.useState<string>("");
 
   const [no, setNo] = React.useState<string>("");
-  const [drivers, setDrivers] = React.useState<Driver[]>([]);
-  const [alldrivers, setAllDrivers] = React.useState<Driver[]>([]);
+  const [beekeepers, setBeekeepers] = React.useState<Beekeeper[]>([]);
+  const [allBeekeepers, setAllBeekeepers] = React.useState<Beekeeper[]>([]);
   const [selected, setSelected] = React.useState<string[]>([]);
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
     React.useState<boolean>(false);
-  const [isNewDriverModalOpen, setIsNewDriverModalOpen] =
+  const [isNewBeekeeperModalOpen, setIsNewBeekeeperModalOpen] =
     React.useState<boolean>(false);
   const [isUpdate, setIsUpdate] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
   const [searchCategory, setSearchCategory] = React.useState<string>("no");
 
-  // Fetch(get) all drivers when the page loads
+  // Fetch all beekeepers when the page loads
   React.useEffect(() => {
-    getAllDrivers();
+    getAllBeekeepers();
   }, []);
 
-  // Function to get all drivers
-  const getAllDrivers = () => {
-    setDrivers([]);
-    setAllDrivers([]);
-    console.log("Fetching all bee keepers...");
+  // Function to get all beekeepers
+  const getAllBeekeepers = () => {
+    setBeekeepers([]);
+    setAllBeekeepers([]);
+    console.log("Fetching all beekeepers...");
 
-    fetch("http://localhost:3000/api/v1/driver")
+    fetch("http://localhost:3000/api/v1/beekeeper")
       .then((res) => res.json())
       .then((data) => {
-        setDrivers(data.data);
-        setAllDrivers(data.data);
+        setBeekeepers(data.data);
+        setAllBeekeepers(data.data);
       })
       .catch((error) => {
-        console.error("Error fetching bee keepers:", error);
-        setErrorMessage("Error fetching bee keepers");
+        console.error("Error fetching beekeepers:", error);
+        setErrorMessage("Error fetching beekeepers");
       });
   };
 
   // Function to handle click event on a table row
   const handleClick = (_event: any, id: string) => {
-    //const selectedIndex = selected.indexOf(id);
     const newSelected: string[] = [id];
     setSelected(newSelected);
     setErrorMessage("");
@@ -129,7 +119,7 @@ const Drivers: React.FC = () => {
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // Function to handle delete button click
-  const handleDeleteClick = (row: Driver) => {
+  const handleDeleteClick = (row: Beekeeper) => {
     if (selected.length === 0) {
       setErrorMessage("Please select a bee keeper to delete");
     } else {
@@ -140,15 +130,15 @@ const Drivers: React.FC = () => {
   // Function to handle delete confirmation
   const handleDeleteConfirmation = () => {
     setIsConfirmationDialogOpen(false);
-    const d = drivers.filter((v) => v._id === selected[0])[0];
+    const b = beekeepers.filter((v) => v._id === selected[0])[0];
     axios
-      .delete(`http://localhost:3000/api/v1/driver/${d._id}`)
+      .delete(`http://localhost:3000/api/v1/beekeeper/${b._id}`)
       .then((r) => {
         if (r.status === 204) {
           alert("Bee keeper deleted successfully");
           setSelected([]);
-          setDrivers([]);
-          getAllDrivers();
+          setBeekeepers([]);
+          getAllBeekeepers();
         }
       })
       .catch(() => {
@@ -157,34 +147,33 @@ const Drivers: React.FC = () => {
   };
 
   // Function to handle update button click
-  const handleUpdateClick = (row: Driver) => {
+  const handleUpdateClick = (row: Beekeeper) => {
     if (selected.length === 0) {
       setErrorMessage("Please select a bee keeper to update");
     } else {
-      const d = drivers.filter((v) => v._id === selected[0])[0];
-      if (d) {
-        setIsNewDriverModalOpen(true);
-        setNo(d.no || "");
-        setFName(d.firstName);
-        setLName(d.lastName);
-        setDOfBirth(new Date(d.dob));
-        setNIC(d.nic);
-        setEmail(d.email);
-        setContactNo(d.contactNo);
-
-        setGender(d.gender);
+      const b = beekeepers.filter((v) => v._id === selected[0])[0];
+      if (b) {
+        setIsNewBeekeeperModalOpen(true);
+        setNo(b.no || "");
+        setFName(b.firstName);
+        setLName(b.lastName);
+        setDOfBirth(new Date(b.dob));
+        setNIC(b.nic);
+        setEmail(b.email);
+        setContactNo(b.contactNo);
+        setGender(b.gender);
       }
     }
   };
 
   // Function to close the dialog
   const closeDialog = () => {
-    setIsNewDriverModalOpen(false);
+    setIsNewBeekeeperModalOpen(false);
   };
 
   // Function to open the dialog
   const openDialog = () => {
-    setIsNewDriverModalOpen(true);
+    setIsNewBeekeeperModalOpen(true);
   };
 
   // Function to clear all fields
@@ -193,10 +182,8 @@ const Drivers: React.FC = () => {
     setFName("");
     setLName("");
     setContactNo("");
-
     setDOfBirth(new Date());
     setGender("");
-
     setNIC("");
     setEmail("");
   };
@@ -205,36 +192,35 @@ const Drivers: React.FC = () => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
 
-    if (alldrivers.length === 0) {
-      setDrivers([]);
+    if (allBeekeepers.length === 0) {
+      setBeekeepers([]);
       setErrorMessage("No bee keepers in the database.");
       return;
     }
 
-    const filteredDrivers = alldrivers.filter((driver) => {
+    const filtered = allBeekeepers.filter((beekeeper) => {
       switch (searchCategory) {
         case "no":
-          return driver?.no?.toLowerCase().includes(searchTerm);
+          return beekeeper?.no?.toLowerCase().includes(searchTerm);
         case "firstName":
-          return driver?.firstName?.toLowerCase().includes(searchTerm);
+          return beekeeper?.firstName?.toLowerCase().includes(searchTerm);
         case "lastName":
-          return driver?.lastName?.toLowerCase().includes(searchTerm);
+          return beekeeper?.lastName?.toLowerCase().includes(searchTerm);
         case "nic":
-          return driver?.nic?.toLowerCase().includes(searchTerm);
+          return beekeeper?.nic?.toLowerCase().includes(searchTerm);
         case "email":
-          return driver?.email?.toLowerCase().includes(searchTerm);
+          return beekeeper?.email?.toLowerCase().includes(searchTerm);
         case "contactNo":
-          return driver?.contactNo?.toLowerCase().includes(searchTerm);
-
+          return beekeeper?.contactNo?.toLowerCase().includes(searchTerm);
         case "gender":
-          return driver?.gender?.toLowerCase().includes(searchTerm);
+          return beekeeper?.gender?.toLowerCase().includes(searchTerm);
         default:
           return false;
       }
     });
-    setDrivers(filteredDrivers);
-    if (filteredDrivers.length === 0) {
-      setErrorMessage("Cannot find the driver in this category.");
+    setBeekeepers(filtered);
+    if (filtered.length === 0) {
+      setErrorMessage("Cannot find the beekeeper in this category.");
     } else {
       setErrorMessage("");
     }
@@ -243,34 +229,34 @@ const Drivers: React.FC = () => {
   // Function to handle status change
   const handleStatusChange = (id: string, isActive: boolean) => {
     axios
-      .put(`http://localhost:3000/api/v1/driver/${id}/status`, {
+      .put(`http://localhost:3000/api/v1/beekeeper/${id}/status`, {
         isActive: !isActive,
       })
       .then((response) => {
         console.log(
-          `Driver ${isActive ? "deactivated" : "activated"}:`,
+          `Beekeeper ${isActive ? "deactivated" : "activated"}:`,
           response
         );
-        getAllDrivers();
+        getAllBeekeepers();
       })
       .catch((error) => {
         console.error(
-          `Error ${isActive ? "deactivating" : "activating"} driver:`,
+          `Error ${isActive ? "deactivating" : "activating"} beekeeper:`,
           error
         );
         setErrorMessage(
-          `Error ${isActive ? "deactivating" : "activating"} driver`
+          `Error ${isActive ? "deactivating" : "activating"} beekeeper`
         );
       });
   };
 
-  const onChangeAvailability = (availability: boolean, driver: Driver) => {
+  const onChangeAvailability = (availability: boolean, beekeeper: Beekeeper) => {
     axios
-      .put(`http://localhost:3000/api/v1/driver/${driver._id}`, {
+      .put(`http://localhost:3000/api/v1/beekeeper/${beekeeper._id}`, {
         availability,
       })
       .then(() => {
-        getAllDrivers();
+        getAllBeekeepers();
       })
       .catch(() => {
         setErrorMessage("Error updating availability");
@@ -345,12 +331,12 @@ const Drivers: React.FC = () => {
               borderRadius: "8px",
               textTransform: "none",
               backgroundColor: "#FFB700",
-                "&:hover": {
-                  backgroundColor: "#CC9200",
-                },
+              "&:hover": {
+                backgroundColor: "#CC9200",
+              },
             }}
             onClick={() => {
-              setIsNewDriverModalOpen(true);
+              setIsNewBeekeeperModalOpen(true);
               setIsUpdate(false);
               clearFields();
             }}
@@ -371,7 +357,9 @@ const Drivers: React.FC = () => {
             <TableHead>
               <TableRow>
                 <StyledTableCell align="center">No</StyledTableCell>
-                <StyledTableCell align="center">Date of Joined</StyledTableCell>
+                <StyledTableCell align="center">
+                  Date of Joined
+                </StyledTableCell>
                 <StyledTableCell align="center">First Name</StyledTableCell>
                 <StyledTableCell align="center">Last Name</StyledTableCell>
                 <StyledTableCell align="center">NIC</StyledTableCell>
@@ -386,7 +374,7 @@ const Drivers: React.FC = () => {
             </TableHead>
 
             <TableBody>
-              {drivers.map((row) => {
+              {beekeepers.map((row) => {
                 const isItemSelected = isSelected(row._id || "");
                 return (
                   <TableRow
@@ -437,13 +425,13 @@ const Drivers: React.FC = () => {
                       />
                     </TableCell>
                     <TableCell align="center">
-                  <IconButton onClick={() => handleUpdateClick(row)}>
-                    <EditIcon color="primary" />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteClick(row)}>
-                    <DeleteIcon color="error" />
-                  </IconButton>
-                </TableCell>
+                      <IconButton onClick={() => handleUpdateClick(row)}>
+                        <EditIcon color="primary" />
+                      </IconButton>
+                      <IconButton onClick={() => handleDeleteClick(row)}>
+                        <DeleteIcon color="error" />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -475,7 +463,7 @@ const Drivers: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <NewDriver
+      <NewBeekeeper
         no={no}
         firstName={fName}
         lastName={lName}
@@ -484,46 +472,16 @@ const Drivers: React.FC = () => {
         dob={dOfBirth}
         contactNo={contactNo}
         email={email}
-        getAll={getAllDrivers}
+        getAll={getAllBeekeepers}
         id={selected[0]}
-        isOpen={isNewDriverModalOpen}
+        isOpen={isNewBeekeeperModalOpen}
         isUpdate={isUpdate}
         close={closeDialog}
         open={openDialog}
       />
       <br />
-      {/*<Button
-        variant="outlined"
-        startIcon={<AddIcon />}
-        onClick={() => {
-          setIsNewDriverModalOpen(true);
-          setIsUpdate(false);
-          clearFields();
-        }}
-      >
-        Add
-      </Button>
-      &nbsp;&nbsp;
-      <Button
-        variant="outlined"
-        startIcon={<CloudUploadIcon />}
-        onClick={() => {
-          handleUpdateClick();
-          setIsUpdate(true);
-        }}
-      >
-        Update
-      </Button>
-      &nbsp;&nbsp;
-      <Button
-        variant="outlined"
-        startIcon={<DeleteIcon />}
-        onClick={handleDeleteClick}
-      >
-        Delete
-      </Button>*/}
     </Container>
   );
 };
 
-export default Drivers;
+export default Beekeepers;

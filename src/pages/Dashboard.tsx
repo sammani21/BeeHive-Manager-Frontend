@@ -59,10 +59,10 @@ const DashboardPage: React.FC = () => {
     outOfServiceVehicles: 0,
   });
 
-  const [driverCounts, setDriverCounts] = useState({
-    noOfTotalDrivers: 0,
-    noOfAvailableDrivers: 0,
-    noOfUnavailableDrivers: 0,
+  const [beekeeperCounts, setBeekeeperCounts] = useState({
+    noOfTotalBeekeepers: 0,
+    noOfAvailableBeekeepers: 0,
+    noOfUnavailableBeekeepers: 0,
   });
 
   const [tripCounts, setTripCounts] = useState({
@@ -81,7 +81,7 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     fetchVehicleCounts();
-    fetchDriverCounts();
+    fetchBeekeeperCounts();
     fetchTripCounts();
     fetchComparisonData();
     fetchTripCountsDaily();
@@ -89,7 +89,7 @@ const DashboardPage: React.FC = () => {
 
     const intervalId = setInterval(() => {
       fetchVehicleCounts();
-      fetchDriverCounts();
+      fetchBeekeeperCounts();
       fetchTripCounts();
       fetchComparisonData();
       fetchTripCountsDaily();
@@ -115,17 +115,17 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const fetchDriverCounts = async () => {
+  const fetchBeekeeperCounts = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/drivers/counts");
-      const { available, unavailable } = response.data.drivers;
-      setDriverCounts({
-        noOfTotalDrivers: response.data.drivers.total,
-        noOfAvailableDrivers: available,
-        noOfUnavailableDrivers: unavailable,
+      const response = await axios.get("http://localhost:3000/api/beekeepers/counts");
+      const { available, unavailable } = response.data.beekeepers;
+      setBeekeeperCounts({
+        noOfTotalBeekeepers: response.data.drivers.total,
+        noOfAvailableBeekeepers: available,
+        noOfUnavailableBeekeepers: unavailable,
       });
     } catch (error) {
-      console.error("Error fetching driver counts:", error);
+      console.error("Error fetching beekeeper counts:", error);
     }
   };
 
@@ -203,8 +203,8 @@ const DashboardPage: React.FC = () => {
   
   const { totalVehicles, inServiceVehicles, outOfServiceVehicles } =
     vehicleCounts;
-  const { noOfTotalDrivers, noOfAvailableDrivers, noOfUnavailableDrivers } =
-    driverCounts;
+  const { noOfTotalBeekeepers, noOfAvailableBeekeepers, noOfUnavailableBeekeepers } =
+    beekeeperCounts;
   const { numberOfTotalTrips, scheduledTrips, cancelledTrips } = tripCounts;
   const { years, malfunctionData, accidentData } = comparisonChartData;
 
@@ -238,11 +238,11 @@ const DashboardPage: React.FC = () => {
                    Bee Keeper Status
                   </Typography>
                   <PieChart
-                    noOfAvailableDrivers={noOfAvailableDrivers}
-                    noOfUnavailableDrivers={noOfUnavailableDrivers}
+                    noOfAvailableBeekeepers={noOfAvailableBeekeepers}
+                    noOfUnavailableBeekeepers={noOfUnavailableBeekeepers}
                   />
                   <Typography variant="body1">
-                    <b>Number of Total Bee Keepers: {noOfTotalDrivers}</b>
+                    <b>Number of Total Bee Keepers: {noOfTotalBeekeepers}</b>
                   </Typography>
                 </CardContent>
               </Card>

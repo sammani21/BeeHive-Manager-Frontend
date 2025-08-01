@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
 import DatePickerValue from "../components/DatePickerValue"; // Importing custom DatePicker component
-import DriverTable from "../components/BeekeepersTable"; // Importing DriverTable component
+import BeekeeperTable from "../components/BeekeepersTable"; // Importing DriverTable component
  import NavigationBar from "../components/NavigationBar"; // Importing NavigationBar component
 import PrintButton from "../components/DownloadButton"; // Importing DownloadButton component
 import { DialogTitle } from "@mui/material";
 
 // Define the DriverReport functional component
-const DriverReport: React.FC = () => {
+const BeekeeperReport: React.FC = () => {
   // State variables for start and end dates
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -79,7 +79,7 @@ const DriverReport: React.FC = () => {
       
       {/* DriverTable component to display driver details */}
       <div style={{ marginTop: "10px", width: "calc(100vw - 50px)" }}>
-        <DriverTable
+        <BeekeeperTable
           tableRef={tableRef}
           startDate={startDate}
           endDate={endDate} /*rows={[]} */       />
@@ -88,4 +88,4 @@ const DriverReport: React.FC = () => {
   );
 };
 
-export default DriverReport;
+export default BeekeeperReport;
