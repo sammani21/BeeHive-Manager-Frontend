@@ -14,8 +14,9 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import BusImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
-import { auth } from "../firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+//import { auth } from "../firebaseConfig";
+//import { signInWithEmailAndPassword } from "firebase/auth";
+import axios, { AxiosResponse } from "axios";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -25,21 +26,52 @@ const Login: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  // Password strength validation function
+  const isStrongPassword = (password: string): boolean => {
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    const numberRegex = /[0-9]/;
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+    return (
+      password.length >= 8 &&
+      uppercaseRegex.test(password) &&
+      lowercaseRegex.test(password) &&
+      numberRegex.test(password) &&
+      specialCharacterRegex.test(password)
+    );
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    try {
-      // Firebase email and password login
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("User logged in:", userCredential.user);
-
-      // Navigate to dashboard
-      navigate("/dashboard");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Login Error:", error);
-      setErrorMessage(error.message || "Invalid email or password. Please try again.");
+    if (!isStrongPassword(password)) {
+      setErrorMessage(
+        "Password should contain at least 8 characters, including uppercase letters, lowercase letters, numbers, and special characters"
+      );
+      return;
     }
+
+    axios
+      .post("http://localhost:3000/api/v1/user/login", {
+        email,
+        password,
+      })
+      .then((res: AxiosResponse<{ status: boolean; token: string }>) => {
+        if (res.data.status) {
+          console.log("User logged in successfully");
+          localStorage.setItem("token", res.data.token);
+          navigate("/dashboard");
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+
+        if (err.response.data.message === "User is not registered") {
+          setErrorMessage("You need to sign up before logging in!");
+        } else {
+          setErrorMessage("Invalid username or password. Please try again.");
+        }
+      });
   };
 
   return (
@@ -71,6 +103,7 @@ const Login: React.FC = () => {
           justifyContent: "center",
           alignItems: "center",
           padding: { xs: "20px", md: "40px" },
+          backgroundColor: "#EDE8F5", // Ensure same background as parent
         }}
       >
         <Box
@@ -78,6 +111,7 @@ const Login: React.FC = () => {
             width: "100%",
             maxWidth: "400px",
             textAlign: "center",
+            backgroundColor: "transparent", // Ensure no distinct background
           }}
         >
           <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: "bold", color: "#000000" }}>
@@ -89,7 +123,14 @@ const Login: React.FC = () => {
           </Typography>
 
           {/* Email/Password Login Form */}
-          <form onSubmit={handleSubmit} style={{ maxHeight: "380px", maxWidth: "260px" }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              backgroundColor: "transparent", // Match the parent background
+              border: "none", // Remove any border
+              //padding: 0, // Remove padding to blend with parent
+            }}
+          >
             <TextField
               required
               type="email"
@@ -109,7 +150,6 @@ const Login: React.FC = () => {
               id="password"
               label="Password"
               variant="outlined"
-
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               margin="normal"

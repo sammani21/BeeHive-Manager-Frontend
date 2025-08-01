@@ -2,7 +2,7 @@
 import React, {useState} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
-import Signupf1 from "./pages/Signupf1";
+import Signupf1 from "./pages/SignupPage";
 
 import "./App.css";
 //import BarNavigation from "./components/BarNavigation";

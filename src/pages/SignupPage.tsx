@@ -14,8 +14,9 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import BusImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
-import { auth } from "../firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+//import { auth } from "../firebaseConfig";
+//import { createUserWithEmailAndPassword } from "firebase/auth";
+import axios, { AxiosResponse } from "axios";
 
 const Signup: React.FC = () => {
   const [company, setCompany] = useState("");
@@ -56,16 +57,38 @@ const Signup: React.FC = () => {
       return;
     }
 
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("User registered successfully");
-      navigate("/login");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Signup Error:", error);
-      setErrorMessage(error.message || "Failed to create an account");
-    }
+    axios
+      .post("http://localhost:3000/api/v1/user/signup", {
+        company,
+        adminId,
+        email,
+        password,
+      })
+      .then((res: AxiosResponse<{ status: boolean }>) => {
+        if (res.data.status) {
+          alert("User created the account successfully");
+          console.log("User created the account successfully");
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        const error = "User already exists";
+        setErrorMessage(error);
+        alert(error);
+        console.log(err);
+      });
   };
+
+  //   try {
+  //     await createUserWithEmailAndPassword(auth, email, password);
+  //     console.log("User registered successfully");
+  //     navigate("/login");
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   } catch (error: any) {
+  //     console.error("Signup Error:", error);
+  //     setErrorMessage(error.message || "Failed to create an account");
+  //   }
+  // };
 
   return (
     <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, height: "100vh", width: "100vw", backgroundColor: "#EDE8F5" }}>
@@ -78,7 +101,14 @@ const Signup: React.FC = () => {
           <Typography variant="subtitle1" gutterBottom sx={{ color: "#000000" }}>
             Getting started is easy
           </Typography>
-          <form onSubmit={handleSubmit} style={{ maxHeight: "450px", maxWidth: "260px" }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              backgroundColor: "transparent", // Match the parent background
+              border: "none", // Remove any border
+              //padding: 0, // Remove padding to blend with parent
+            }}
+          >
             <TextField
               required
               type="text"
