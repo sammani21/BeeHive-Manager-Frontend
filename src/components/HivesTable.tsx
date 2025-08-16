@@ -33,24 +33,26 @@ interface HiveTableProps {
 const columns = [
   { id: "no", label: "Hive ID", minWidth: 170 },
   { id: "type", label: "Owner ID", minWidth: 100 },
-  { id: "chassisNo", label: "Location", minWidth: 170 },
-  { id: "fuelType", label: "Products", minWidth: 170 },
-  { id: "noOfSeats", label: "Population", minWidth: 170 },
-  { id: "productionYear", label: "Established Year", minWidth: 170 },
-  { id: "acNonAc", label: "Status", minWidth: 170 },
+  { id: "location", label: "Location", minWidth: 170 },
+  { id: "products", label: "Products", minWidth: 170 },
+  { id: "population", label: "Population", minWidth: 170 },
+  { id: "establishedYear", label: "Established Year", minWidth: 170 },
+  { id: "status", label: "Status", minWidth: 170 },
   { id: "availability", label: "Availability", minWidth: 170 },
 ];
 
 // Define the data interface for table rows
 interface Hive {
   _id: string;
+  id: string;
   no: string;
   type: string;
-  chassisNo: string;
-  fuelType: string;
-  noOfSeats: number;
-  productionYear: number;
-  ac: boolean;
+  location: string;
+  products: string;
+  population: number;
+  establishedYear: string; // Using string to match API response (ISO date string)
+  status: boolean;
+  queenBreed: string;
   availability: boolean;
   createdAt: string;
   updatedAt: string;
@@ -78,7 +80,7 @@ const HiveTable: React.FC<HiveTableProps> = ({ tableRef, startDate, endDate }) =
   // Function to fetch hive data from the server
   const fetchHives = () => {
     axios
-      .get("http://localhost:3000/api/hives")
+      .get("http://localhost:3000/api/v1/hive")
       .then((response) => {
         setHives(response.data);
       })
@@ -107,13 +109,10 @@ const HiveTable: React.FC<HiveTableProps> = ({ tableRef, startDate, endDate }) =
     setPage(0);
   };
 
-  // Format the date once during rendering
+  // Format the date for display
   const formatDate = (dateString: string) => {
     const date = dayjs(dateString);
-    return {
-      date: date.format("YYYY-MM-DD"),
-      time: date.format("HH:mm:ss"),
-    };
+    return date.format("YYYY");
   };
 
   // Render the HiveTable component
@@ -137,11 +136,11 @@ const HiveTable: React.FC<HiveTableProps> = ({ tableRef, startDate, endDate }) =
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                   <TableCell>{hive.no}</TableCell>
                   <TableCell>{hive.type}</TableCell>
-                  <TableCell>{hive.chassisNo}</TableCell>
-                  <TableCell>{hive.fuelType}</TableCell>
-                  <TableCell>{hive.noOfSeats}</TableCell>
-                  <TableCell>{hive.productionYear}</TableCell>
-                  <TableCell>{hive.ac ? "Active" : "Inactive"}</TableCell>
+                  <TableCell>{hive.location}</TableCell>
+                  <TableCell>{hive.products}</TableCell>
+                  <TableCell>{hive.population}</TableCell>
+                  <TableCell>{formatDate(hive.establishedYear)}</TableCell>
+                  <TableCell>{hive.status ? "Active" : "Inactive"}</TableCell>
                   <TableCell>{hive.availability ? "Yes" : "No"}</TableCell>
                 </TableRow>
               ))}

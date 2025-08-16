@@ -26,10 +26,12 @@ interface Hive {
   id: string;
   no: string;
   type: string;
-  chassisNo: string;
-  productionYear: string;
-  ac: boolean;
-  fuelType: string;
+  location: string;
+  establishedYear: string;
+  status: boolean;
+  queenBreed: string;
+  products: string;
+  population: number;
   availability: boolean;
 }
 
@@ -51,8 +53,8 @@ const Hives: React.FC = () => {
     fetch("http://localhost:3000/api/v1/hive")
       .then((res) => res.json())
       .then((data) => {
-        setHives(data.data);
-        setAllHives(data.data);
+        setHives(data);
+        setAllHives(data);
       })
       .catch(() => {
         setErrorMessage("Failed to fetch hives.");
@@ -77,12 +79,14 @@ const Hives: React.FC = () => {
           return hive?.no?.toLowerCase().includes(searchTerm);
         case "type":
           return hive?.type?.toLowerCase().includes(searchTerm);
-        case "chassisNo":
-          return hive?.chassisNo?.toLowerCase().includes(searchTerm);
-        case "brand":
-          return hive?.brand?.toLowerCase().includes(searchTerm);
-        case "fuelType":
-          return hive?.fuelType?.toLowerCase().includes(searchTerm);
+        case "location":
+          return hive?.location?.toLowerCase().includes(searchTerm);
+        case "queenBreed":
+          return hive?.queenBreed?.toLowerCase().includes(searchTerm);
+        case "products":
+          return hive?.products?.toLowerCase().includes(searchTerm);
+        case "population":
+          return hive?.population?.toString().includes(searchTerm);
         default:
           return false;
       }
@@ -122,10 +126,11 @@ const Hives: React.FC = () => {
             >
               <MenuItem value="id">Hive ID</MenuItem>
               <MenuItem value="no">Owner ID</MenuItem>
-              <MenuItem value="type">Location</MenuItem>
-              <MenuItem value="chassisNo">Population</MenuItem>
-              <MenuItem value="brand">Status</MenuItem>
-              <MenuItem value="fuelType">Products</MenuItem>
+              <MenuItem value="type">Type</MenuItem>
+              <MenuItem value="location">Location</MenuItem>
+              <MenuItem value="queenBreed">Queen Breed</MenuItem>
+              <MenuItem value="products">Products</MenuItem>
+              <MenuItem value="population">Population</MenuItem>
             </Select>
           </FormControl>
 
@@ -158,11 +163,13 @@ const Hives: React.FC = () => {
               <TableRow>
                 <StyledTableCell align="center">Hive ID</StyledTableCell>
                 <StyledTableCell align="right">Owner ID</StyledTableCell>
+                <StyledTableCell align="right">Type</StyledTableCell>
                 <StyledTableCell align="right">Location</StyledTableCell>
                 <StyledTableCell align="right">Population</StyledTableCell>
                 <StyledTableCell align="right">Established Year</StyledTableCell>
                 <StyledTableCell align="right">Status</StyledTableCell>
                 <StyledTableCell align="right">Products</StyledTableCell>
+                <StyledTableCell align="right">Queen Breed</StyledTableCell>
               </TableRow>
             </TableHead>
 
@@ -174,14 +181,16 @@ const Hives: React.FC = () => {
                   </TableCell>
                   <TableCell align="right">{row.no}</TableCell>
                   <TableCell align="right">{row.type}</TableCell>
-                  <TableCell align="right">{row.chassisNo}</TableCell>
+                  <TableCell align="right">{row.location}</TableCell>
+                  <TableCell align="right">{row.population}</TableCell>
                   <TableCell align="right">
-                    {new Date(row.productionYear).getFullYear()}
+                    {new Date(row.establishedYear).getFullYear()}
                   </TableCell>
                   <TableCell align="right">
-                    {row.ac ? "Active" : "Inactive"}
+                    {row.status ? "Active" : "Inactive"}
                   </TableCell>
-                  <TableCell align="right">{row.fuelType}</TableCell>
+                  <TableCell align="right">{row.products}</TableCell>
+                  <TableCell align="right">{row.queenBreed}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
