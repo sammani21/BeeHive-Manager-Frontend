@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
 import DatePickerValue from "../components/DatePickerValue"; // Importing custom DatePicker component
-import VehicleTable from "../components/HivesTable"; // Importing VehicleTable component
- import NavigationBar from "../components/NavigationBar"; // Importing NavigationBar component
+import HiveTable from "../components/HivesTable"; // Importing HiveTable component
+import NavigationBar from "../components/NavigationBar"; // Importing NavigationBar component
 import PrintButton from "../components/DownloadButton"; // Importing DownloadButton component
 import { DialogTitle } from "@mui/material";
 
-// Define the VehicleReport functional component
-const VehicleReport: React.FC = () => {
+// Define the HiveReport functional component
+const HiveReport: React.FC = () => {
   // State variables for start and end dates
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -24,7 +24,7 @@ const VehicleReport: React.FC = () => {
     setEndDate(date);
   };
 
-  // Return the JSX for the VehicleReport component
+  // Return the JSX for the HiveReport component
   return (
     <div
       style={{
@@ -40,10 +40,10 @@ const VehicleReport: React.FC = () => {
       <NavigationBar />
 
       <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-         Hive Details Report
-        </DialogTitle>
+        Hive Details Report
+      </DialogTitle>
 
-<br />
+      <br />
       {/* Date picker components for start and end dates */}
       <div style={{ display: "flex", alignItems: "right" }}>
         <div style={{ marginRight: "10px" }}>
@@ -74,9 +74,9 @@ const VehicleReport: React.FC = () => {
       </div>
 
       <br />
-      {/* VehicleTable component to display vehicle details */}
+      {/* HiveTable component to display hive details */}
       <div style={{ marginTop: "10px", width: "calc(100vw - 50px)" }}>
-        <VehicleTable
+        <HiveTable
           tableRef={tableRef}
           startDate={startDate}
           endDate={endDate}
@@ -86,4 +86,4 @@ const VehicleReport: React.FC = () => {
   );
 };
 
-export default VehicleReport;
+export default HiveReport;

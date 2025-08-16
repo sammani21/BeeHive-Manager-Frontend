@@ -1,16 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-type BarChartProps = {
-  noOfTotalVehicles: number;
-  noOfInServiceVehicles: number;
-  noOfOutOfServiceVehicles: number;
+type HiveBarChartProps = {
+  noOfTotalHives: number;
+  noOfActiveHives: number;
+  noOfInactiveHives: number;
 };
 
-const BarChart: React.FC<BarChartProps> = ({
-  noOfTotalVehicles,
-  noOfInServiceVehicles,
-  noOfOutOfServiceVehicles,
+const HiveBarChart: React.FC<HiveBarChartProps> = ({
+  noOfTotalHives,
+  noOfActiveHives,
+  noOfInactiveHives,
 }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
@@ -19,9 +19,9 @@ const BarChart: React.FC<BarChartProps> = ({
     if (chartRef.current) {
       if (chartInstance.current) {
         chartInstance.current.data.datasets[0].data = [
-          noOfTotalVehicles,
-          noOfInServiceVehicles,
-          noOfOutOfServiceVehicles,
+          noOfTotalHives,
+          noOfActiveHives,
+          noOfInactiveHives,
         ];
         chartInstance.current.update();
       } else {
@@ -33,13 +33,13 @@ const BarChart: React.FC<BarChartProps> = ({
         gradientTotal.addColorStop(0, 'rgba(75, 0, 130, 0.8)');
         gradientTotal.addColorStop(1, 'rgba(75, 0, 130, 0.3)');
 
-        const gradientInService = ctx.createLinearGradient(0, 0, 0, 400);
-        gradientInService.addColorStop(0, 'rgba(255, 193, 7, 0.8)');
-        gradientInService.addColorStop(1, 'rgba(255, 193, 7, 0.3)');
+        const gradientActive = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientActive.addColorStop(0, 'rgba(255, 193, 7, 0.8)');
+        gradientActive.addColorStop(1, 'rgba(255, 193, 7, 0.3)');
 
-        const gradientOutOfService = ctx.createLinearGradient(0, 0, 0, 400);
-        gradientOutOfService.addColorStop(0, 'rgba(233, 30, 99, 0.8)');
-        gradientOutOfService.addColorStop(1, 'rgba(233, 30, 99, 0.3)');
+        const gradientInactive = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientInactive.addColorStop(0, 'rgba(233, 30, 99, 0.8)');
+        gradientInactive.addColorStop(1, 'rgba(233, 30, 99, 0.3)');
 
         chartInstance.current = new Chart(chartRef.current, {
           type: 'bar',
@@ -47,8 +47,8 @@ const BarChart: React.FC<BarChartProps> = ({
             labels: ['Total Hives', 'Active Hives', 'Inactive Hives'],
             datasets: [
               {
-                data: [noOfTotalVehicles, noOfInServiceVehicles, noOfOutOfServiceVehicles],
-                backgroundColor: [gradientTotal, gradientInService, gradientOutOfService],
+                data: [noOfTotalHives, noOfActiveHives, noOfInactiveHives],
+                backgroundColor: [gradientTotal, gradientActive, gradientInactive],
                 borderColor: ['rgba(75, 0, 130, 1)', 'rgba(255, 193, 7, 1)', 'rgba(233, 30, 99, 1)'],
                 borderWidth: 2,
                 borderRadius: 8,
@@ -111,7 +111,7 @@ const BarChart: React.FC<BarChartProps> = ({
         chartInstance.current = null;
       }
     };
-  }, [noOfTotalVehicles, noOfInServiceVehicles, noOfOutOfServiceVehicles]);
+  }, [noOfTotalHives, noOfActiveHives, noOfInactiveHives]);
 
   return (
     <div style={{ height: '280px', width: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -120,4 +120,4 @@ const BarChart: React.FC<BarChartProps> = ({
   );
 };
 
-export default BarChart;
+export default HiveBarChart;

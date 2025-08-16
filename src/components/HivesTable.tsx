@@ -9,7 +9,6 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import dayjs from "dayjs";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
 // Styled TableCell component for header
@@ -23,8 +22,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-// Define the props interface for the VehicleTable component
-interface VehicleTableProps {
+// Define the props interface for the HiveTable component
+interface HiveTableProps {
   tableRef: React.RefObject<HTMLTableElement>;
   startDate: Date | null;
   endDate: Date | null;
@@ -35,66 +34,61 @@ const columns = [
   { id: "no", label: "Hive ID", minWidth: 170 },
   { id: "type", label: "Owner ID", minWidth: 100 },
   { id: "chassisNo", label: "Location", minWidth: 170 },
-  //{ id: "brand", label: "Population", minWidth: 170 },
-  { id: "fuelType", label: "Established Year", minWidth: 170 },
-  { id: "noOfSeats", label: "Brand", minWidth: 170 },
-  { id: "productionYear", label: "Production Year", minWidth: 170 },
-  { id: "acNonAc", label: "Products", minWidth: 170 },
+  { id: "fuelType", label: "Products", minWidth: 170 },
+  { id: "noOfSeats", label: "Population", minWidth: 170 },
+  { id: "productionYear", label: "Established Year", minWidth: 170 },
+  { id: "acNonAc", label: "Status", minWidth: 170 },
   { id: "availability", label: "Availability", minWidth: 170 },
-  //{ id: "createdAt", label: "Registered Date",  minWidth: 170 },
-  //{ id: "updatedAt", label: "Updated Date", minWidth: 170 },
 ];
 
 // Define the data interface for table rows
-interface Vehicle {
+interface Hive {
   _id: string;
-  no: string; // Ensure this matches the schema property name
+  no: string;
   type: string;
   chassisNo: string;
-  //brand: string;
   fuelType: string;
   noOfSeats: number;
   productionYear: number;
-  ac: boolean; // Ensure this matches the schema property name
+  ac: boolean;
   availability: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-// Define the VehicleTable component
-const VehicleTable: React.FC<VehicleTableProps> = ({ tableRef, startDate, endDate }) => {
+// Define the HiveTable component
+const HiveTable: React.FC<HiveTableProps> = ({ tableRef, startDate, endDate }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [hives, setHives] = useState<Hive[]>([]);
 
-  // Fetch vehicle data from the server when the component mounts
+  // Fetch hive data from the server when the component mounts
   useEffect(() => {
-    fetchVehicles();
+    fetchHives();
 
     // Fetch data every 5 seconds
     const interval = setInterval(() => {
-      fetchVehicles();
+      fetchHives();
     }, 5000);
 
     // Cleanup interval to prevent memory leaks
     return () => clearInterval(interval);
   }, []);
 
-  // Function to fetch vehicle data from the server
-  const fetchVehicles = () => {
+  // Function to fetch hive data from the server
+  const fetchHives = () => {
     axios
-      .get("http://localhost:3000/api/vehicles")
+      .get("http://localhost:3000/api/hives")
       .then((response) => {
-        
-        setVehicles(response.data);
+        setHives(response.data);
       })
       .catch((err) => {
-        console.error("Error fetching vehicles:", err);
+        console.error("Error fetching hives:", err);
       });
   };
 
   // Filter rows based on the selected date range
-  const filteredRows = vehicles.filter((row) => {
+  const filteredRows = hives.filter((row) => {
     const registeredDate = dayjs(row.createdAt);
     return (
       (!startDate || registeredDate >= dayjs(startDate)) &&
@@ -122,7 +116,7 @@ const VehicleTable: React.FC<VehicleTableProps> = ({ tableRef, startDate, endDat
     };
   };
 
-  // Render the VehicleTable component
+  // Render the HiveTable component
   return (
     <Paper sx={{ width: "100%" }}>
       <TableContainer sx={{ maxHeight: "calc(100vh - 200px)" }}>
@@ -130,31 +124,28 @@ const VehicleTable: React.FC<VehicleTableProps> = ({ tableRef, startDate, endDat
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-               <StyledTableCell key={column.id} style={{ minWidth: column.minWidth }}>
-               {column.label}
-             </StyledTableCell>
+                <StyledTableCell key={column.id} style={{ minWidth: column.minWidth }}>
+                  {column.label}
+                </StyledTableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-          {filteredRows
-  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-  .map((vehicle, index) => (
-    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-      <TableCell>{vehicle.no}</TableCell>
-      <TableCell>{vehicle.type}</TableCell>
-      <TableCell>{vehicle.chassisNo}</TableCell>
-      {/*<TableCell>{vehicle.brand}</TableCell>*/}
-      <TableCell>{vehicle.fuelType}</TableCell>
-      <TableCell>{vehicle.noOfSeats}</TableCell>
-      <TableCell>{vehicle.productionYear}</TableCell>
-      <TableCell>{vehicle.ac ? "AC" : "Non-AC"}</TableCell>
-      <TableCell>{vehicle.availability ? "Yes" : "No"}</TableCell>
-      {/*<TableCell><Typography variant="body2">{formatDate(vehicle.createdAt).date}</Typography></TableCell>
-      <TableCell><Typography variant="body2">{formatDate(vehicle.updatedAt).date}</Typography></TableCell>*/}
-    </TableRow>
-  ))}
-</TableBody>
+            {filteredRows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((hive, index) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                  <TableCell>{hive.no}</TableCell>
+                  <TableCell>{hive.type}</TableCell>
+                  <TableCell>{hive.chassisNo}</TableCell>
+                  <TableCell>{hive.fuelType}</TableCell>
+                  <TableCell>{hive.noOfSeats}</TableCell>
+                  <TableCell>{hive.productionYear}</TableCell>
+                  <TableCell>{hive.ac ? "Active" : "Inactive"}</TableCell>
+                  <TableCell>{hive.availability ? "Yes" : "No"}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
@@ -170,4 +161,4 @@ const VehicleTable: React.FC<VehicleTableProps> = ({ tableRef, startDate, endDat
   );
 };
 
-export default VehicleTable;
+export default HiveTable;
