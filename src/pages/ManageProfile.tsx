@@ -59,7 +59,7 @@ const ManageProfile = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [photoURL, setPhotoURL] = useState(user?.photoURL || "");
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  //const [imageFile, setImageFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -91,7 +91,7 @@ const ManageProfile = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setImageFile(file);
+      //setImageFile(file);
       handleUploadImage(file);
     }
   };

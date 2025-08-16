@@ -1,45 +1,42 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import "../App.css";
-//import axios, { AxiosResponse } from "axios";
-//import { Link, useNavigate } from "react-router-dom";
-import {
-  Typography,
-  TextField,
-  Button,
-  Alert,
-  Box,
-} from "@mui/material";
-import BusImage from "../assets/Beeimage.png";
-import { auth } from "../firebaseConfig";
-import { sendPasswordResetEmail } from "firebase/auth";
+import axios, { AxiosResponse } from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { Typography, TextField, Button, Alert, Box, Grid } from "@mui/material";
+import BusImage from "../assets/Beeimage.png"; // Using your original image
 
 const ForgotPassword: React.FC = () => {
-
+  const [adminId, setAdminId] = useState<string>(""); // Changed from username → adminId
   const [email, setEmail] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  //axios.defaults.withCredentials = false;
+  axios.defaults.withCredentials = false;
 
-  
-
-  const handlePasswordReset = async () => {
-    if (!email) {
-      setError("Please enter your email.");
-      return;
-    }
-
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setMessage("Password reset email sent. Check your inbox.");
-      setError(null);
-    } catch (error: any) {
-      setError("Failed to send reset email. Please try again.");
-      setMessage(null);
-    }
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:3000/api/v1/user/forgotPassword", {
+        email,
+        adminId, // Changed here too
+      })
+      .then((res: AxiosResponse<{ status: boolean }>) => {
+        if (res.data.status) {
+          alert("Check your email for the password reset link.");
+          navigate("/login");
+        } else {
+          setErrorMessage("Incorrect Admin ID or email.");
+        }
+      })
+      .catch((err) => {
+        console.error(err.response?.data?.message);
+        if (err.response?.data?.message === "User is not registered.") {
+          setErrorMessage("User is not registered. Please sign up.");
+        } else {
+          setErrorMessage("Invalid Admin ID or email. Please try again.");
+        }
+      });
   };
 
   return (
@@ -62,22 +59,16 @@ const ForgotPassword: React.FC = () => {
         }}
       />
 
-      <Box
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
         sx={{
           flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           padding: { xs: "20px", md: "40px" },
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: "400px",
-            textAlign: "center",
-          }}
-        >
+        <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: "400px", textAlign: "center" }}>
           <Typography
             variant="h4"
             component="h1"
@@ -95,35 +86,56 @@ const ForgotPassword: React.FC = () => {
             Enter your details to reset your password
           </Typography>
 
-          
-
-          
           <TextField
-        label="Enter Your Email"
-        variant="outlined"
-        fullWidth
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        sx={{ mb: 4 }}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handlePasswordReset}
-        fullWidth
-        sx={{ backgroundColor: "#FFB700", "&:hover": { backgroundColor: "#CC9200" } }}
-      >
-        Send Reset Email
-      </Button>
+            required
+            type="text"
+            id="adminId"
+            label="Admin ID"
+            variant="outlined"
+            value={adminId}
+            onChange={(e) => setAdminId(e.target.value)}
+            margin="normal"
+            fullWidth
+          />
 
-      {message && <Alert severity="success" sx={{ mt: 2 }}>{message}</Alert>}
-      {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+          <TextField
+            required
+            type="email"
+            id="email"
+            label="Email"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            margin="normal"
+            fullWidth
+          />
+
+          {errorMessage && (
+            <Alert severity="error" sx={{ marginY: 2 }}>
+              {errorMessage}
+            </Alert>
+          )}
+
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            sx={{
+              backgroundColor: "#FFB700",
+              "&:hover": { backgroundColor: "#CC9200" },
+              marginTop: 2,
+            }}
+          >
+            SUBMIT
+          </Button>
+
+          <Typography variant="body2" sx={{ marginTop: 2 }}>
+            <Link to="/login">Back to Login</Link>
+          </Typography>
+        </form>
+      </Grid>
     </Box>
-
-         
-        </Box>
-      </Box>
-
   );
 };
 
