@@ -12,7 +12,6 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { styled } from "@mui/material/styles";
 
-
 // Styled TableCell component for header
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: "#BDBDBD",
@@ -33,61 +32,55 @@ interface Column {
 
 // Define the columns for the table
 const columns: readonly Column[] = [
-  { id: 'email', label: 'Email', minWidth: 170 },
-  { id: 'firstName', label: 'First Name', minWidth: 170 },
-  { id: 'lastName', label: 'Last Name', minWidth: 170 },
-  { id: 'nicNo', label: 'NIC No', minWidth: 170 },
-  { id: 'gender', label: 'Gender', minWidth: 170 },
-  { id: 'contactNo', label: 'Contact No', minWidth: 170 },
-  { id: 'serviceNo', label: 'Service No', minWidth: 170 },
-  { id: 'isInternal', label: 'Internal/External', minWidth: 170 }, // Adjusted to match the data structure
-  { id: 'createdAt', label: "Registered Date",  minWidth: 170 },
-  { id: 'updatedAt', label: "Updated Date", minWidth: 170 },
+  { id: 'productId', label: 'Product ID', minWidth: 170 },
+  { id: 'hiveId', label: 'Hive ID', minWidth: 170 },
+  { id: 'type', label: 'Type', minWidth: 170 },
+  { id: 'quantity', label: 'Quantity', minWidth: 170 },
+  { id: 'quality', label: 'Quality', minWidth: 170 },
+  { id: 'createdAt', label: 'Created Date', minWidth: 170 },
+  { id: 'updatedAt', label: 'Updated Date', minWidth: 170 },
 ];
 
 // Define the data interface for table rows
 interface Data {
-  email: string;
-  firstName: string;
-  lastName: string;
-  nicNo: string;
-  gender: string;
-  contactNo: string;
-  serviceNo: string;
-  isInternal: boolean;
+  productId: string;
+  hiveId: string;
+  type: string;
+  quantity: number;
+  quality: string;
   createdAt: string;
   updatedAt: string;
 }
 
-// Define the props interface for the PassengersTable component
-interface PassengersTableProps {
+// Define the props interface for the ProductsTable component
+interface ProductsTableProps {
   tableRef: React.RefObject<HTMLTableElement>;
   startDate: Date | null;
   endDate: Date | null;
 }
 
-// Define the PassengersTable component
-const PassengersTable: React.FC<PassengersTableProps> = ({ tableRef, startDate, endDate }) => {
+// Define the ProductsTable component
+const ProductsTable: React.FC<ProductsTableProps> = ({ tableRef, startDate, endDate }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [passengers, setPassengers] = useState<Data[]>([]);
+  const [products, setProducts] = useState<Data[]>([]);
 
-  // Fetch passenger data from the server
-  const fetchPassengers = () => {
+  // Fetch product data from the server
+  const fetchProducts = () => {
     axios
-      .get("http://localhost:3000/api/passengers")
-      .then((response) => setPassengers(response.data))
+      .get("http://localhost:3000/api/v1/product")
+      .then((response) => setProducts(response.data.data))
       .catch((err) => {
-        console.error("Error fetching passengers:", err);
+        console.error("Error fetching products:", err);
       });
   };
 
   useEffect(() => {
-    fetchPassengers();
+    fetchProducts();
 
     // Fetch data every 5 seconds
     const interval = setInterval(() => {
-      fetchPassengers();
+      fetchProducts();
     }, 5000);
 
     // Cleanup interval to prevent memory leaks
@@ -95,11 +88,11 @@ const PassengersTable: React.FC<PassengersTableProps> = ({ tableRef, startDate, 
   }, []);
 
   // Filter rows based on the selected date range
-  const filteredRows = passengers.filter((row) => {
-    const registeredDate = dayjs(row.createdAt); // Convert to Dayjs object for comparison
+  const filteredRows = products.filter((row) => {
+    const createdDate = dayjs(row.createdAt); // Convert to Dayjs object for comparison
     return (
-      (!startDate || registeredDate >= dayjs(startDate)) &&
-      (!endDate || registeredDate <= dayjs(endDate))
+      (!startDate || createdDate >= dayjs(startDate)) &&
+      (!endDate || createdDate <= dayjs(endDate))
     );
   });
 
@@ -122,7 +115,7 @@ const PassengersTable: React.FC<PassengersTableProps> = ({ tableRef, startDate, 
     };
   };
 
-  // Render the PassengersTable component
+  // Render the ProductsTable component
   return (
     <Paper sx={{ maxWidth: '100%', maxHeight: '100%' }}>
       <TableContainer sx={{ maxHeight: '100%', maxWidth: '100%' }}>
@@ -131,8 +124,8 @@ const PassengersTable: React.FC<PassengersTableProps> = ({ tableRef, startDate, 
             <TableRow>
               {columns.map((column) => (
                 <StyledTableCell key={column.id} style={{ minWidth: column.minWidth }}>
-                {column.label}
-              </StyledTableCell>
+                  {column.label}
+                </StyledTableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -141,14 +134,11 @@ const PassengersTable: React.FC<PassengersTableProps> = ({ tableRef, startDate, 
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.firstName}</TableCell>
-                  <TableCell>{row.lastName}</TableCell>
-                  <TableCell>{row.nicNo}</TableCell>
-                  <TableCell>{row.gender}</TableCell>
-                  <TableCell>{row.contactNo}</TableCell>
-                  <TableCell>{row.serviceNo}</TableCell>
-                  <TableCell>{row.isInternal ? 'Internal' : 'External'}</TableCell>
+                  <TableCell>{row.productId}</TableCell>
+                  <TableCell>{row.hiveId}</TableCell>
+                  <TableCell>{row.type}</TableCell>
+                  <TableCell>{row.quantity}</TableCell>
+                  <TableCell>{row.quality}</TableCell>
                   <TableCell>
                     <Typography variant="body2">{formatDate(row.createdAt).date}</Typography>
                   </TableCell>
@@ -173,4 +163,4 @@ const PassengersTable: React.FC<PassengersTableProps> = ({ tableRef, startDate, 
   );
 };
 
-export default PassengersTable;
+export default ProductsTable;

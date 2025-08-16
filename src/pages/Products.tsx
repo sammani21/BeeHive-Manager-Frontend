@@ -9,7 +9,6 @@ import {
   TableBody,
   Paper,
   TextField,
-  //IconButton,
   InputAdornment,
   Dialog,
   DialogTitle,
@@ -19,8 +18,6 @@ import {
   styled,
   tableCellClasses,
   Alert,
-  //Switch,
-  //FormControlLabel,
   Button,
   Select,
   MenuItem,
@@ -31,47 +28,41 @@ import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import NavigationBar from "../components/NavigationBar";
 
-export const StyledTableCell = styled(TableCell)(
-  (
-    {
-      /*theme*/
-    }
-  ) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#FFD700",
-      color: "#000000",
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  })
-);
+export const StyledTableCell = styled(TableCell)(() => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#FFD700",
+    color: "#000000",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
 
-// Passenger component
-const Passengers: React.FC = () => {
-  const [passengers, setPassengers] = React.useState<any[]>([]);
-  const [allPassengers, setAllPassengers] = React.useState<any[]>([]);
+// Products component
+const Products: React.FC = () => {
+  const [products, setProducts] = React.useState<any[]>([]);
+  const [allProducts, setAllProducts] = React.useState<any[]>([]);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [selectedPassenger, setSelectedPassenger] = React.useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [statusChange, setStatusChange] = React.useState<string | null>(null);
-  const [searchCategory, setSearchCategory] = React.useState<string>("firstName");
+  const [searchCategory, setSearchCategory] = React.useState<string>("productId");
 
   React.useEffect(() => {
-    getAllPassengers();
+    getAllProducts();
   }, []);
 
-  // Function to fetch all passengers
-  const getAllPassengers = () => {
-    setPassengers([]);
-    setAllPassengers([]);
+  // Function to fetch all products
+  const getAllProducts = () => {
+    setProducts([]);
+    setAllProducts([]);
     console.log("Fetching all Products...");
 
-    fetch("http://localhost:3000/api/v1/passenger")
+    fetch("http://localhost:3000/api/v1/product")
       .then((res) => res.json())
       .then((data) => {
-        setPassengers(data.data);
-        setAllPassengers(data.data);
+        setProducts(data.data);
+        setAllProducts(data.data);
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
@@ -79,53 +70,47 @@ const Passengers: React.FC = () => {
       });
   };
 
-  // Function to update passenger status
-  const updatePassengerStatus = (id: string, action: string) => {
+  // Function to update product status
+  const updateProductStatus = (id: string, action: string) => {
     axios
-      .put(`http://localhost:3000/api/v1/passenger/${id}`, { action })
+      .put(`http://localhost:3000/api/v1/product/${id}`, { action })
       .then((response) => {
         console.log(`Product ${action}d:`, response);
-        getAllPassengers(); // Refresh the passenger list
+        getAllProducts(); // Refresh the product list
       })
       .catch((error) => {
-        console.error(`Error ${action}ing products:`, error);
-        setErrorMessage(`Error ${action}ing products`);
+        console.error(`Error ${action}ing product:`, error);
+        setErrorMessage(`Error ${action}ing product`);
       });
   };
 
   // Function to handle search
- const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const searchTerm = e.target.value.toLowerCase();
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value.toLowerCase();
 
-  const filteredPassengers = allPassengers.filter((passenger) => {
-    switch (searchCategory) {
-      case "firstName":
-        return passenger.firstName.toLowerCase().includes(searchTerm);
-      case "lastName":
-        return passenger.lastName.toLowerCase().includes(searchTerm);
-      case "nic":
-        return passenger.nicNo.toLowerCase().includes(searchTerm);
-      case "email":
-        return passenger.email.toLowerCase().includes(searchTerm);
-      case "gender":
-        return passenger.gender.toLowerCase().includes(searchTerm);
-      default:
-        return false;
+    const filteredProducts = allProducts.filter((product) => {
+      switch (searchCategory) {
+        case "productId":
+          return product.productId.toLowerCase().includes(searchTerm);
+        case "type":
+          return product.type.toLowerCase().includes(searchTerm);
+        default:
+          return false;
+      }
+    });
+
+    setProducts(filteredProducts);
+
+    if (filteredProducts.length === 0) {
+      setErrorMessage("Cannot find the products in this category.");
+    } else {
+      setErrorMessage("");
     }
-  });
-
-  setPassengers(filteredPassengers);
-
-  if (filteredPassengers.length === 0) {
-    setErrorMessage("Cannot find the products in this category.");
-  } else {
-    setErrorMessage("");
-  }
-};
+  };
 
   // Function to handle dialog open
-  const handleDialogOpen = (passenger: any, action: string) => {
-    setSelectedPassenger(passenger);
+  const handleDialogOpen = (product: any, action: string) => {
+    setSelectedProduct(product);
     setStatusChange(action);
     setOpenDialog(true);
   };
@@ -133,14 +118,14 @@ const Passengers: React.FC = () => {
   // Function to handle dialog close
   const handleDialogClose = () => {
     setOpenDialog(false);
-    setSelectedPassenger(null);
+    setSelectedProduct(null);
     setStatusChange(null);
   };
 
   // Function to handle confirm change
   const handleConfirmChange = () => {
-    if (selectedPassenger && statusChange) {
-      updatePassengerStatus(selectedPassenger._id, statusChange);
+    if (selectedProduct && statusChange) {
+      updateProductStatus(selectedProduct._id, statusChange);
     }
     handleDialogClose();
   };
@@ -149,7 +134,7 @@ const Passengers: React.FC = () => {
     <Container maxWidth="xl" sx={{ marginTop: "-60px", width: "91vw" }}>
       <br />
       <br />
-      <NavigationBar/>
+      <NavigationBar />
       <div
         style={{
           display: "flex",
@@ -160,26 +145,21 @@ const Passengers: React.FC = () => {
         <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
           Products Details Management
         </DialogTitle>
-        
+
         <div>
-  <FormControl sx={{ minWidth: 150, marginRight: "10px" }}>
-    <InputLabel>Search by</InputLabel>
-    <Select
-      value={searchCategory}
-      onChange={(e) => setSearchCategory(e.target.value)}
-      label="Search by"
-    >
-      <MenuItem value="firstName">Product ID</MenuItem>
-      <MenuItem value="lastName">Product Type</MenuItem>
-      {/*<MenuItem value="nic">NIC</MenuItem>
-      <MenuItem value="email">Email</MenuItem>
-      <MenuItem value="gender">Gender</MenuItem>*/}
-    </Select>
-  </FormControl>
+          <FormControl sx={{ minWidth: 150, marginRight: "10px" }}>
+            <InputLabel>Search by</InputLabel>
+            <Select
+              value={searchCategory}
+              onChange={(e) => setSearchCategory(e.target.value)}
+              label="Search by"
+            >
+              <MenuItem value="productId">Product ID</MenuItem>
+              <MenuItem value="type">Product Type</MenuItem>
+            </Select>
+          </FormControl>
 
-  
-
-<TextField
+          <TextField
             placeholder="Search"
             onChange={handleSearch}
             InputProps={{
@@ -190,8 +170,7 @@ const Passengers: React.FC = () => {
               ),
             }}
           />
-</div>
-
+        </div>
       </div>
 
       {errorMessage && (
@@ -212,51 +191,16 @@ const Passengers: React.FC = () => {
                 <StyledTableCell align="center">Type</StyledTableCell>
                 <StyledTableCell align="center">Quantity</StyledTableCell>
                 <StyledTableCell align="center">Quality</StyledTableCell>
-                {/*<StyledTableCell align="center">Contact No</StyledTableCell>
-                <StyledTableCell align="center">Birthday</StyledTableCell>
-                <StyledTableCell align="center">Is Internal</StyledTableCell>
-                <StyledTableCell align="center">Company Name</StyledTableCell>
-                <StyledTableCell align="center">Service No</StyledTableCell>
-                <StyledTableCell align="center">Actions</StyledTableCell>*/}
               </TableRow>
             </TableHead>
             <TableBody>
-              {passengers.map((row) => (
+              {products.map((row) => (
                 <TableRow key={row._id}>
-                  <TableCell align="center">{row.firstName}</TableCell>
-                  <TableCell align="center">{row.lastName}</TableCell>
-                  <TableCell align="center">{row.nicNo}</TableCell>
-                  <TableCell align="center">{row.email}</TableCell>
-                  <TableCell align="center">{row.gender}</TableCell>
-                  {/*
-                  <TableCell align="center">{row.contactNo}</TableCell>
-                  <TableCell align="center">
-                    {new Date(row.birthday).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell align="center">
-                    {row.isInternal ? "Yes" : "No"}
-                  </TableCell>
-                  <TableCell align="center">{row.companyName}</TableCell>
-                  <TableCell align="center">{row.serviceNo}</TableCell>
-                  <TableCell align="center">
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={row.isActive}
-                          onChange={() =>
-                            handleDialogOpen(
-                              row,
-                              row.isActive ? "deactivate" : "activate"
-                            )
-                          }
-                          color="primary"
-                        />
-                      }
-                      label={row.isActive ? "Active" : "Inactive"}
-                      labelPlacement="start"
-                    />
-                  </TableCell>
-                  */}
+                  <TableCell align="center">{row.productId}</TableCell>
+                  <TableCell align="center">{row.hiveId}</TableCell>
+                  <TableCell align="center">{row.type}</TableCell>
+                  <TableCell align="center">{row.quantity}</TableCell>
+                  <TableCell align="center">{row.quality}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -271,13 +215,11 @@ const Passengers: React.FC = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {statusChange === "activate"
-            ? "Activate Passenger"
-            : "Deactivate Passenger"}
+          {statusChange === "activate" ? "Activate Product" : "Deactivate Product"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to {statusChange} this passenger?
+            Are you sure you want to {statusChange} this product?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -293,4 +235,4 @@ const Passengers: React.FC = () => {
   );
 };
 
-export default Passengers;
+export default Products;

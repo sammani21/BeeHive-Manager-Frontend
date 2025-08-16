@@ -1,76 +1,77 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
 
-interface ComparisonBarChartProps {
+interface ProductsComparisonChartProps {
   years: string[];
-  malfunctionData: number[];
-  accidentData: number[];
+  honeyData: number[];
+  waxData: number[];
 }
 
-const ComparisonBarChart: React.FC<ComparisonBarChartProps> = ({
+const ProductsComparisonChart: React.FC<ProductsComparisonChartProps> = ({
   years,
-  malfunctionData,
-  accidentData,
+  honeyData,
+  waxData,
 }) => {
-  const chartData = {
-    labels: years,
-    datasets: [
-      {
-        label: 'Bee Honey',
-        data: malfunctionData,
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
-      },
-      {
-        label: 'Bee Wax',
-        data: accidentData,
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      tooltip: {
-        callbacks: {
-          label: (tooltipItem: any) => {
-            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
-        stacked: false,
-      },
-      y: {
-        stacked: false,
-        beginAtZero: true,
-      },
-    },
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-      },
-    },
-  };
-
   return (
     <div style={{ height: '300px' }}>
-      <Bar data={chartData} options={options} />
+      ```chartjs
+      {
+        "type": "bar",
+        "data": {
+          "labels": years,
+          "datasets": [
+            {
+              "label": "Honey Quantity",
+              "data": honeyData,
+              "backgroundColor": "rgba(255, 99, 132, 0.6)",
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "Wax Quantity",
+              "data": waxData,
+              "backgroundColor": "rgba(54, 162, 235, 0.6)",
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "position": "top"
+            },
+            "tooltip": {
+              "callbacks": {
+                "label": function(tooltipItem) {
+                  return tooltipItem.dataset.label + ": " + tooltipItem.raw;
+                }
+              }
+            }
+          },
+          "scales": {
+            "x": {
+              "stacked": false
+            },
+            "y": {
+              "stacked": false,
+              "beginAtZero": true
+            }
+          },
+          "layout": {
+            "padding": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          }
+        }
+      }
+      ```
     </div>
   );
 };
 
-export default ComparisonBarChart;
+export default ProductsComparisonChart;
