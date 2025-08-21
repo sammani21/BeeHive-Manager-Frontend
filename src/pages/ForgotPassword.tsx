@@ -3,7 +3,7 @@ import "../App.css";
 import axios, { AxiosResponse } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Typography, TextField, Button, Alert, Box, Grid } from "@mui/material";
-import BusImage from "../assets/Beeimage.png"; // Using your original image
+import BeeImage from "../assets/Beeimage.png"; // Using your original image
 
 const ForgotPassword: React.FC = () => {
   const [adminId, setAdminId] = useState<string>(""); // Changed from username → adminId
@@ -23,6 +23,7 @@ const ForgotPassword: React.FC = () => {
       })
       .then((res: AxiosResponse<{ status: boolean }>) => {
         if (res.data.status) {
+          console.log("Email sent");
           alert("Check your email for the password reset link.");
           navigate("/login");
         } else {
@@ -30,7 +31,7 @@ const ForgotPassword: React.FC = () => {
         }
       })
       .catch((err) => {
-        console.error(err.response?.data?.message);
+        console.error(err.response.data.message);
         if (err.response?.data?.message === "User is not registered.") {
           setErrorMessage("User is not registered. Please sign up.");
         } else {
@@ -52,7 +53,7 @@ const ForgotPassword: React.FC = () => {
       <Box
         sx={{
           flex: 1,
-          backgroundImage: `url(${BusImage})`,
+          backgroundImage: `url(${BeeImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           display: { xs: "none", md: "block" },
@@ -90,6 +91,7 @@ const ForgotPassword: React.FC = () => {
             required
             type="text"
             id="adminId"
+            autoComplete="adminId"
             label="Admin ID"
             variant="outlined"
             value={adminId}
@@ -102,9 +104,10 @@ const ForgotPassword: React.FC = () => {
             required
             type="email"
             id="email"
+            autoComplete="email"
             label="Email"
             variant="outlined"
-            value={email}
+            //value={email}
             onChange={(e) => setEmail(e.target.value)}
             margin="normal"
             fullWidth

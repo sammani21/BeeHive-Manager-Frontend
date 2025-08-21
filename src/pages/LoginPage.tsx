@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import "../App.css";
+import axios, { AxiosResponse } from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Typography,
@@ -12,11 +13,11 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import BusImage from "../assets/Beeimage.png";
+import BeeImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 //import { auth } from "../firebaseConfig";
 //import { signInWithEmailAndPassword } from "firebase/auth";
-import axios, { AxiosResponse } from "axios";
+
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -88,7 +89,7 @@ const Login: React.FC = () => {
       <Box
         sx={{
           flex: 1,
-          backgroundImage: `url(${BusImage})`,
+          backgroundImage: `url(${BeeImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           display: { xs: "none", md: "block" },

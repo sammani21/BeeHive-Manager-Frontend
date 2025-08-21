@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import "../App.css";
+import axios, { AxiosResponse } from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Typography,
@@ -12,14 +13,14 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import BusImage from "../assets/Beeimage.png";
+import BeeImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 //import { auth } from "../firebaseConfig";
 //import { createUserWithEmailAndPassword } from "firebase/auth";
-import axios, { AxiosResponse } from "axios";
+
 
 const Signup: React.FC = () => {
-  const [company, setCompany] = useState("");
+  const [fullname, setFullname] = useState("");
   const [adminId, setAdminId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,11 +45,13 @@ const Signup: React.FC = () => {
     );
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     if (!isStrongPassword(password)) {
-      setErrorMessage("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+      setErrorMessage(
+        "Password should contain at least 8 characters, including uppercase letters, lowercase letters, numbers, and special characters"
+      );
       return;
     }
 
@@ -59,7 +62,7 @@ const Signup: React.FC = () => {
 
     axios
       .post("http://localhost:3000/api/v1/user/signup", {
-        company,
+        fullname,
         adminId,
         email,
         password,
@@ -92,7 +95,7 @@ const Signup: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, height: "100vh", width: "100vw", backgroundColor: "#EDE8F5" }}>
-      <Box sx={{ flex: 1, backgroundImage: `url(${BusImage})`, backgroundSize: "cover", backgroundPosition: "center", display: { xs: "none", md: "block" } }} />
+      <Box sx={{ flex: 1, backgroundImage: `url(${BeeImage})`, backgroundSize: "cover", backgroundPosition: "center", display: { xs: "none", md: "block" } }} />
       <Box sx={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", padding: { xs: "20px", md: "40px" } }}>
         <Box sx={{ width: "100%", maxWidth: "400px", textAlign: "center" }}>
           <Typography variant="h5" component="h1" gutterBottom sx={{ fontWeight: "bold", color: "#000000" }}>
@@ -114,8 +117,8 @@ const Signup: React.FC = () => {
               type="text"
               label="Full Name"
               variant="outlined"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
               margin="normal"
               fullWidth
               sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px", mt: -2 }}
