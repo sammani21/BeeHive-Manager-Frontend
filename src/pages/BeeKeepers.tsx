@@ -109,6 +109,7 @@ const Beekeepers: React.FC = () => {
   };
 
   // Function to handle click event on a table row
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClick = (_event: any, id: string) => {
     const newSelected: string[] = [id];
     setSelected(newSelected);
@@ -119,6 +120,7 @@ const Beekeepers: React.FC = () => {
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // Function to handle delete button click
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDeleteClick = (row: Beekeeper) => {
     if (selected.length === 0) {
       setErrorMessage("Please select a bee keeper to delete");
@@ -147,6 +149,7 @@ const Beekeepers: React.FC = () => {
   };
 
   // Function to handle update button click
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUpdateClick = (row: Beekeeper) => {
     if (selected.length === 0) {
       setErrorMessage("Please select a bee keeper to update");
@@ -425,9 +428,20 @@ const Beekeepers: React.FC = () => {
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <IconButton onClick={() => handleUpdateClick(row)}>
-                        <EditIcon color="primary" />
-                      </IconButton>
+                      <Button
+  variant="text" // no background or border
+  startIcon={<EditIcon color="primary" />}
+  sx={{
+    minWidth: 0,         // remove default button width
+    padding: 0,          // remove extra padding
+    textTransform: "none",
+    borderRadius: 0,
+  }}
+  onClick={() => {
+    handleUpdateClick(row);
+    setIsUpdate(true);
+  }}
+/>
                       <IconButton onClick={() => handleDeleteClick(row)}>
                         <DeleteIcon color="error" />
                       </IconButton>

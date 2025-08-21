@@ -49,15 +49,34 @@ const Hives: React.FC = () => {
   }, []);
 
   // Function to fetch all hives
+  /*const getAllHives = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/v1/hive");
+      const data = await res.json();
+
+      // Validate that data is an array
+      if (Array.isArray(data)) {
+        setHives(data);
+        setAllHives(data);
+      } else {
+        setErrorMessage("API response is not an array.");
+        setHives([]);
+        setAllHives([]);
+      }
+    } catch (error) {
+      console.error("Error fetching hives:", error);
+      setErrorMessage("Failed to fetch hives.");
+      setHives([]);
+      setAllHives([]);
+    }
+  };*/
+
   const getAllHives = () => {
     fetch("http://localhost:3000/api/v1/hive")
       .then((res) => res.json())
       .then((data) => {
-        setHives(data);
-        setAllHives(data);
-      })
-      .catch(() => {
-        setErrorMessage("Failed to fetch hives.");
+        setHives(data.data);
+        setAllHives(data.data);
       });
   };
 
@@ -74,19 +93,19 @@ const Hives: React.FC = () => {
     const filteredHives = allHives.filter((hive) => {
       switch (searchCategory) {
         case "id":
-          return hive?.id?.toLowerCase().includes(searchTerm);
+          return hive?.id?.toLowerCase()?.includes(searchTerm) ?? false;
         case "no":
-          return hive?.no?.toLowerCase().includes(searchTerm);
+          return hive?.no?.toLowerCase()?.includes(searchTerm) ?? false;
         case "type":
-          return hive?.type?.toLowerCase().includes(searchTerm);
+          return hive?.type?.toLowerCase()?.includes(searchTerm) ?? false;
         case "location":
-          return hive?.location?.toLowerCase().includes(searchTerm);
+          return hive?.location?.toLowerCase()?.includes(searchTerm) ?? false;
         case "queenBreed":
-          return hive?.queenBreed?.toLowerCase().includes(searchTerm);
+          return hive?.queenBreed?.toLowerCase()?.includes(searchTerm) ?? false;
         case "products":
-          return hive?.products?.toLowerCase().includes(searchTerm);
+          return hive?.products?.toLowerCase()?.includes(searchTerm) ?? false;
         case "population":
-          return hive?.population?.toString().includes(searchTerm);
+          return hive?.population?.toString()?.includes(searchTerm) ?? false;
         default:
           return false;
       }
@@ -174,25 +193,33 @@ const Hives: React.FC = () => {
             </TableHead>
 
             <TableBody>
-              {hives.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell align="center" component="th" scope="row">
-                    {row.id}
+              {Array.isArray(hives) && hives.length > 0 ? (
+                hives.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell align="center" component="th" scope="row">
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="right">{row.no}</TableCell>
+                    <TableCell align="right">{row.type}</TableCell>
+                    <TableCell align="right">{row.location}</TableCell>
+                    <TableCell align="right">{row.population}</TableCell>
+                    <TableCell align="right">
+                      {new Date(row.establishedYear).getFullYear()}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.status ? "Active" : "Inactive"}
+                    </TableCell>
+                    <TableCell align="right">{row.products}</TableCell>
+                    <TableCell align="right">{row.queenBreed}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={9} align="center">
+                    No hives available.
                   </TableCell>
-                  <TableCell align="right">{row.no}</TableCell>
-                  <TableCell align="right">{row.type}</TableCell>
-                  <TableCell align="right">{row.location}</TableCell>
-                  <TableCell align="right">{row.population}</TableCell>
-                  <TableCell align="right">
-                    {new Date(row.establishedYear).getFullYear()}
-                  </TableCell>
-                  <TableCell align="right">
-                    {row.status ? "Active" : "Inactive"}
-                  </TableCell>
-                  <TableCell align="right">{row.products}</TableCell>
-                  <TableCell align="right">{row.queenBreed}</TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>

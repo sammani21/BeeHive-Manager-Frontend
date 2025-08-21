@@ -53,10 +53,10 @@ const theme = createTheme({
 });
 
 const DashboardPage: React.FC = () => {
-  const [vehicleCounts, setVehicleCounts] = useState({
-    totalVehicles: 0,
-    inServiceVehicles: 0,
-    outOfServiceVehicles: 0,
+  const [hiveCounts, setHiveCounts] = useState({
+    totalHives: 0,
+    inProductionHives: 0,
+    outOfProductionHives: 0,
   });
 
   const [beekeeperCounts, setBeekeeperCounts] = useState({
@@ -80,7 +80,7 @@ const DashboardPage: React.FC = () => {
   const [completedTripCounts, setCompletedTripCounts] = useState<TripCount[]>([]);
 
   useEffect(() => {
-    fetchVehicleCounts();
+    fetchHiveCounts();
     fetchBeekeeperCounts();
     fetchTripCounts();
     fetchComparisonData();
@@ -88,7 +88,7 @@ const DashboardPage: React.FC = () => {
     // fetchTraveledKmCounts();
 
     const intervalId = setInterval(() => {
-      fetchVehicleCounts();
+      fetchHiveCounts();
       fetchBeekeeperCounts();
       fetchTripCounts();
       fetchComparisonData();
@@ -99,19 +99,19 @@ const DashboardPage: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const fetchVehicleCounts = async () => {
+  const fetchHiveCounts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/vehicles/counts"
+        "http://localhost:3000/api/hives/counts"
       );
-      const { vehicles } = response.data;
-      setVehicleCounts({
-        totalVehicles: vehicles.total,
-        inServiceVehicles: vehicles.inService,
-        outOfServiceVehicles: vehicles.outOfService,
+      const { hives } = response.data;
+      setHiveCounts({
+        totalHives: hives.total,
+        inProductionHives: hives.inProduction,
+        outOfProductionHives: hives.outOfProduction,
       });
     } catch (error) {
-      console.error("Error fetching vehicle counts:", error);
+      console.error("Error fetching hive counts:", error);
     }
   };
 
@@ -120,7 +120,7 @@ const DashboardPage: React.FC = () => {
       const response = await axios.get("http://localhost:3000/api/beekeepers/counts");
       const { available, unavailable } = response.data.beekeepers;
       setBeekeeperCounts({
-        noOfTotalBeekeepers: response.data.drivers.total,
+        noOfTotalBeekeepers: response.data.beekeepers.total,
         noOfAvailableBeekeepers: available,
         noOfUnavailableBeekeepers: unavailable,
       });
@@ -152,8 +152,11 @@ const DashboardPage: React.FC = () => {
         "http://localhost:3000/api/issues/counts"
       );
       const data = response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const years = data.map((item: any) => item.year.toString());
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const malfunctionData = data.map((item: any) => item.malfunctions);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const accidentData = data.map((item: any) => item.accidents);
       setComparisonChartData({ years, malfunctionData, accidentData });
     } catch (error) {
@@ -177,6 +180,7 @@ const DashboardPage: React.FC = () => {
         throw new Error("Expected an array of daily trip data");
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const transformedData: TripCount[] = dailyData.map((item: any) => {
         try {
           const date = new Date(`${item.year}-${item.month}-${item.day}`);
@@ -201,8 +205,8 @@ const DashboardPage: React.FC = () => {
   };
 
   
-  const { totalVehicles, inServiceVehicles, outOfServiceVehicles } =
-    vehicleCounts;
+  const { totalHives, inProductionHives, outOfProductionHives } =
+    hiveCounts;
   const { noOfTotalBeekeepers, noOfAvailableBeekeepers, noOfUnavailableBeekeepers } =
     beekeeperCounts;
   const { numberOfTotalTrips, scheduledTrips, cancelledTrips } = tripCounts;
@@ -224,9 +228,9 @@ const DashboardPage: React.FC = () => {
                     Hive Status
                   </Typography>
                   <BarChart
-                    noOfTotalVehicles={totalVehicles}
-                    noOfInServiceVehicles={inServiceVehicles}
-                    noOfOutOfServiceVehicles={outOfServiceVehicles}
+                    noOfTotalHives={totalHives}
+                    noOfInProductionHives={inProductionHives}
+                    noOfOutOfProductionHives={outOfProductionHives}
                   />
                 </CardContent>
               </Card>
