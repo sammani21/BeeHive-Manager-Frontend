@@ -18,7 +18,6 @@ import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 //import { auth } from "../firebaseConfig";
 //import { signInWithEmailAndPassword } from "firebase/auth";
 
-
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -115,11 +114,20 @@ const Login: React.FC = () => {
             backgroundColor: "transparent", // Ensure no distinct background
           }}
         >
-          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: "bold", color: "#000000" }}>
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#000000" }}
+          >
             Welcome Back
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom sx={{ color: "#000000", mb: 2 }}>
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            sx={{ color: "#000000", mb: 2 }}
+          >
             Login into your account
           </Typography>
 
@@ -159,7 +167,11 @@ const Login: React.FC = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} onMouseDown={(e) => e.preventDefault()} edge="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      onMouseDown={(e) => e.preventDefault()}
+                      edge="end"
+                    >
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
@@ -169,13 +181,24 @@ const Login: React.FC = () => {
 
             {password && <PasswordStrengthMeter password={password} />}
 
-            <Typography variant="body2" align="right" sx={{ marginY: 1, color: "#ff4444" }}>
-              <Link to="/forgotPassword" style={{ color: "#ff4444", textDecoration: "none" }}>
+            <Typography
+              variant="body2"
+              align="right"
+              sx={{ marginY: 1, color: "#ff4444" }}
+            >
+              <Link
+                to="/forgotPassword"
+                style={{ color: "#ff4444", textDecoration: "none" }}
+              >
                 Recover Password
               </Link>
             </Typography>
 
-            {errorMessage && <Alert severity="error" sx={{ marginY: 2 }}>{errorMessage}</Alert>}
+            {errorMessage && (
+              <Alert severity="error" sx={{ marginY: 2 }}>
+                {errorMessage}
+              </Alert>
+            )}
 
             <Button
               type="submit"
@@ -198,7 +221,10 @@ const Login: React.FC = () => {
 
             <Typography variant="body2" sx={{ color: "#666666", mb: -4 }}>
               Don't have an account?{" "}
-              <Link to="/signup" style={{ color: "#FFB700", textDecoration: "none" }}>
+              <Link
+                to="/signup"
+                style={{ color: "#FFB700", textDecoration: "none" }}
+              >
                 Sign Up
               </Link>
             </Typography>

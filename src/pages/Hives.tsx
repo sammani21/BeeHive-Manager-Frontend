@@ -17,6 +17,7 @@ import {
   FormControl,
   DialogTitle,
   Chip,
+  //Box,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import NavigationBar from "../components/NavigationBar";
@@ -31,7 +32,7 @@ interface Hive {
   location: string;
   establishedYear: string;
   strength: number;
-  status: boolean;
+   status: string; 
   queenStatus: string;
   products: string;
   population: number;
@@ -49,35 +50,14 @@ const Hives: React.FC = () => {
   const [allHives, setAllHives] = React.useState<Hive[]>([]);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
   const [searchCategory, setSearchCategory] = React.useState<string>("id");
+  const [successMessage, setSuccessMessage] = React.useState<string>("");
 
   // Fetch all hives when component mounts
   React.useEffect(() => {
     getAllHives();
   }, []);
 
-  // Function to fetch all hives
-  /*const getAllHives = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/api/v1/hive");
-      const data = await res.json();
-
-      // Validate that data is an array
-      if (Array.isArray(data)) {
-        setHives(data);
-        setAllHives(data);
-      } else {
-        setErrorMessage("API response is not an array.");
-        setHives([]);
-        setAllHives([]);
-      }
-    } catch (error) {
-      console.error("Error fetching hives:", error);
-      setErrorMessage("Failed to fetch hives.");
-      setHives([]);
-      setAllHives([]);
-    }
-  };*/
-
+  // Function to fetch all hives from the API
   const getAllHives = () => {
     fetch("http://localhost:3000/api/v1/hive")
       .then((res) => res.json())
@@ -85,6 +65,32 @@ const Hives: React.FC = () => {
         setHives(data.data);
         setAllHives(data.data);
       });
+  };
+
+   const updateHiveStatus = async (hiveId: string, newStatus: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/hive/${hiveId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSuccessMessage("Hive status updated successfully");
+        setTimeout(() => setSuccessMessage(""), 3000);
+        // Refresh the hive list
+        getAllHives();
+      } else {
+        setErrorMessage(data.msg || "Failed to update status");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      setErrorMessage("Failed to update status");
+    }
   };
 
   // Function to handle search input change
@@ -108,16 +114,20 @@ const Hives: React.FC = () => {
         case "location":
           return hive?.location?.toLowerCase()?.includes(searchTerm) ?? false;
         case "queenBreed":
-          return hive?.queenStatus?.toLowerCase()?.includes(searchTerm) ?? false;
-        
+          return (
+            hive?.queenStatus?.toLowerCase()?.includes(searchTerm) ?? false
+          );
+
         case "population":
           return hive?.population?.toString()?.includes(searchTerm) ?? false;
-          case "hiveName":
-          return hive.hiveName.toLowerCase().includes(searchTerm)?? false;
-          case "queenStatus":
-          return hive.queenStatus.toLowerCase().includes(searchTerm)?? false;
-          case "broodPattern":
-          return hive.broodPattern.toLowerCase().includes(searchTerm)?? false;
+        case "hiveName":
+          return hive.hiveName.toLowerCase().includes(searchTerm) ?? false;
+        case "queenStatus":
+          return hive.queenStatus.toLowerCase().includes(searchTerm) ?? false;
+        case "broodPattern":
+          return hive.broodPattern.toLowerCase().includes(searchTerm) ?? false;
+          case "status":
+          return hive.status.toLowerCase().includes(searchTerm) ?? false;
         default:
           return false;
       }
@@ -129,6 +139,10 @@ const Hives: React.FC = () => {
     } else {
       setErrorMessage("");
     }
+  };
+  
+  const formatYear = (dateString: string) => {
+    return new Date(dateString).getFullYear();
   };
 
   return (
@@ -157,12 +171,13 @@ const Hives: React.FC = () => {
             >
               <MenuItem value="id">Hive ID</MenuItem>
               <MenuItem value="no">Owner ID</MenuItem>
-               <MenuItem value="hiveName">Hive Name</MenuItem>
+              <MenuItem value="hiveName">Hive Name</MenuItem>
               <MenuItem value="hiveType">Type</MenuItem>
               <MenuItem value="location">Location</MenuItem>
               <MenuItem value="queenBreed">Queen Breed</MenuItem>
               <MenuItem value="broodPattern">Brood Pattern</MenuItem>
               <MenuItem value="population">Population</MenuItem>
+              <MenuItem value="status">Status</MenuItem>
             </Select>
           </FormControl>
 
@@ -185,6 +200,11 @@ const Hives: React.FC = () => {
           {errorMessage}
         </Alert>
       )}
+      {successMessage && (
+        <Alert severity="success" sx={{ marginTop: "10px" }}>
+          {successMessage}
+        </Alert>
+      )}
       <br />
 
       <div style={{ height: "400px", overflow: "auto" }}>
@@ -200,12 +220,13 @@ const Hives: React.FC = () => {
                 <StyledTableCell align="right">Honey Stores</StyledTableCell>
                 <StyledTableCell align="right">Location</StyledTableCell>
                 <StyledTableCell align="right">Population</StyledTableCell>
-                <StyledTableCell align="right">Established Year</StyledTableCell>
+                <StyledTableCell align="right">
+                  Established Year
+                </StyledTableCell>
                 <StyledTableCell align="right">Strength</StyledTableCell>
                 <StyledTableCell align="right">Brood Pattern</StyledTableCell>
                 <StyledTableCell align="right">Queen Status</StyledTableCell>
-                
-                
+
                 <StyledTableCell align="right">Pest Level</StyledTableCell>
                 <StyledTableCell align="right">Disease Signs</StyledTableCell>
                 <StyledTableCell align="right">Status</StyledTableCell>
@@ -222,35 +243,42 @@ const Hives: React.FC = () => {
                     <TableCell align="right">{row.no}</TableCell>
                     <TableCell align="right">{row.hiveType}</TableCell>
                     <TableCell align="right">{row.hiveName}</TableCell>
-                    <TableCell align="right">{row.honeyStores}%</TableCell>
+                    <TableCell align="right">{row.honeyStores}</TableCell>
                     <TableCell align="right">{row.location}</TableCell>
                     <TableCell align="right">{row.population}</TableCell>
                     <TableCell align="right">
-                      {new Date(row.establishedYear).getFullYear()}
+                      {formatYear(row.establishedYear)}
                     </TableCell>
                     <TableCell align="right">{row.strength}/10</TableCell>
                     <TableCell align="right">{row.broodPattern}</TableCell>
                     <TableCell align="right">{row.queenStatus}</TableCell>
-                     <TableCell align="right">{row.pestLevel}/10</TableCell>
+                    <TableCell align="right">{row.pestLevel}/10</TableCell>
                     <TableCell align="right">
-                      {row.diseaseSigns.length > 0 ? (
-                        row.diseaseSigns.map((disease, index) => (
-                          <Chip 
-                            key={index} 
-                            label={disease} 
-                            size="small" 
-                            sx={{ margin: '2px' }} 
-                          />
-                        ))
-                      ) : (
-                        "None"
-                      )}
+                      {row.diseaseSigns.length > 0
+                        ? row.diseaseSigns.map((disease, index) => (
+                            <Chip
+                              key={index}
+                              label={disease}
+                              size="small"
+                              sx={{ margin: "2px" }}
+                            />
+                          ))
+                        : "None"}
                     </TableCell>
                     <TableCell align="right">
-                      {row.status ? "Active" : "Inactive"}
+                      <Select
+                        value={row.status || "Active"}
+                        onChange={(e) => updateHiveStatus(row.id, e.target.value)}
+                        size="small"
+                        sx={{ minWidth: 120 }}
+                      >
+                        <MenuItem value="Active">Active</MenuItem>
+                        <MenuItem value="Inactive">Inactive</MenuItem>
+                        <MenuItem value="Maintenance">Maintenance</MenuItem>
+                        <MenuItem value="Quarantined">Quarantined</MenuItem>
+                      </Select>
                     </TableCell>
                   </TableRow>
-                
                 ))
               ) : (
                 <TableRow>
