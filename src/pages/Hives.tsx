@@ -199,9 +199,9 @@ const Hives: React.FC = () => {
                 <StyledTableCell align="right">Hive Name</StyledTableCell>
                 <StyledTableCell align="right">Honey Stores</StyledTableCell>
                 <StyledTableCell align="right">Location</StyledTableCell>
+                <StyledTableCell align="right">Population</StyledTableCell>
                 <StyledTableCell align="right">Established Year</StyledTableCell>
                 <StyledTableCell align="right">Strength</StyledTableCell>
-                <StyledTableCell align="right">Status</StyledTableCell>
                 <StyledTableCell align="right">Brood Pattern</StyledTableCell>
                 <StyledTableCell align="right">Queen Status</StyledTableCell>
                 
@@ -228,9 +228,7 @@ const Hives: React.FC = () => {
                     <TableCell align="right">
                       {new Date(row.establishedYear).getFullYear()}
                     </TableCell>
-                    <TableCell align="right">
-                      {row.status ? "Active" : "Inactive"}
-                    </TableCell>
+                    <TableCell align="right">{row.strength}/10</TableCell>
                     <TableCell align="right">{row.broodPattern}</TableCell>
                     <TableCell align="right">{row.queenStatus}</TableCell>
                      <TableCell align="right">{row.pestLevel}/10</TableCell>
@@ -247,6 +245,9 @@ const Hives: React.FC = () => {
                       ) : (
                         "None"
                       )}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.status ? "Active" : "Inactive"}
                     </TableCell>
                   </TableRow>
                 
