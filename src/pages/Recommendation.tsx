@@ -11,19 +11,20 @@ import {
   Box,
   Alert,
   Grid,
-  Paper,
-  Divider,
   Card,
   CardContent,
   Chip,
   Avatar,
+  Divider,
 } from "@mui/material";
 import { MailOutline, AccessTime } from "@mui/icons-material";
 import axios from "axios";
 import NavigationBar from "../components/NavigationBar";
 
 const Recommendation: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [beekeepers, setBeekeepers] = React.useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [hives, setHives] = React.useState<any[]>([]);
   const [selectedBeekeeper, setSelectedBeekeeper] = React.useState("");
   const [selectedHive, setSelectedHive] = React.useState("");
@@ -50,18 +51,26 @@ const Recommendation: React.FC = () => {
 
   const fetchHivesByBeekeeper = async (beekeeperId: string) => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/v1/hive/byBeekeeper/${beekeeperId}`);
+      const res = await axios.get(
+        `http://localhost:3000/api/v1/hive/byBeekeeper/${beekeeperId}`
+      );
       setHives(res.data.data);
     } catch (error) {
       console.error("Error fetching hives", error);
+      setHives([]);
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleBeekeeperChange = (event: any) => {
     const id = event.target.value;
     setSelectedBeekeeper(id);
     setSelectedHive("");
-    fetchHivesByBeekeeper(id);
+    if (id) {
+      fetchHivesByBeekeeper(id);
+    } else {
+      setHives([]);
+    }
   };
 
   const handleSubmit = async () => {
@@ -106,10 +115,14 @@ const Recommendation: React.FC = () => {
             </Typography>
 
             {errorMessage && (
-              <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {errorMessage}
+              </Alert>
             )}
             {successMessage && (
-              <Alert severity="success" sx={{ mb: 2 }}>{successMessage}</Alert>
+              <Alert severity="success" sx={{ mb: 2 }}>
+                {successMessage}
+              </Alert>
             )}
 
             <Box display="flex" flexDirection="column" gap={3}>
@@ -168,7 +181,11 @@ const Recommendation: React.FC = () => {
 
               <Button
                 variant="contained"
-                sx={{ minWidth: "50px", padding: "10px", backgroundColor: "#FFB700" }}
+                sx={{
+                  minWidth: "50px",
+                  padding: "10px",
+                  backgroundColor: "#FFB700",
+                }}
                 onClick={handleSubmit}
               >
                 Send Recommendation
@@ -182,9 +199,16 @@ const Recommendation: React.FC = () => {
               Live Preview
             </Typography>
 
-            <Card elevation={4} sx={{ borderRadius: 3, backgroundColor: "#fdfdfd" }}>
+            <Card
+              elevation={4}
+              sx={{ borderRadius: 3, backgroundColor: "#fdfdfd" }}
+            >
               <CardContent>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
                   <Box display="flex" alignItems="center" gap={1}>
                     <Avatar sx={{ bgcolor: "#FFB700" }}>
                       <MailOutline />
@@ -203,7 +227,11 @@ const Recommendation: React.FC = () => {
 
                 <Divider sx={{ my: 2 }} />
 
-                <Typography variant="subtitle2" fontWeight="medium" color="text.secondary">
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="medium"
+                  color="text.secondary"
+                >
                   To:
                 </Typography>
                 <Typography variant="body1" mb={1}>
@@ -212,14 +240,22 @@ const Recommendation: React.FC = () => {
                     : "Not selected"}
                 </Typography>
 
-                <Typography variant="subtitle2" fontWeight="medium" color="text.secondary">
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="medium"
+                  color="text.secondary"
+                >
                   Hive ID:
                 </Typography>
                 <Typography variant="body1" mb={1}>
                   {selectedHiveObj ? selectedHiveObj.hiveId : "Not selected"}
                 </Typography>
 
-                <Typography variant="subtitle2" fontWeight="medium" color="text.secondary">
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="medium"
+                  color="text.secondary"
+                >
                   Category:
                 </Typography>
                 <Chip
@@ -231,7 +267,11 @@ const Recommendation: React.FC = () => {
 
                 <Divider sx={{ my: 2 }} />
 
-                <Typography variant="subtitle2" fontWeight="medium" color="text.secondary">
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="medium"
+                  color="text.secondary"
+                >
                   Message:
                 </Typography>
                 <Typography

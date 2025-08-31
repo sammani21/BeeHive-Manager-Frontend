@@ -47,7 +47,7 @@ import {
 import BHMLogo from "../assets/BHM_logo.jpg";
 import { getAuth, signOut } from "firebase/auth";
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
@@ -316,8 +316,8 @@ export default function NavigationBar() {
 
           <ListItemButton
             component={Link}
-            to="/drivers"
-            onClick={() => handleDrawerItemClick("Drivers")}
+            to="/beekeepers"
+            onClick={() => handleDrawerItemClick("Bee Keepers")}
           >
             <ListItemIcon>
               <PersonIcon />
@@ -327,8 +327,8 @@ export default function NavigationBar() {
 
           <ListItemButton
             component={Link}
-            to="/vehicles"
-            onClick={() => handleDrawerItemClick("Vehicles")}
+            to="/hives"
+            onClick={() => handleDrawerItemClick("Hives")}
           >
             <ListItemIcon>
               <DriveEtaIcon />
@@ -338,8 +338,8 @@ export default function NavigationBar() {
 
           <ListItemButton
             component={Link}
-            to="/passengers"
-            onClick={() => handleDrawerItemClick("Passengers")}
+            to="/products"
+            onClick={() => handleDrawerItemClick("Products")}
           >
             <ListItemIcon>
               <PeopleIcon />
@@ -359,9 +359,9 @@ export default function NavigationBar() {
             <List component="div" disablePadding>
               <ListItemButton
                 component={Link}
-                to="/reports/vehicle-details"
+                to="/reports/Hive-details"
                 sx={{ pl: 4 }}
-                onClick={() => handleNestedItemClick("Vehicle Report")}
+                onClick={() => handleNestedItemClick("Hive Report")}
               >
                 <ListItemIcon>
                   <StarOutlineIcon />
@@ -371,9 +371,9 @@ export default function NavigationBar() {
 
               <ListItemButton
                 component={Link}
-                to="/reports/passenger-details"
+                to="/reports/product-details"
                 sx={{ pl: 4 }}
-                onClick={() => handleNestedItemClick("Passenger Details")}
+                onClick={() => handleNestedItemClick("Product Details")}
               >
                 <ListItemIcon>
                   <StarOutlineIcon />
@@ -383,9 +383,9 @@ export default function NavigationBar() {
 
               <ListItemButton
                 component={Link}
-                to="/reports/driver-details"
+                to="/reports/beekeeper-details"
                 sx={{ pl: 4 }}
-                onClick={() => handleNestedItemClick("Driver Details")}
+                onClick={() => handleNestedItemClick("Beekeeper Details")}
               >
                 <ListItemIcon>
                   <StarOutlineIcon />
