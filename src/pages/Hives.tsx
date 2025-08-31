@@ -16,6 +16,7 @@ import {
   InputLabel,
   FormControl,
   DialogTitle,
+  Chip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import NavigationBar from "../components/NavigationBar";
@@ -25,14 +26,20 @@ import { StyledTableCell } from "./BeeKeepers";
 interface Hive {
   id: string;
   no: string;
-  type: string;
+  hiveName: string;
+  hiveType: string;
   location: string;
   establishedYear: string;
+  strength: number;
   status: boolean;
-  queenBreed: string;
+  queenStatus: string;
   products: string;
   population: number;
   availability: boolean;
+  broodPattern: string;
+  honeyStores: number;
+  pestLevel: number;
+  diseaseSigns: string[];
 }
 
 // Define the Hives component
@@ -97,15 +104,20 @@ const Hives: React.FC = () => {
         case "no":
           return hive?.no?.toLowerCase()?.includes(searchTerm) ?? false;
         case "type":
-          return hive?.type?.toLowerCase()?.includes(searchTerm) ?? false;
+          return hive?.hiveType?.toLowerCase()?.includes(searchTerm) ?? false;
         case "location":
           return hive?.location?.toLowerCase()?.includes(searchTerm) ?? false;
         case "queenBreed":
-          return hive?.queenBreed?.toLowerCase()?.includes(searchTerm) ?? false;
-        case "products":
-          return hive?.products?.toLowerCase()?.includes(searchTerm) ?? false;
+          return hive?.queenStatus?.toLowerCase()?.includes(searchTerm) ?? false;
+        
         case "population":
           return hive?.population?.toString()?.includes(searchTerm) ?? false;
+          case "hiveName":
+          return hive.hiveName.toLowerCase().includes(searchTerm)?? false;
+          case "queenStatus":
+          return hive.queenStatus.toLowerCase().includes(searchTerm)?? false;
+          case "broodPattern":
+          return hive.broodPattern.toLowerCase().includes(searchTerm)?? false;
         default:
           return false;
       }
@@ -145,10 +157,11 @@ const Hives: React.FC = () => {
             >
               <MenuItem value="id">Hive ID</MenuItem>
               <MenuItem value="no">Owner ID</MenuItem>
-              <MenuItem value="type">Type</MenuItem>
+               <MenuItem value="hiveName">Hive Name</MenuItem>
+              <MenuItem value="hiveType">Type</MenuItem>
               <MenuItem value="location">Location</MenuItem>
               <MenuItem value="queenBreed">Queen Breed</MenuItem>
-              <MenuItem value="products">Products</MenuItem>
+              <MenuItem value="broodPattern">Brood Pattern</MenuItem>
               <MenuItem value="population">Population</MenuItem>
             </Select>
           </FormControl>
@@ -182,13 +195,20 @@ const Hives: React.FC = () => {
               <TableRow>
                 <StyledTableCell align="center">Hive ID</StyledTableCell>
                 <StyledTableCell align="right">Owner ID</StyledTableCell>
-                <StyledTableCell align="right">Type</StyledTableCell>
+                <StyledTableCell align="center">Type</StyledTableCell>
+                <StyledTableCell align="right">Hive Name</StyledTableCell>
+                <StyledTableCell align="right">Honey Stores</StyledTableCell>
                 <StyledTableCell align="right">Location</StyledTableCell>
-                <StyledTableCell align="right">Population</StyledTableCell>
                 <StyledTableCell align="right">Established Year</StyledTableCell>
+                <StyledTableCell align="right">Strength</StyledTableCell>
                 <StyledTableCell align="right">Status</StyledTableCell>
-                <StyledTableCell align="right">Products</StyledTableCell>
-                <StyledTableCell align="right">Queen Breed</StyledTableCell>
+                <StyledTableCell align="right">Brood Pattern</StyledTableCell>
+                <StyledTableCell align="right">Queen Status</StyledTableCell>
+                
+                
+                <StyledTableCell align="right">Pest Level</StyledTableCell>
+                <StyledTableCell align="right">Disease Signs</StyledTableCell>
+                <StyledTableCell align="right">Status</StyledTableCell>
               </TableRow>
             </TableHead>
 
@@ -200,7 +220,9 @@ const Hives: React.FC = () => {
                       {row.id}
                     </TableCell>
                     <TableCell align="right">{row.no}</TableCell>
-                    <TableCell align="right">{row.type}</TableCell>
+                    <TableCell align="right">{row.hiveType}</TableCell>
+                    <TableCell align="right">{row.hiveName}</TableCell>
+                    <TableCell align="right">{row.honeyStores}%</TableCell>
                     <TableCell align="right">{row.location}</TableCell>
                     <TableCell align="right">{row.population}</TableCell>
                     <TableCell align="right">
@@ -209,9 +231,25 @@ const Hives: React.FC = () => {
                     <TableCell align="right">
                       {row.status ? "Active" : "Inactive"}
                     </TableCell>
-                    <TableCell align="right">{row.products}</TableCell>
-                    <TableCell align="right">{row.queenBreed}</TableCell>
+                    <TableCell align="right">{row.broodPattern}</TableCell>
+                    <TableCell align="right">{row.queenStatus}</TableCell>
+                     <TableCell align="right">{row.pestLevel}/10</TableCell>
+                    <TableCell align="right">
+                      {row.diseaseSigns.length > 0 ? (
+                        row.diseaseSigns.map((disease, index) => (
+                          <Chip 
+                            key={index} 
+                            label={disease} 
+                            size="small" 
+                            sx={{ margin: '2px' }} 
+                          />
+                        ))
+                      ) : (
+                        "None"
+                      )}
+                    </TableCell>
                   </TableRow>
+                
                 ))
               ) : (
                 <TableRow>
