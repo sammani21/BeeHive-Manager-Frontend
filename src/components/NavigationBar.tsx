@@ -165,18 +165,10 @@ export default function NavigationBar() {
     setLogoutDialogOpen(false);
   };
 
-  const confirmLogout = () => {
-    const auth = getAuth();
-
-    signOut(auth)
-      .then(() => {
-        console.log("User logged out successfully");
-        localStorage.removeItem("token");
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.error("Logout failed:", error);
-      });
+  const handleLogout1 = () => {
+    // clear any auth tokens / session here if needed
+    localStorage.removeItem("token"); // example
+    navigate("/login"); // redirect to login page
   };
 
   const notifications = [
@@ -361,7 +353,7 @@ export default function NavigationBar() {
                   Cancel
                 </Button>
                 <Button
-                  onClick={confirmLogout}
+                  onClick={handleLogout1}
                   color="primary"
                   variant="contained"
                   sx={{

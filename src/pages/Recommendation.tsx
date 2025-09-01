@@ -79,21 +79,21 @@ const Recommendations: React.FC = () => {
   const theme = useTheme();
 
 const dummyBeekeepers = [
-    { _id: "b1", name: "John Doe", email: "john@example.com" },
-    { _id: "b2", name: "Jane Smith", email: "jane@example.com" },
+    { _id: "B011", name: "hello", email: "kavisamrajasooriya@gmail.com" },
+    { _id: "B012", name: "kavindhya", email: "a@gmail.com" },
   ];
 
   const dummyHives = [
-    { _id: "h1", hiveId: "HIVE-101", beekeeperId: "b1" },
-    { _id: "h2", hiveId: "HIVE-102", beekeeperId: "b1" },
-    { _id: "h3", hiveId: "HIVE-201", beekeeperId: "b2" },
+    { _id: "h1", hiveId: "H0001", beekeeperId: "B011" },
+    { _id: "h2", hiveId: "H0001", beekeeperId: "B011" },
+
   ];
 
   const dummyRecommendations = [
     {
       _id: "r1",
-      beekeeperId: { _id: "b1", name: "John Doe" },
-      hiveId: { _id: "h1", hiveId: "HIVE-101" },
+      beekeeperId: { _id: "B011", name: "hello" },
+      hiveId: { _id: "h2", hiveId: "H0001" },
       category: "Health",
       message: "Check hive for mites",
       status: "pending",
@@ -101,8 +101,8 @@ const dummyBeekeepers = [
     },
     {
       _id: "r2",
-      beekeeperId: { _id: "b2", name: "Jane Smith" },
-      hiveId: { _id: "h3", hiveId: "HIVE-201" },
+      beekeeperId: { _id: "B011", name: "hello" },
+      hiveId: { _id: "h1", hiveId: "H0001" },
       category: "Maintenance",
       message: "Replace broken frame",
       status: "completed",

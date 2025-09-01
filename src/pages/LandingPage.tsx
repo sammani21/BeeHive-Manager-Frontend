@@ -132,9 +132,9 @@ const LandingPage: React.FC = () => {
     },
     {
       id: 3,
-      title: "Seamless Communication",
-      description:
-        "Ensure smooth communication between hive managers, beekeepers, and others.",
+      title: "Production Tracking",
+  description:
+    "Monitor and analyze honey production, hive performance, and yield trends in real-time.",
       image: communicationImage,
     },
   ].map((feature) => (

@@ -1,12 +1,18 @@
 import { useState, FormEvent } from "react";
 import "../App.css";
 import axios, { AxiosResponse } from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { Typography, TextField, Button, Alert, Box, Grid } from "@mui/material";
-import BeeImage from "../assets/Beeimage.png"; // Using your original image
+import { useNavigate, Link } from "react-router-dom";
+import {
+  Typography,
+  Button,
+  Box,
+  TextField,
+  Alert,
+} from "@mui/material";
+import BeeImage from "../assets/Beeimage.png";
 
 const ForgotPassword: React.FC = () => {
-  const [adminId, setAdminId] = useState<string>(""); // Changed from username → adminId
+  const [adminId, setAdminId] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -16,10 +22,11 @@ const ForgotPassword: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+
     axios
       .post("http://localhost:3000/api/v1/user/forgotPassword", {
         email,
-        adminId, // Changed here too
+        adminId,
       })
       .then((res: AxiosResponse<{ status: boolean }>) => {
         if (res.data.status) {
@@ -31,7 +38,7 @@ const ForgotPassword: React.FC = () => {
         }
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response?.data?.message || err.message);
         if (err.response?.data?.message === "User is not registered.") {
           setErrorMessage("User is not registered. Please sign up.");
         } else {
@@ -50,6 +57,7 @@ const ForgotPassword: React.FC = () => {
         backgroundColor: "#EDE8F5",
       }}
     >
+      {/* Left Section: Background Image */}
       <Box
         sx={{
           flex: 1,
@@ -60,16 +68,25 @@ const ForgotPassword: React.FC = () => {
         }}
       />
 
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
+      {/* Right Section: Forgot Password Form */}
+      <Box
         sx={{
           flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           padding: { xs: "20px", md: "40px" },
+          backgroundColor: "#EDE8F5",
         }}
       >
-        <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: "400px", textAlign: "center" }}>
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "400px",
+            textAlign: "center",
+            backgroundColor: "transparent",
+          }}
+        >
           <Typography
             variant="h4"
             component="h1"
@@ -82,62 +99,78 @@ const ForgotPassword: React.FC = () => {
           <Typography
             variant="subtitle1"
             gutterBottom
-            sx={{ color: "#000000", mb: 4 }}
+            sx={{ color: "#000000", mb: 2 }}
           >
-            Enter your details to reset your password
+            Enter your Admin ID and email to reset your password
           </Typography>
 
-          <TextField
-            required
-            type="text"
-            id="adminId"
-            autoComplete="adminId"
-            label="Admin ID"
-            variant="outlined"
-            value={adminId}
-            onChange={(e) => setAdminId(e.target.value)}
-            margin="normal"
-            fullWidth
-          />
-
-          <TextField
-            required
-            type="email"
-            id="email"
-            autoComplete="email"
-            label="Email"
-            variant="outlined"
-            //value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            margin="normal"
-            fullWidth
-          />
-
-          {errorMessage && (
-            <Alert severity="error" sx={{ marginY: 2 }}>
-              {errorMessage}
-            </Alert>
-          )}
-
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            fullWidth
-            sx={{
-              backgroundColor: "#FFB700",
-              "&:hover": { backgroundColor: "#CC9200" },
-              marginTop: 2,
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              backgroundColor: "transparent",
+              border: "none",
             }}
           >
-            SUBMIT
-          </Button>
+            <TextField
+              required
+              type="text"
+              id="adminId"
+              label="Admin ID"
+              variant="outlined"
+              value={adminId}
+              onChange={(e) => setAdminId(e.target.value)}
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px", mt: -2 }}
+            />
 
-          <Typography variant="body2" sx={{ marginTop: 2 }}>
-            <Link to="/login">Back to Login</Link>
-          </Typography>
-        </form>
-      </Grid>
+            <TextField
+              required
+              type="email"
+              id="email"
+              label="Email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              margin="normal"
+              fullWidth
+              sx={{ backgroundColor: "#f5f5f5", borderRadius: "5px" }}
+            />
+
+            {errorMessage && (
+              <Alert severity="error" sx={{ marginY: 2 }}>
+                {errorMessage}
+              </Alert>
+            )}
+
+            <Button
+              type="submit"
+              size="large"
+              variant="contained"
+              fullWidth
+              sx={{
+                marginY: 2,
+                backgroundColor: "#FFB700",
+                "&:hover": { backgroundColor: "#CC9200" },
+                fontWeight: "bold",
+                fontSize: "1rem",
+              }}
+            >
+              Submit
+            </Button>
+
+            <Typography variant="body2" sx={{ color: "#666666" }}>
+              Remembered your password?{" "}
+              <Link
+                to="/login"
+                style={{ color: "#FFB700", textDecoration: "none" }}
+              >
+                Back to Login
+              </Link>
+            </Typography>
+          </form>
+        </Box>
+      </Box>
     </Box>
   );
 };
