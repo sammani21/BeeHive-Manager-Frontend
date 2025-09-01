@@ -25,8 +25,9 @@ import { StyledTableCell } from "./BeeKeepers";
 
 // Define the Hive interface
 interface Hive {
+  
   id: string;
-  no: string;
+  beekeeper: string;
   hiveName: string;
   hiveType: string;
   location: string;
@@ -108,7 +109,7 @@ const Hives: React.FC = () => {
         case "id":
           return hive?.id?.toLowerCase()?.includes(searchTerm) ?? false;
         case "no":
-          return hive?.no?.toLowerCase()?.includes(searchTerm) ?? false;
+          return hive?.beekeeper?.toLowerCase()?.includes(searchTerm) ?? false;
         case "type":
           return hive?.hiveType?.toLowerCase()?.includes(searchTerm) ?? false;
         case "location":
@@ -170,7 +171,7 @@ const Hives: React.FC = () => {
               label="Search by"
             >
               <MenuItem value="id">Hive ID</MenuItem>
-              <MenuItem value="no">Owner ID</MenuItem>
+              <MenuItem value="no">Beekeeper</MenuItem>
               <MenuItem value="hiveName">Hive Name</MenuItem>
               <MenuItem value="hiveType">Type</MenuItem>
               <MenuItem value="location">Location</MenuItem>
@@ -214,7 +215,7 @@ const Hives: React.FC = () => {
             <TableHead>
               <TableRow>
                 <StyledTableCell align="center">Hive ID</StyledTableCell>
-                <StyledTableCell align="right">Owner ID</StyledTableCell>
+                <StyledTableCell align="right">Beekeeper</StyledTableCell>
                 <StyledTableCell align="center">Type</StyledTableCell>
                 <StyledTableCell align="right">Hive Name</StyledTableCell>
                 <StyledTableCell align="right">Honey Stores</StyledTableCell>
@@ -240,7 +241,7 @@ const Hives: React.FC = () => {
                     <TableCell align="center" component="th" scope="row">
                       {row.id}
                     </TableCell>
-                    <TableCell align="right">{row.no}</TableCell>
+                    <TableCell align="right">{row.beekeeper}</TableCell>
                     <TableCell align="right">{row.hiveType}</TableCell>
                     <TableCell align="right">{row.hiveName}</TableCell>
                     <TableCell align="right">{row.honeyStores}</TableCell>
