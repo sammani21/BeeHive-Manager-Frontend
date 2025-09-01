@@ -37,7 +37,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import axios from "axios";
+//import axios from "axios";
 import NavigationBar from "../components/NavigationBar";
 
 // StyledTableCell component with #FFB700 color
@@ -77,15 +77,48 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Recommendations: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const theme = useTheme();
+
+const dummyBeekeepers = [
+    { _id: "b1", name: "John Doe", email: "john@example.com" },
+    { _id: "b2", name: "Jane Smith", email: "jane@example.com" },
+  ];
+
+  const dummyHives = [
+    { _id: "h1", hiveId: "HIVE-101", beekeeperId: "b1" },
+    { _id: "h2", hiveId: "HIVE-102", beekeeperId: "b1" },
+    { _id: "h3", hiveId: "HIVE-201", beekeeperId: "b2" },
+  ];
+
+  const dummyRecommendations = [
+    {
+      _id: "r1",
+      beekeeperId: { _id: "b1", name: "John Doe" },
+      hiveId: { _id: "h1", hiveId: "HIVE-101" },
+      category: "Health",
+      message: "Check hive for mites",
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      _id: "r2",
+      beekeeperId: { _id: "b2", name: "Jane Smith" },
+      hiveId: { _id: "h3", hiveId: "HIVE-201" },
+      category: "Maintenance",
+      message: "Replace broken frame",
+      status: "completed",
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
   // State variables
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [recommendations, setRecommendations] = React.useState<any[]>([]);
+  //const [recommendations, setRecommendations] = React.useState<any[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [allRecommendations, setAllRecommendations] = React.useState<any[]>([]);
+  //const [allRecommendations, setAllRecommendations] = React.useState<any[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [beekeepers, setBeekeepers] = React.useState<any[]>([]);
+  //const [beekeepers, setBeekeepers] = React.useState<any[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [hives, setHives] = React.useState<any[]>([]);
+  //const [hives, setHives] = React.useState<any[]>([]);
   const [selected, setSelected] = React.useState<string>("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(false);
   const [isFormDialogOpen, setIsFormDialogOpen] = React.useState<boolean>(false);
@@ -94,8 +127,19 @@ const Recommendations: React.FC = () => {
   const [searchCategory, setSearchCategory] = React.useState<string>("beekeeperName");
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [successMessage, setSuccessMessage] = React.useState<string>("");
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  //const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [recommendations, setRecommendations] = React.useState<any[]>(dummyRecommendations);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const [allRecommendations, setAllRecommendations] = React.useState<any[]>(dummyRecommendations);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+const [beekeepers, setBeekeepers] = React.useState<any[]>(dummyBeekeepers);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const [hives, setHives] = React.useState<any[]>(dummyHives);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const [isLoading, setIsLoading] = React.useState<boolean>(false); 
   // Form state
   const [beekeeperId, setBeekeeperId] = React.useState<string>("");
   const [hiveId, setHiveId] = React.useState<string>("");
@@ -104,13 +148,13 @@ const Recommendations: React.FC = () => {
   const [status, setStatus] = React.useState<string>("pending");
 
   // Fetch all data when the page loads
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     getAllRecommendations();
     getBeekeepers();
   }, []);
-
+*/
   // Function to get all recommendations
-  const getAllRecommendations = () => {
+  /*const getAllRecommendations = () => {
     setIsLoading(true);
     setRecommendations([]);
     setAllRecommendations([]);
@@ -150,12 +194,17 @@ const Recommendations: React.FC = () => {
         console.error("Error fetching hives:", error);
         setErrorMessage("Error fetching hives");
       });
-  };
+  };*/
 
   // Function to handle beekeeper selection change
-  const handleBeekeeperChange = (id: string) => {
+  /*const handleBeekeeperChange = (id: string) => {
     setBeekeeperId(id);
     getHivesByBeekeeper(id);
+  };*/
+
+  const handleBeekeeperChange = (id: string) => {
+    setBeekeeperId(id);
+    setHives(dummyHives.filter(hive => hive.beekeeperId === id));
   };
 
   // Function to handle delete button click
@@ -165,7 +214,7 @@ const Recommendations: React.FC = () => {
   };
 
   // Function to handle delete confirmation
-  const handleDeleteConfirmation = () => {
+  /*const handleDeleteConfirmation = () => {
     setIsDeleteDialogOpen(false);
     axios.delete(`http://localhost:3000/api/v1/recommendation/${selected}`)
       .then((response) => {
@@ -178,11 +227,19 @@ const Recommendations: React.FC = () => {
       .catch(() => {
         setErrorMessage("Something went wrong");
       });
+  };*/
+
+  const handleDeleteConfirmation = () => {
+    setRecommendations((prev) => prev.filter((r) => r._id !== selected));
+    setAllRecommendations((prev) => prev.filter((r) => r._id !== selected));
+    setSuccessMessage("Recommendation deleted successfully");
+    setTimeout(() => setSuccessMessage(""), 3000);
+    setIsDeleteDialogOpen(false);
   };
 
   // Function to handle edit button click
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleEditClick = (recommendation: any) => {
+  /*const handleEditClick = (recommendation: any) => {
     setIsEditMode(true);
     setSelected(recommendation._id);
     setBeekeeperId(recommendation.beekeeperId._id);
@@ -192,10 +249,25 @@ const Recommendations: React.FC = () => {
     setStatus(recommendation.status);
     getHivesByBeekeeper(recommendation.beekeeperId._id);
     setIsFormDialogOpen(true);
+  };*/
+
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleEditClick = (rec: any) => {
+    setIsEditMode(true);
+    setSelected(rec._id);
+    setBeekeeperId(rec.beekeeperId._id);
+    setHiveId(rec.hiveId._id);
+    setCategory(rec.category);
+    setMessage(rec.message);
+    setStatus(rec.status);
+    setHives(dummyHives.filter((h) => h.beekeeperId === rec.beekeeperId._id));
+    setIsFormDialogOpen(true);
   };
 
+
   // Function to handle status update
-  const handleStatusUpdate = (id: string, newStatus: string) => {
+  /*const handleStatusUpdate = (id: string, newStatus: string) => {
     axios.put(`http://localhost:3000/api/v1/recommendation/${id}/status`, { status: newStatus })
       .then((response) => {
         if (response.status === 200) {
@@ -207,10 +279,18 @@ const Recommendations: React.FC = () => {
       .catch(() => {
         setErrorMessage("Error updating status");
       });
+  };*/
+
+  const handleStatusUpdate = (id: string, newStatus: string) => {
+    setRecommendations((prev) =>
+      prev.map((r) => (r._id === id ? { ...r, status: newStatus } : r))
+    );
+    setSuccessMessage("Status updated successfully");
+    setTimeout(() => setSuccessMessage(""), 3000);
   };
 
   // Function to handle form submission
-  const handleSubmit = () => {
+  /*const handleSubmit = () => {
     if (!beekeeperId || !hiveId || !category || !message) {
       setErrorMessage("All fields are required");
       return;
@@ -241,6 +321,37 @@ const Recommendations: React.FC = () => {
 
     setIsFormDialogOpen(false);
     resetForm();
+  };*/
+
+  const handleSubmit = () => {
+    if (!beekeeperId || !hiveId || !category || !message) {
+      setErrorMessage("All fields are required");
+      return;
+    }
+
+    if (isEditMode) {
+      setRecommendations((prev) =>
+        prev.map((r) => (r._id === selected ? { ...r, status } : r))
+      );
+      setSuccessMessage("Recommendation updated successfully");
+    } else {
+      const newRec = {
+        _id: `r${Math.random()}`,
+        beekeeperId: beekeepers.find((b) => b._id === beekeeperId),
+        hiveId: hives.find((h) => h._id === hiveId),
+        category,
+        message,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      };
+      setRecommendations((prev) => [...prev, newRec]);
+      setAllRecommendations((prev) => [...prev, newRec]);
+      setSuccessMessage("Recommendation created successfully");
+    }
+
+    setTimeout(() => setSuccessMessage(""), 3000);
+    setIsFormDialogOpen(false);
+    resetForm();
   };
 
   // Function to reset form
@@ -255,7 +366,7 @@ const Recommendations: React.FC = () => {
   };
 
   // Function to handle search
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /*const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
 
@@ -285,6 +396,27 @@ const Recommendations: React.FC = () => {
     } else {
       setErrorMessage("");
     }
+  };*/
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    const filtered = allRecommendations.filter((rec) => {
+      switch (searchCategory) {
+        case "beekeeperName":
+          return rec.beekeeperId?.name?.toLowerCase().includes(term);
+        case "hiveId":
+          return rec.hiveId?.hiveId?.toLowerCase().includes(term);
+        case "category":
+          return rec.category?.toLowerCase().includes(term);
+        case "status":
+          return rec.status?.toLowerCase().includes(term);
+        default:
+          return false;
+      }
+    });
+    setRecommendations(filtered);
+    setErrorMessage(filtered.length === 0 ? "No results found" : "");
   };
 
   // Function to open create dialog

@@ -1,7 +1,4 @@
-
-
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -10,16 +7,14 @@ import {
   Typography,
   ThemeProvider,
   createTheme,
+  Box,
+  Divider,
 } from "@mui/material";
- import NavigationBar from "../components/NavigationBar";
-import ComparisonBarChart from "../components/ProductsDashboard";
+import NavigationBar from "../components/NavigationBar";
 import BarChart from "../components/HivesDashboard";
 import PieChart from "../components/BeekeepersDashboard";
 import DoughnutChart from "../components/RecommendationsDashboard";
-//import LineChartForNoOfTripsDashboard from "../components/LineChartForNoOfTripsDashboard";
-import { format } from "date-fns";
-
-
+import ComparisonBarChart from "../components/ProductsDashboard";
 
 const theme = createTheme({
   palette: {
@@ -32,271 +27,330 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Arial, sans-serif",
-    h1: {
-      fontWeight: 900,
-      fontSize: "3rem",
-      textTransform: "uppercase",
-      marginBottom: "1rem",
-      marginLeft: "300px",
-      textAlign: "center",
-      letterSpacing: "0.5px",
-      background: "linear-gradient(135deg, #00b4db 0%, #0083b0 100%)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      padding: "0.5rem",
+    h4: {
+      fontWeight: "bold",
     },
     h6: {
       fontWeight: "bold",
-      textAlign: "center",
+    },
+    body2: {
+      color: "#555",
     },
   },
 });
 
 const DashboardPage: React.FC = () => {
-  const [hiveCounts, setHiveCounts] = useState({
-    totalHives: 0,
-    inProductionHives: 0,
-    outOfProductionHives: 0,
+  // Dummy data
+  const [hiveData] = useState({
+    totalHives: 15,
+    inProductionHives: 14,
+    outOfProductionHives: 1,
   });
 
-  const [beekeeperCounts, setBeekeeperCounts] = useState({
-    noOfTotalBeekeepers: 0,
-    noOfAvailableBeekeepers: 0,
-    noOfUnavailableBeekeepers: 0,
+  const [beekeeperData] = useState({
+    totalBeekeepers: 5,
+    availableBeekeepers: 3,
+    unavailableBeekeepers: 2,
   });
 
-  const [tripCounts, setTripCounts] = useState({
-    numberOfTotalTrips: 0,
-    scheduledTrips: 0,
-    cancelledTrips: 0,
+  const [recommendationData] = useState({
+    totalRecommendations: 2,
+    pendingRecommendations: 1,
+    completedRecommendations: 1,
+    dismissedRecommendations: 0,
   });
 
-  const [comparisonChartData, setComparisonChartData] = useState({
-    years: [],
-    malfunctionData: [],
-    accidentData: [],
+  const [productData] = useState({
+    years: ["2023", "2024"],
+    honeyProduction: [120, 150],
+    waxProduction: [35, 42],
   });
 
-  const [completedTripCounts, setCompletedTripCounts] = useState<TripCount[]>([]);
-
+  // Simulated loading
   useEffect(() => {
-    fetchHiveCounts();
-    fetchBeekeeperCounts();
-    fetchTripCounts();
-    fetchComparisonData();
-    fetchTripCountsDaily();
-    // fetchTraveledKmCounts();
-
-    const intervalId = setInterval(() => {
-      fetchHiveCounts();
-      fetchBeekeeperCounts();
-      fetchTripCounts();
-      fetchComparisonData();
-      fetchTripCountsDaily();
-      // fetchTraveledKmCounts();
-    }, 5000);
-
-    return () => clearInterval(intervalId);
+    const timer = setTimeout(() => {
+      console.log("Dashboard data loaded");
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
-
-  const fetchHiveCounts = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/hives/counts"
-      );
-      const { hives } = response.data;
-      setHiveCounts({
-        totalHives: hives.total,
-        inProductionHives: hives.inProduction,
-        outOfProductionHives: hives.outOfProduction,
-      });
-    } catch (error) {
-      console.error("Error fetching hive counts:", error);
-    }
-  };
-
-  const fetchBeekeeperCounts = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/api/beekeepers/counts");
-      const { available, unavailable } = response.data.beekeepers;
-      setBeekeeperCounts({
-        noOfTotalBeekeepers: response.data.beekeepers.total,
-        noOfAvailableBeekeepers: available,
-        noOfUnavailableBeekeepers: unavailable,
-      });
-    } catch (error) {
-      console.error("Error fetching beekeeper counts:", error);
-    }
-  };
-
-  const fetchTripCounts = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/trips/counts"
-      );
-      const { scheduledTrips, cancelledTrips, totalTrips } =
-        response.data.trips;
-      setTripCounts({
-        numberOfTotalTrips: totalTrips,
-        scheduledTrips: scheduledTrips,
-        cancelledTrips: cancelledTrips,
-      });
-    } catch (error) {
-      console.error("Error fetching trip counts:", error);
-    }
-  };
-
-  const fetchComparisonData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/issues/counts"
-      );
-      const data = response.data;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const years = data.map((item: any) => item.year.toString());
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const malfunctionData = data.map((item: any) => item.malfunctions);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const accidentData = data.map((item: any) => item.accidents);
-      setComparisonChartData({ years, malfunctionData, accidentData });
-    } catch (error) {
-      console.error("Error fetching comparison data:", error);
-    }
-  };
-
-  interface TripCount {
-    date: string;
-    count: number;
-  }
-  
-  const fetchTripCountsDaily = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/api/trips/daily-completed");
-      const dailyData = response.data;
-
-      console.log("Raw API Response:", dailyData);
-
-      if (!Array.isArray(dailyData)) {
-        throw new Error("Expected an array of daily trip data");
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const transformedData: TripCount[] = dailyData.map((item: any) => {
-        try {
-          const date = new Date(`${item.year}-${item.month}-${item.day}`);
-          const formattedDate = format(date, 'yyyy-MM-dd');
-
-          return {
-            date: formattedDate,
-            count: item.count,
-          };
-        } catch (error) {
-          console.error("Error parsing date or count:", error);
-          return null;
-        }
-      }).filter((data: TripCount | null): data is TripCount => data !== null);
-
-      console.log("Transformed Data:", transformedData);
-
-      setCompletedTripCounts(transformedData);
-    } catch (error) {
-      console.error("Error fetching daily completed trips:", error);
-    }
-  };
-
-  
-  const { totalHives, inProductionHives, outOfProductionHives } =
-    hiveCounts;
-  const { noOfTotalBeekeepers, noOfAvailableBeekeepers, noOfUnavailableBeekeepers } =
-    beekeeperCounts;
-  const { numberOfTotalTrips, scheduledTrips, cancelledTrips } = tripCounts;
-  const { years, malfunctionData, accidentData } = comparisonChartData;
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ minHeight: "100vh", backgroundColor: "#ffffff" }}>
+      <Box sx={{ minHeight: "100vh", backgroundColor: "#f9fafe" }}>
         <NavigationBar />
-        <Container maxWidth="lg">
-        <Typography variant="h4" fontWeight="bold" textAlign="left" color="primary">
-              Dashboard
-            </Typography>
-          <Grid container spacing={2} sx={{ marginTop: "2rem", marginBottom: "2rem", justifyContent: "center" }}>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ height: "400px", width :"320px" , display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Hive Status
-                  </Typography>
-                  <BarChart
-                    noOfTotalHives={totalHives}
-                    noOfInProductionHives={inProductionHives}
-                    noOfOutOfProductionHives={outOfProductionHives}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} >
-              <Card sx={{ height: "400px", width :"320px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                   Bee Keeper Status
-                  </Typography>
-                  <PieChart
-                    noOfAvailableBeekeepers={noOfAvailableBeekeepers}
-                    noOfUnavailableBeekeepers={noOfUnavailableBeekeepers}
-                  />
-                  <Typography variant="body1">
-                    <b>Number of Total Bee Keepers: {noOfTotalBeekeepers}</b>
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} >
-              <Card sx={{ height: "400px", width :"320px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Recommendation Status
-                  </Typography>
-                  <DoughnutChart
-                    numberOfTotalTrips={numberOfTotalTrips}
-                    scheduledTrips={scheduledTrips}
-                    cancelledTrips={cancelledTrips}
-                  />
-                  <Typography variant="body1">
-                    <b>Number of Total Recommendations: {numberOfTotalTrips}</b>
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} >
-              <Card sx={{ height: "400px", width :"320px" ,display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", background: "#f0f0f0", borderRadius: "30px" }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Production Comparison
-                  </Typography>
-                  <ComparisonBarChart
-                    years={years}
-                    malfunctionData={malfunctionData}
-                    accidentData={accidentData}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+        <Container maxWidth="xl" sx={{ py: 4 }}>
+<Typography 
+  variant="h4" 
+  fontWeight="bold" 
+  color="primary" 
+  gutterBottom
+>
+  🐝 Beekeeping Dashboard
+</Typography>
 
-            {/* <Grid item xs={12} sm={6} md={4} lg={3} sx={{ marginRight: "400px" }}>
-  <Card sx={{ height: "530px", width: "900px" ,display: "flex", flexDirection: "column", justifyContent: "space-between",  background: "#f0f0f0", borderRadius: "30px" }}>
-    <CardContent>
-      <Typography variant="h6" gutterBottom>
-        High Performing Bee Keepers
+<Typography variant="body1" color="text.secondary" paragraph>
+  Welcome to the central hub of your beekeeping operations. 
+  Here you can monitor hive health, manage beekeepers, track recommendations, 
+  and analyze production trends — all in one place. 
+  Use the live insights and visual charts to make better decisions 
+  for sustainable and productive beekeeping.
+</Typography>
+          <Grid container spacing={3}>
+            {/* Hive Status */}
+            {/* Hive Status */}
+<Grid item xs={12} sm={6} md={6} lg={3}>
+  <Card
+    sx={{
+      height: "100%",
+      borderRadius: 3,
+      boxShadow: 4,
+      p: 1,
+      transition: "all 0.3s",
+      "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
+    }}
+  >
+    <CardContent sx={{ textAlign: "center" }}>
+      {/* Title */}
+      <Typography variant="h6" color="primary" gutterBottom>
+        Hive Status
       </Typography>
-      <LineChartForNoOfTripsDashboard completedTripCounts={completedTripCounts} />
+
+      {/* Chart (smaller + centered) */}
+      <Box
+        sx={{
+          height: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <BarChart
+          noOfTotalHives={hiveData.totalHives}
+          noOfInProductionHives={hiveData.inProductionHives}
+          noOfOutOfProductionHives={hiveData.outOfProductionHives}
+        />
+      </Box>
+
+      <Divider sx={{ my: 1 }} />
+
+      {/* Footer */}
+      <Typography variant="body2">
+        <b>Total Hives: {hiveData.totalHives}</b>
+      </Typography>
     </CardContent>
   </Card>
-</Grid> */}
-            
+</Grid>
+
+
+            {/* Beekeeper Status */}
+            {/* Beekeeper Status */}
+<Grid item xs={12} sm={6} md={6} lg={3}>
+  <Card
+    sx={{
+      height: "100%",
+      borderRadius: 3,
+      boxShadow: 4,
+      p: 1,
+      transition: "all 0.3s",
+      "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
+    }}
+  >
+    <CardContent sx={{ textAlign: "center" }}>
+      {/* Title */}
+      <Typography variant="h6" color="primary" gutterBottom>
+        Beekeeper Status
+      </Typography>
+
+      {/* Chart (larger for better visibility) */}
+      <Box
+        sx={{
+          height: 250,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <PieChart
+          noOfAvailableBeekeepers={beekeeperData.availableBeekeepers}
+          noOfUnavailableBeekeepers={beekeeperData.unavailableBeekeepers}
+        />
+      </Box>
+
+      <Divider sx={{ my: 1 }} />
+
+      {/* Footer */}
+      <Typography variant="body2">
+        <b>Total Beekeepers: {beekeeperData.totalBeekeepers}</b>
+      </Typography>
+    </CardContent>
+  </Card>
+</Grid>
+
+
+            {/* Recommendations */}
+            {/* Recommendations */}
+<Grid item xs={12} sm={6} md={6} lg={3}>
+  <Card
+    sx={{
+      height: "100%",
+      borderRadius: 3,
+      boxShadow: 4,
+      p: 1,
+      transition: "all 0.3s",
+      "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
+    }}
+  >
+    <CardContent sx={{ textAlign: "center" }}>
+      <Typography variant="h6" color="primary" gutterBottom>
+        Recommendations
+      </Typography>
+
+      {/* Chart (same size as Beekeeper Status for balance) */}
+      <Box
+        sx={{
+          height: 250,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <DoughnutChart
+          numberOfTotalTrips={recommendationData.totalRecommendations}
+          scheduledTrips={recommendationData.pendingRecommendations}
+          cancelledTrips={recommendationData.completedRecommendations}
+        />
+      </Box>
+
+      <Divider sx={{ my: 1 }} />
+
+      <Typography variant="body2">
+        <b>Total: {recommendationData.totalRecommendations}</b>
+      </Typography>
+    </CardContent>
+  </Card>
+</Grid>
+
+            {/* Production Comparison */}
+            {/* Production Comparison */}
+{/* Production Comparison */}
+{/* Production Comparison */}
+<Grid item xs={12} sm={6} md={6} lg={3}>
+  <Card
+    sx={{
+      height: "100%",
+      borderRadius: 3,
+      boxShadow: 4,
+      p: 1,
+      transition: "all 0.3s",
+      "&:hover": { transform: "translateY(-6px)", boxShadow: 6 },
+    }}
+  >
+    <CardContent sx={{ textAlign: "center" }}>
+      {/* Title */}
+      <Typography
+        variant="h6"
+        color="primary"
+        gutterBottom
+        fontWeight="bold"
+      >
+        Production Comparison
+      </Typography>
+
+      {/* Chart (smaller height) */}
+      <Box sx={{ height: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <ComparisonBarChart
+          years={productData.years}
+          malfunctionData={productData.honeyProduction}
+          accidentData={productData.waxProduction}
+          //showTitle={false} // chart should not render internal titles
+        />
+      </Box>
+
+      <Divider sx={{ my: 1 }} />
+
+      {/* Footer/Subtext */}
+      <Typography variant="body2" sx={{ fontStyle: "italic" }}>
+        Honey vs Wax Production
+      </Typography>
+    </CardContent>
+  </Card>
+</Grid>
+
+
+
+
+            {/* System Overview */}
+            <Grid item xs={12}>
+  <Card
+    sx={{
+      borderRadius: 3,
+      boxShadow: 4,
+      p: 3,
+      background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+    }}
+  >
+    <CardContent>
+      {/* Title */}
+      <Typography
+        variant="h6"
+        gutterBottom
+        color="primary"
+        textAlign="center"
+        fontWeight="bold"
+      >
+        System Overview
+      </Typography>
+
+      {/* Stats Grid */}
+      <Grid container spacing={3} justifyContent="center">
+        {[
+          { label: "Total Hives", value: hiveData.totalHives, icon: "🐝" },
+          { label: "Beekeepers", value: beekeeperData.totalBeekeepers, icon: "👨‍🌾" },
+          { label: "Recommendations", value: recommendationData.totalRecommendations, icon: "📋" },
+          { label: "Active Hives", value: hiveData.inProductionHives, icon: "✅" },
+        ].map((stat, index) => (
+          <Grid item xs={6} md={3} key={index}>
+            <Box
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                backgroundColor: "white",
+                boxShadow: 2,
+                transition: "all 0.3s",
+                "&:hover": { transform: "translateY(-4px)", boxShadow: 4 },
+                textAlign: "center",
+              }}
+            >
+              {/* Icon */}
+              <Typography variant="h5" sx={{ mb: 1 }}>
+                {stat.icon}
+              </Typography>
+
+              {/* Value */}
+              <Typography
+                variant="h4"
+                color="primary"
+                fontWeight="bold"
+                sx={{ lineHeight: 1.2 }}
+              >
+                {stat.value}
+              </Typography>
+
+              {/* Label */}
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {stat.label}
+              </Typography>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+    </CardContent>
+  </Card>
+</Grid>
+
           </Grid>
         </Container>
-      </div>
+      </Box>
     </ThemeProvider>
   );
 };
