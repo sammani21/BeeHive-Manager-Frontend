@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import BusImage from "../assets/busimage.jpg";
+import BusImage from "../assets/Beeimage.png";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 
 const ResetPassword: React.FC = () => {

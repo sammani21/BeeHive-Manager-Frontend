@@ -47,6 +47,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
 // StyledTableCell component with #FFB700 color
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#FFB700",

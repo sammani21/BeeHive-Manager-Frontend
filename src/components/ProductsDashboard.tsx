@@ -41,6 +41,7 @@ const ComparisonBarChart: React.FC<ComparisonBarChartProps> = ({
       },
       tooltip: {
         callbacks: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           label: (tooltipItem: any) => {
             return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
           },

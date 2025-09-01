@@ -7,7 +7,6 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Paper,
   Button,
   DialogTitle,
   styled,
@@ -23,8 +22,16 @@ import {
   Select,
   MenuItem,
   IconButton,
-  //Typography,
   Box,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  CircularProgress,
+  Tooltip,
+  alpha,
+  useTheme,
+  Stack
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -33,20 +40,43 @@ import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import NavigationBar from "../components/NavigationBar";
 
-// StyledTableCell component for custom styling of table cells
-export const StyledTableCell = styled(TableCell)(() => ({
+// StyledTableCell component with #FFB700 color
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#FFD700",
+    backgroundColor: "#FFB700",
     color: "#000000",
     fontWeight: "bold",
+    fontSize: "14px",
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: "12px 16px",
   },
+}));
+
+// StyledTableRow component
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(even)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+  '&:hover': {
+    backgroundColor: alpha("#FFB700", 0.05),
+  },
+  cursor: 'pointer',
+  transition: 'background-color 0.2s ease',
 }));
 
 // Recommendations functional component
 const Recommendations: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const theme = useTheme();
   // State variables
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recommendations, setRecommendations] = React.useState<any[]>([]);
@@ -62,7 +92,9 @@ const Recommendations: React.FC = () => {
   const [isEditMode, setIsEditMode] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
   const [searchCategory, setSearchCategory] = React.useState<string>("beekeeperName");
+  const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [successMessage, setSuccessMessage] = React.useState<string>("");
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   // Form state
   const [beekeeperId, setBeekeeperId] = React.useState<string>("");
@@ -79,6 +111,7 @@ const Recommendations: React.FC = () => {
 
   // Function to get all recommendations
   const getAllRecommendations = () => {
+    setIsLoading(true);
     setRecommendations([]);
     setAllRecommendations([]);
 
@@ -86,10 +119,12 @@ const Recommendations: React.FC = () => {
       .then((response) => {
         setRecommendations(response.data.data);
         setAllRecommendations(response.data.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching recommendations:", error);
         setErrorMessage("Error fetching recommendations");
+        setIsLoading(false);
       });
   };
 
@@ -221,7 +256,8 @@ const Recommendations: React.FC = () => {
 
   // Function to handle search
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value.toLowerCase();
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
 
     if (allRecommendations.length === 0) {
       setRecommendations([]);
@@ -232,13 +268,13 @@ const Recommendations: React.FC = () => {
     const filtered = allRecommendations.filter((recommendation) => {
       switch (searchCategory) {
         case "beekeeperName":
-          return recommendation.beekeeperId?.name?.toLowerCase().includes(searchTerm);
+          return recommendation.beekeeperId?.name?.toLowerCase().includes(term);
         case "hiveId":
-          return recommendation.hiveId?.hiveId?.toLowerCase().includes(searchTerm);
+          return recommendation.hiveId?.hiveId?.toLowerCase().includes(term);
         case "category":
-          return recommendation.category?.toLowerCase().includes(searchTerm);
+          return recommendation.category?.toLowerCase().includes(term);
         case "status":
-          return recommendation.status?.toLowerCase().includes(searchTerm);
+          return recommendation.status?.toLowerCase().includes(term);
         default:
           return false;
       }
@@ -258,179 +294,269 @@ const Recommendations: React.FC = () => {
     resetForm();
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "success";
+      case "pending":
+        return "warning";
+      case "dismissed":
+        return "error";
+      default:
+        return "default";
+    }
+  };
+
   return (
-    <Container maxWidth="xl" sx={{ marginTop: "-60px", width: "91vw" }}>
-      <br />
-      <br />
+    <Container maxWidth="xl" sx={{ mt: 2 }}>
       <NavigationBar />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <DialogTitle sx={{ margin: 0, fontSize: "32px", fontWeight: "bold" }}>
-          Recommendations
-        </DialogTitle>
+      
+      {/* Fixed Header Section */}
+      <Box sx={{ mb: 4, position: 'sticky', top: 0, backgroundColor: 'background.paper', zIndex: 100, pt: 2, pb: 2 }}>
+        <Typography variant="h4" component="h1" fontWeight="700" gutterBottom>
+          Recommendations Management
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Manage recommendations for beekeepers and hives, track status, and provide guidance.
+        </Typography>
+      </Box>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            padding: "10px 0",
-          }}
-        >
-          <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel>Search by</InputLabel>
-            <Select
-              value={searchCategory}
-              onChange={(e) => setSearchCategory(e.target.value)}
-              label="Search by"
-              sx={{ borderRadius: "8px" }}
+      {/* Stats Card */}
+      <Card sx={{ mb: 3, bgcolor: alpha("#FFB700", 0.05), position: 'sticky', top: 160, zIndex: 90 }}>
+        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <Typography variant="h6" color="primary" gutterBottom>
+              Recommendations Overview
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total: {recommendations.length} recommendations
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Chip 
+              label={`${recommendations.filter(r => r.status === "completed").length} Completed`} 
+              color="success"
+              variant="outlined"
+            />
+            <Chip 
+              label={`${recommendations.filter(r => r.status === "pending").length} Pending`} 
+              color="warning"
+              variant="outlined"
+            />
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Search and Actions Section - Fixed */}
+      <Card sx={{ mb: 2, position: 'sticky', top: 230, zIndex: 80 }}>
+        <CardContent>
+          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+            <FormControl sx={{ minWidth: 150 }} size="small">
+              <InputLabel>Search by</InputLabel>
+              <Select
+                value={searchCategory}
+                onChange={(e) => setSearchCategory(e.target.value)}
+                label="Search by"
+              >
+                <MenuItem value="beekeeperName">Beekeeper Name</MenuItem>
+                <MenuItem value="hiveId">Hive ID</MenuItem>
+                <MenuItem value="category">Category</MenuItem>
+                <MenuItem value="status">Status</MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              placeholder="Search recommendations..."
+              value={searchTerm}
+              onChange={handleSearch}
+              size="small"
+              sx={{ minWidth: 250 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={openCreateDialog}
+              sx={{ 
+                backgroundColor: "#FFB700",
+                '&:hover': {
+                  backgroundColor: "#CC9200",
+                }
+              }}
             >
-              <MenuItem value="beekeeperName">Beekeeper Name</MenuItem>
-              <MenuItem value="hiveId">Hive ID</MenuItem>
-              <MenuItem value="category">Category</MenuItem>
-              <MenuItem value="status">Status</MenuItem>
-            </Select>
-          </FormControl>
+              Add New
+            </Button>
+          </Stack>
+        </CardContent>
+      </Card>
 
-          <TextField
-            placeholder="Search..."
-            onChange={handleSearch}
-            sx={{
-              borderRadius: "8px",
-              minWidth: "250px",
-              "& .MuiInputBase-root": { paddingRight: "10px" },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon color="action" />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{
-              borderRadius: "8px",
-              textTransform: "none",
-              backgroundColor: "#FFB700",
-              "&:hover": {
-                backgroundColor: "#CC9200",
-              },
-            }}
-            onClick={openCreateDialog}
-          >
-            Add New
-          </Button>
-        </div>
-      </div>
       {errorMessage && (
-        <Alert severity="error" sx={{ marginTop: "10px" }}>
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setErrorMessage("")}>
           {errorMessage}
         </Alert>
       )}
+      
       {successMessage && (
-        <Alert severity="success" sx={{ marginTop: "10px" }}>
+        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccessMessage("")}>
           {successMessage}
         </Alert>
       )}
-      <br />
-      <div style={{ height: "400px", overflow: "auto" }}>
-        <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
-          <Table aria-label="simple table" stickyHeader>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="center">Beekeeper</StyledTableCell>
-                <StyledTableCell align="center">Hive ID</StyledTableCell>
-                <StyledTableCell align="center">Category</StyledTableCell>
-                <StyledTableCell align="center">Message</StyledTableCell>
-                <StyledTableCell align="center">Status</StyledTableCell>
-                <StyledTableCell align="center">Created At</StyledTableCell>
-                <StyledTableCell align="center">Actions</StyledTableCell>
-              </TableRow>
-            </TableHead>
 
-            <TableBody>
-              {recommendations.map((row) => (
-                <TableRow
-                  key={row._id}
-                  hover
-                  sx={{ cursor: "pointer" }}
-                >
-                  <TableCell align="right">
-                    {row.beekeeperId?.name || "N/A"}
-                  </TableCell>
-                  <TableCell align="right">
-                    {row.hiveId?.hiveId || "N/A"}
-                  </TableCell>
-                  <TableCell align="right">{row.category}</TableCell>
-                  <TableCell align="right">{row.message}</TableCell>
-                  <TableCell align="right">
-                    <Select
-                      value={row.status}
-                      onChange={(e) => handleStatusUpdate(row._id, e.target.value)}
-                      size="small"
+      {/* Table Section - Scrollable */}
+      <Card>
+        <CardContent sx={{ p: 0 }}>
+          {isLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : recommendations.length === 0 ? (
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              p: 4,
+              textAlign: 'center'
+            }}>
+              <SearchIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                No recommendations found
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {searchTerm ? 'Try adjusting your search query' : 'Create a new recommendation to get started'}
+              </Typography>
+            </Box>
+          ) : (
+            <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
+              <Table stickyHeader aria-label="recommendations table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Beekeeper</StyledTableCell>
+                    <StyledTableCell>Hive ID</StyledTableCell>
+                    <StyledTableCell>Category</StyledTableCell>
+                    <StyledTableCell>Message</StyledTableCell>
+                    <StyledTableCell align="center">Status</StyledTableCell>
+                    <StyledTableCell>Created At</StyledTableCell>
+                    <StyledTableCell align="center">Actions</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {recommendations.map((row) => (
+                    <StyledTableRow
+                      key={row._id}
+                      hover
+                      sx={{ 
+                        cursor: 'pointer',
+                      }}
                     >
-                      <MenuItem value="pending">Pending</MenuItem>
-                      <MenuItem value="completed">Completed</MenuItem>
-                      <MenuItem value="dismissed">Dismissed</MenuItem>
-                    </Select>
-                  </TableCell>
-                  <TableCell align="right">
-                    {new Date(row.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton 
-                      onClick={() => handleEditClick(row)}
-                      color="primary"
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton 
-                      onClick={() => handleDeleteClick(row._id)}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+                      <TableCell>
+                        <Typography variant="body2" fontWeight="medium">
+                          {row.beekeeperId?.name || "N/A"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{row.hiveId?.hiveId || "N/A"}</TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={row.category} 
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Tooltip title={row.message}>
+                          <Typography variant="body2" noWrap sx={{ maxWidth: 200 }}>
+                            {row.message}
+                          </Typography>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Select
+                          value={row.status}
+                          onChange={(e) => handleStatusUpdate(row._id, e.target.value)}
+                          size="small"
+                          sx={{ minWidth: 120 }}
+                        >
+                          <MenuItem value="pending">Pending</MenuItem>
+                          <MenuItem value="completed">Completed</MenuItem>
+                          <MenuItem value="dismissed">Dismissed</MenuItem>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(row.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Tooltip title="Edit">
+                          <IconButton 
+                            onClick={() => handleEditClick(row)}
+                            color="primary"
+                            size="medium"
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <IconButton 
+                            onClick={() => handleDeleteClick(row._id)}
+                            color="error"
+                            size="medium"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 2
+          }
+        }}
       >
-        <DialogTitle>Confirmation</DialogTitle>
+        <DialogTitle fontWeight="bold">Confirm Deletion</DialogTitle>
         <DialogContent>
-          <div>Are you sure you want to delete this recommendation?</div>
+          <Typography>
+            Are you sure you want to delete this recommendation? This action cannot be undone.
+          </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button
+        <DialogActions sx={{ p: 2 }}>
+          <Button 
             onClick={() => setIsDeleteDialogOpen(false)}
-            color="primary"
+            variant="outlined"
           >
             Cancel
           </Button>
           <Button
             onClick={handleDeleteConfirmation}
             color="error"
+            variant="contained"
             startIcon={<DeleteIcon />}
+            sx={{
+              backgroundColor: "#FFB700",
+              '&:hover': {
+                backgroundColor: "#CC9200",
+              }
+            }}
           >
-            Yes, delete it
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
@@ -441,8 +567,13 @@ const Recommendations: React.FC = () => {
         onClose={() => setIsFormDialogOpen(false)}
         maxWidth="md"
         fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2
+          }
+        }}
       >
-        <DialogTitle>
+        <DialogTitle fontWeight="bold">
           {isEditMode ? "Edit Recommendation" : "Create New Recommendation"}
         </DialogTitle>
         <DialogContent>
@@ -519,23 +650,27 @@ const Recommendations: React.FC = () => {
             )}
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button
+        <DialogActions sx={{ p: 2 }}>
+          <Button 
             onClick={() => setIsFormDialogOpen(false)}
-            color="primary"
+            variant="outlined"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
-            color="primary"
             variant="contained"
+            sx={{
+              backgroundColor: "#FFB700",
+              '&:hover': {
+                backgroundColor: "#CC9200",
+              }
+            }}
           >
             {isEditMode ? "Update" : "Create"}
           </Button>
         </DialogActions>
       </Dialog>
-      <br />
     </Container>
   );
 };

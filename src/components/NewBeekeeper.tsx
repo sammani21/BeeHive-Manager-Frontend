@@ -283,6 +283,7 @@ function NewBeekeeper(props: NewBeekeeperProps) {
                   <DatePicker
                     label={"Date of Birth"}
                     value={dayjs(dOfBirth)}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     onChange={(v: any) => setDOfBirth(v)}
                     maxDate={dayjs()}
                   />
