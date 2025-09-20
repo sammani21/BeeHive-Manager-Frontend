@@ -47,7 +47,11 @@ const LandingPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <img src={logo} alt="BeeHive Manager Logo" style={{ height: "50px", marginRight: "10px" }} />
+            <img
+              src={logo}
+              alt="BeeHive Manager Logo"
+              style={{ height: "50px", marginRight: "10px" }}
+            />
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
@@ -80,7 +84,9 @@ const LandingPage: React.FC = () => {
             contributing to a sustainable future.
           </Typography>
 
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 5 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 5 }}
+          >
             <Button
               variant="contained"
               startIcon={<RocketLaunchIcon />}
@@ -115,81 +121,79 @@ const LandingPage: React.FC = () => {
         </Box>
 
         <Grid container spacing={2} justifyContent="center">
-  {[
-    {
-      id: 1,
-      title: "Hive Management",
-      description:
-        "Manage your hives efficiently and keep track of their health and productivity.",
-      image: hiveImage,
-    },
-    {
-      id: 2,
-      title: "Manage BeeKeepers",
-      description:
-        "Keep track of beekeepers, their activities, and manage their roles in the system.",
-      image: beekeepersImage,
-    },
-    {
-      id: 3,
-      title: "Production Tracking",
-  description:
-    "Monitor and analyze honey production, hive performance, and yield trends in real-time.",
-      image: communicationImage,
-    },
-  ].map((feature) => (
-    <Grid item key={feature.id} xs={10} md={4}>
-      <Card
-        sx={{
-          minHeight: "300px",
-          backgroundColor: "rgba(0, 0, 0, 0.1)",
-          color: "#000",
-        }}
-      >
-        <img
-          src={feature.image}
-          alt={feature.title}
-          style={{ width: "100%", height: "150px", objectFit: "cover" }}
-        />
-        <CardContent>
-          <Typography variant="h5" component="h3" gutterBottom>
-            {feature.title}
-          </Typography>
-          <Typography>{feature.description}</Typography>
-        </CardContent>
-      </Card>
-    </Grid>
-  ))}
-</Grid>
+          {[
+            {
+              id: 1,
+              title: "Hive Management",
+              description:
+                "Manage your hives efficiently and keep track of their health and productivity.",
+              image: hiveImage,
+            },
+            {
+              id: 2,
+              title: "Manage BeeKeepers",
+              description:
+                "Keep track of beekeepers, their activities, and manage their roles in the system.",
+              image: beekeepersImage,
+            },
+            {
+              id: 3,
+              title: "Production Tracking",
+              description:
+                "Monitor and analyze honey production, hive performance, and yield trends in real-time.",
+              image: communicationImage,
+            },
+          ].map((feature) => (
+            <Grid item key={feature.id} xs={10} md={4}>
+              <Card
+                sx={{
+                  minHeight: "300px",
+                  backgroundColor: "rgba(0, 0, 0, 0.1)",
+                  color: "#000",
+                }}
+              >
+                <img
+                  src={feature.image}
+                  alt={feature.title}
+                  style={{ width: "100%", height: "150px", objectFit: "cover" }}
+                />
+                <CardContent>
+                  <Typography variant="h5" component="h3" gutterBottom>
+                    {feature.title}
+                  </Typography>
+                  <Typography>{feature.description}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
       <Box sx={{ backgroundColor: "#FFB700", py: 1, px: 3, color: "#fff" }}>
-  <Container maxWidth="lg">
-    <Grid container justifyContent="space-between" alignItems="center">
-      {/* Left Side */}
-      <Grid item>
-        <Typography variant="body2" component="p">
-          &copy; {new Date().getFullYear()} BeeHive Manager. All rights reserved.
-        </Typography>
-      </Grid>
+        <Container maxWidth="lg">
+          <Grid container justifyContent="space-between" alignItems="center">
+            {/* Left Side */}
+            <Grid item>
+              <Typography variant="body2" component="p">
+                &copy; {new Date().getFullYear()} BeeHive Manager. All rights
+                reserved.
+              </Typography>
+            </Grid>
 
-      
-
-      {/* Right Side */}
-      <Grid item>
-        <Button color="inherit" onClick={() => navigate("/terms")}>
-          Terms of Service
-        </Button>
-        <Button color="inherit" onClick={() => navigate("/privacy")}>
-          Privacy Policy
-        </Button>
-        <Button color="inherit" onClick={() => navigate("/cookies")}>
-          Cookies
-        </Button>
-      </Grid>
-    </Grid>
-  </Container>
-</Box>
-
+            {/* Right Side */}
+            <Grid item>
+              <Button color="inherit" onClick={() => navigate("/terms")}>
+                Terms of Service
+              </Button>
+              <Button color="inherit" onClick={() => navigate("/privacy")}>
+                Privacy Policy
+              </Button>
+              <Button color="inherit" onClick={() => navigate("/cookies")}>
+                Cookies
+              </Button>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
     </Box>
   );
 };

@@ -2,13 +2,7 @@ import { useState, FormEvent } from "react";
 import "../App.css";
 import axios, { AxiosResponse } from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import {
-  Typography,
-  Button,
-  Box,
-  TextField,
-  Alert,
-} from "@mui/material";
+import { Typography, Button, Box, TextField, Alert } from "@mui/material";
 import BeeImage from "../assets/Beeimage.png";
 
 const ForgotPassword: React.FC = () => {

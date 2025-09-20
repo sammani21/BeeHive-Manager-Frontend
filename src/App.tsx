@@ -1,32 +1,30 @@
 // App.tsx
+// Main entry point of the React application. 
+// This file handles all the routing between different pages of the app.
+
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+
+// Importing all the pages
 import LandingPage from "./pages/LandingPage";
 import Signupf1 from "./pages/SignupPage";
-
-import "./App.css";
-//import BarNavigation from "./components/BarNavigation";
-import NavigationBar from "./components/NavigationBar";
 import LoginPage from "./pages/LoginPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-//import SetServiceArea from "./components/SetServiceArea";
-
-
 import Products from "./pages/Products";
 import Hives from "./pages/Hives";
-//import Trips from "./pages/Trips";
 import Beekeepers from "./pages/BeeKeepers";
 import DashboardPage from "./pages/Dashboard";
-import ManageProfile from "./pages/ManageProfile";
-
-
+import ManageProfile from "./pages/ManageProfile"
 import Recommendation from "./pages/Recommendation";
+
+
+// Importing reusable components
+import NavigationBar from "./components/NavigationBar";
 
 // Main App component
 const App: React.FC = () => {
-  
-
   return (
     <>
       <BrowserRouter>
@@ -38,22 +36,11 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgotPassword" element={<ForgotPassword />} />
           <Route path="/resetPassword/:token" element={<ResetPassword />} />
-          <Route
-            path="/myTestCompany"
-            element={<NavigationBar />} //navbar+dashboardcomponent
-          />
-
-          
-
-          
-
+          <Route path="/myTestCompany" element={<NavigationBar />} />
           <Route path="/products" element={<Products />} />
           <Route path="/hives" element={<Hives />} />
-
           <Route path="/beekeepers" element={<Beekeepers />} />
           <Route path="/manage-profile" element={<ManageProfile />} />
-          {/* Chatbox Route */}
-          
           <Route path="/recommendation" element={<Recommendation />} />
         </Routes>
       </BrowserRouter>

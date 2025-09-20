@@ -18,7 +18,6 @@ import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 //import { auth } from "../firebaseConfig";
 //import { createUserWithEmailAndPassword } from "firebase/auth";
 
-
 const Signup: React.FC = () => {
   const [fullname, setFullname] = useState("");
   const [adminId, setAdminId] = useState("");
@@ -94,14 +93,47 @@ const Signup: React.FC = () => {
   // };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, height: "100vh", width: "100vw", backgroundColor: "#EDE8F5" }}>
-      <Box sx={{ flex: 1, backgroundImage: `url(${BeeImage})`, backgroundSize: "cover", backgroundPosition: "center", display: { xs: "none", md: "block" } }} />
-      <Box sx={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", padding: { xs: "20px", md: "40px" } }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        height: "100vh",
+        width: "100vw",
+        backgroundColor: "#EDE8F5",
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          backgroundImage: `url(${BeeImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          display: { xs: "none", md: "block" },
+        }}
+      />
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: { xs: "20px", md: "40px" },
+        }}
+      >
         <Box sx={{ width: "100%", maxWidth: "400px", textAlign: "center" }}>
-          <Typography variant="h5" component="h1" gutterBottom sx={{ fontWeight: "bold", color: "#000000" }}>
+          <Typography
+            variant="h5"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#000000" }}
+          >
             Get Started With BeeHive Manager
           </Typography>
-          <Typography variant="subtitle1" gutterBottom sx={{ color: "#000000" }}>
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            sx={{ color: "#000000" }}
+          >
             Getting started is easy
           </Typography>
           <form
@@ -178,7 +210,11 @@ const Signup: React.FC = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                    <IconButton
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
                       {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
@@ -186,19 +222,35 @@ const Signup: React.FC = () => {
               }}
             />
             {password && <PasswordStrengthMeter password={password} />}
-            {errorMessage && <Alert severity="error" sx={{ marginY: 2 }}>{errorMessage}</Alert>}
+            {errorMessage && (
+              <Alert severity="error" sx={{ marginY: 2 }}>
+                {errorMessage}
+              </Alert>
+            )}
             <Button
               type="submit"
               color="primary"
               size="large"
               variant="contained"
               fullWidth
-              sx={{ marginY: 2, backgroundColor: "#FFB700", "&:hover": { backgroundColor: "#CC9200" }, fontWeight: "bold", fontSize: "1rem" }}
+              sx={{
+                marginY: 2,
+                backgroundColor: "#FFB700",
+                "&:hover": { backgroundColor: "#CC9200" },
+                fontWeight: "bold",
+                fontSize: "1rem",
+              }}
             >
               Sign Up
             </Button>
             <Typography variant="body2" sx={{ color: "#666666", mb: -5 }}>
-              Already have an account? <Link to="/login" style={{ color: "#FFB700", textDecoration: "none" }}>Login</Link>
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                style={{ color: "#FFB700", textDecoration: "none" }}
+              >
+                Login
+              </Link>
             </Typography>
           </form>
         </Box>

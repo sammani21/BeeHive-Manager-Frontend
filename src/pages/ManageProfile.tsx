@@ -16,7 +16,7 @@ import {
   CardContent,
   Divider,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import {
   Edit,
@@ -26,7 +26,7 @@ import {
   Email,
   Phone,
   LocationOn,
-  Home
+  Home,
 } from "@mui/icons-material";
 import NavigationBar from "../components/NavigationBar";
 import axios from "axios";
@@ -58,7 +58,7 @@ const ManageProfile = () => {
   const [saving, setSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     firstName: "",
@@ -72,7 +72,7 @@ const ManageProfile = () => {
     password: "",
     confirmPassword: "",
   });
-  
+
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -83,15 +83,15 @@ const ManageProfile = () => {
       navigate("/login");
       return;
     }
-    
+
     // Fetch user data
     const fetchUserData = async () => {
       try {
         setLoading(true);
         const response = await axios.get("/api/user/me", {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
-        
+
         if (response.data.status) {
           setUser(response.data.data);
           const names = response.data.data.fullname?.split(" ") || [];
@@ -115,29 +115,29 @@ const ManageProfile = () => {
         setLoading(false);
       }
     };
-    
+
     fetchUserData();
   }, [navigate]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setError("");
     setMessage("");
-    
+
     if (formData.password && formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
-    
+
     try {
       setSaving(true);
       const token = localStorage.getItem("token");
@@ -150,23 +150,23 @@ const ManageProfile = () => {
         address: formData.address,
         zipCode: formData.zipCode,
       };
-      
+
       // Only include password if it's being changed
       if (formData.password) {
         updateData.password = formData.password;
       }
-      
+
       const response = await axios.put("/api/user/me", updateData, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       if (response.data.status) {
         setMessage("Profile updated successfully!");
         // Clear password fields
         setFormData({
           ...formData,
           password: "",
-          confirmPassword: ""
+          confirmPassword: "",
         });
       } else {
         setError(response.data.message || "Failed to update profile");
@@ -181,20 +181,20 @@ const ManageProfile = () => {
 
   const handleImageChange = async (e) => {
     if (!e.target.files || !e.target.files[0]) return;
-    
+
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("image", file);
-    
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post("/api/user/upload-image", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
-      
+
       if (response.data.status) {
         setUser({ ...user, photoURL: response.data.imageUrl });
         setMessage("Profile picture updated successfully!");
@@ -209,7 +209,12 @@ const ManageProfile = () => {
     return (
       <ThemeProvider theme={theme}>
         <NavigationBar />
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="80vh"
+        >
           <CircularProgress />
         </Box>
       </ThemeProvider>
@@ -221,14 +226,18 @@ const ManageProfile = () => {
       <NavigationBar />
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Typography variant="h4" color="primary" gutterBottom>
-            Manage Your Profile
-          </Typography>
-          <Typography variant="body1" color="text.secondary" maxWidth="sm" mx="auto">
-            Keep your profile up to date. Update personal details, contact information, 
-            and security settings to make your account more secure.
-          </Typography>
-        
-        
+          Manage Your Profile
+        </Typography>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          maxWidth="sm"
+          mx="auto"
+        >
+          Keep your profile up to date. Update personal details, contact
+          information, and security settings to make your account more secure.
+        </Typography>
+
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
@@ -241,7 +250,7 @@ const ManageProfile = () => {
                       height: 120,
                       mx: "auto",
                       border: "4px solid",
-                      borderColor: "primary.main"
+                      borderColor: "primary.main",
                     }}
                   />
                   <input
@@ -267,33 +276,39 @@ const ManageProfile = () => {
                     </IconButton>
                   </label>
                 </Box>
-                
+
                 <Typography variant="h6" sx={{ mt: 2, fontWeight: 600 }}>
                   {user?.fullname}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   {user?.email}
                 </Typography>
-                
+
                 <Box sx={{ mt: 3, textAlign: "left" }}>
                   <Box display="flex" alignItems="center" mb={1.5}>
-                    <Phone sx={{ fontSize: 20, color: "primary.main", mr: 1.5 }} />
+                    <Phone
+                      sx={{ fontSize: 20, color: "primary.main", mr: 1.5 }}
+                    />
                     <Typography variant="body1">
                       {formData.phone || "Not provided"}
                     </Typography>
                   </Box>
-                  
+
                   <Box display="flex" alignItems="center" mb={1.5}>
-                    <LocationOn sx={{ fontSize: 20, color: "primary.main", mr: 1.5 }} />
+                    <LocationOn
+                      sx={{ fontSize: 20, color: "primary.main", mr: 1.5 }}
+                    />
                     <Typography variant="body1">
-                      {formData.city && formData.country 
+                      {formData.city && formData.country
                         ? `${formData.city}, ${formData.country}`
                         : "Location not set"}
                     </Typography>
                   </Box>
-                  
+
                   <Box display="flex" alignItems="center">
-                    <Home sx={{ fontSize: 20, color: "primary.main", mr: 1.5 }} />
+                    <Home
+                      sx={{ fontSize: 20, color: "primary.main", mr: 1.5 }}
+                    />
                     <Typography variant="body1">
                       {formData.address || "Address not provided"}
                     </Typography>
@@ -302,14 +317,18 @@ const ManageProfile = () => {
               </CardContent>
             </Card>
           </Grid>
-          
+
           <Grid item xs={12} md={8}>
             <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
               <CardContent sx={{ p: 4 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{ fontWeight: 600, mb: 3 }}
+                >
                   Personal Information
                 </Typography>
-                
+
                 {message && (
                   <Alert severity="success" sx={{ mb: 3 }}>
                     {message}
@@ -320,12 +339,16 @@ const ManageProfile = () => {
                     {error}
                   </Alert>
                 )}
-                
-                <Box component="form" onSubmit={handleSubmit} sx={{
-    width: "100%",       // takes full available width
-    maxWidth: "900px",   // increase as you like (default MUI form usually ~600px)
-    mx: "auto"           // center horizontally
-  }}>
+
+                <Box
+                  component="form"
+                  onSubmit={handleSubmit}
+                  sx={{
+                    width: "100%", // takes full available width
+                    maxWidth: "900px", // increase as you like (default MUI form usually ~600px)
+                    mx: "auto", // center horizontally
+                  }}
+                >
                   <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -344,7 +367,7 @@ const ManageProfile = () => {
                         }}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -355,7 +378,7 @@ const ManageProfile = () => {
                         onChange={handleInputChange}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
@@ -374,7 +397,7 @@ const ManageProfile = () => {
                         }}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
@@ -392,25 +415,28 @@ const ManageProfile = () => {
                         }}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12}>
                       <Divider sx={{ my: 2 }} />
-                      <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        sx={{ fontWeight: 600 }}
+                      >
                         Address Information
                       </Typography>
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
                         label="Country"
                         name="country"
-
                         value={formData.country}
                         onChange={handleInputChange}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -420,7 +446,7 @@ const ManageProfile = () => {
                         onChange={handleInputChange}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={8}>
                       <TextField
                         fullWidth
@@ -437,7 +463,7 @@ const ManageProfile = () => {
                         }}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={4}>
                       <TextField
                         fullWidth
@@ -447,14 +473,18 @@ const ManageProfile = () => {
                         onChange={handleInputChange}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12}>
                       <Divider sx={{ my: 2 }} />
-                      <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        sx={{ fontWeight: 600 }}
+                      >
                         Change Password
                       </Typography>
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -470,14 +500,18 @@ const ManageProfile = () => {
                                 onClick={() => setShowPassword(!showPassword)}
                                 edge="end"
                               >
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                {showPassword ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
                               </IconButton>
                             </InputAdornment>
                           ),
                         }}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -490,17 +524,23 @@ const ManageProfile = () => {
                           endAdornment: (
                             <InputAdornment position="end">
                               <IconButton
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                onClick={() =>
+                                  setShowConfirmPassword(!showConfirmPassword)
+                                }
                                 edge="end"
                               >
-                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                {showConfirmPassword ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
                               </IconButton>
                             </InputAdornment>
                           ),
                         }}
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12}>
                       <Button
                         type="submit"
@@ -513,10 +553,14 @@ const ManageProfile = () => {
                           borderRadius: 2,
                           fontWeight: 600,
                           fontSize: "1rem",
-                          mt: 2
+                          mt: 2,
                         }}
                       >
-                        {saving ? <CircularProgress size={24} /> : "Save Changes"}
+                        {saving ? (
+                          <CircularProgress size={24} />
+                        ) : (
+                          "Save Changes"
+                        )}
                       </Button>
                     </Grid>
                   </Grid>

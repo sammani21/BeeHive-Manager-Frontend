@@ -1,3 +1,7 @@
+// pages/Beekeepers.tsx
+// This component provides full CRUD operations, export options, 
+// and filtering for managing beekeepers in the system.
+
 import * as React from "react";
 import {
   Container,
@@ -32,21 +36,21 @@ import {
   Tooltip,
   alpha,
   useTheme,
-  Stack
+  Stack,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-//import DownloadIcon from "@mui/icons-material/Download";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+
 import NewBeekeeper, { Beekeeper } from "../components/NewBeekeeper";
 import axios from "axios";
 import NavigationBar from "../components/NavigationBar";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-// StyledTableCell component with #FFB700 color
+// StyledTableCell component
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -66,20 +70,20 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 // StyledTableRow component
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(even)': {
+  "&:nth-of-type(even)": {
     backgroundColor: theme.palette.action.hover,
   },
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
-  '&:hover': {
+  "&:hover": {
     backgroundColor: alpha("#FFB700", 0.05),
   },
-  cursor: 'pointer',
-  transition: 'background-color 0.2s ease',
+  cursor: "pointer",
+  transition: "background-color 0.2s ease",
 }));
 
-// CustomSwitch component with #FFB700 color
+// CustomSwitch component 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -92,8 +96,6 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
     backgroundColor: "#FFB700",
   },
 }));
-
-// AvailabilitySwitch component with #FFB700 color
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const AvailabilitySwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -107,10 +109,11 @@ const AvailabilitySwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-// Beekeepers functional component
 const Beekeepers: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const theme = useTheme();
+
+  // State Variables
   const [fName, setFName] = React.useState<string>("");
   const [lName, setLName] = React.useState<string>("");
   const [dOfBirth, setDOfBirth] = React.useState<Date>(new Date());
@@ -118,15 +121,12 @@ const Beekeepers: React.FC = () => {
   const [email, setEmail] = React.useState<string>("");
   const [contactNo, setContactNo] = React.useState<string>("");
   const [gender, setGender] = React.useState<string>("");
-
   const [no, setNo] = React.useState<string>("");
   const [beekeepers, setBeekeepers] = React.useState<Beekeeper[]>([]);
   const [allBeekeepers, setAllBeekeepers] = React.useState<Beekeeper[]>([]);
   const [selected, setSelected] = React.useState<string[]>([]);
-  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
-    React.useState<boolean>(false);
-  const [isNewBeekeeperModalOpen, setIsNewBeekeeperModalOpen] =
-    React.useState<boolean>(false);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = React.useState<boolean>(false);
+  const [isNewBeekeeperModalOpen, setIsNewBeekeeperModalOpen] = React.useState<boolean>(false);
   const [isUpdate, setIsUpdate] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
   const [searchCategory, setSearchCategory] = React.useState<string>("no");
@@ -247,11 +247,10 @@ const Beekeepers: React.FC = () => {
     } else if (format === "csv") {
       exportCSV();
     }
-    // Reset the selection
     setTimeout(() => setExportFormat(""), 500);
   };
 
-  // handle click/select
+  // handle Row Selection
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClick = (_event: any, id: string) => {
     const newSelected: string[] = [id];
@@ -286,7 +285,7 @@ const Beekeepers: React.FC = () => {
       });
   };
 
-  // update
+  // handle update
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUpdateClick = (row: Beekeeper) => {
     if (selected.length === 0) {
@@ -307,17 +306,15 @@ const Beekeepers: React.FC = () => {
     }
   };
 
-  // search/filter
+  // handle search/filter
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-
     if (allBeekeepers.length === 0) {
       setBeekeepers([]);
       setErrorMessage("No bee keepers in the database.");
       return;
     }
-
     const filtered = allBeekeepers.filter((beekeeper) => {
       switch (searchCategory) {
         case "no":
@@ -346,7 +343,7 @@ const Beekeepers: React.FC = () => {
     }
   };
 
-  // status change
+  // status & Availability change
   const handleStatusChange = (id: string, isActive: boolean) => {
     axios
       .put(`http://localhost:3000/api/v1/beekeeper/${id}/status`, {
@@ -360,7 +357,10 @@ const Beekeepers: React.FC = () => {
       });
   };
 
-  const onChangeAvailability = (availability: boolean, beekeeper: Beekeeper) => {
+  const onChangeAvailability = (
+    availability: boolean,
+    beekeeper: Beekeeper
+  ) => {
     axios
       .put(`http://localhost:3000/api/v1/beekeeper/${beekeeper._id}`, {
         availability,
@@ -376,20 +376,43 @@ const Beekeepers: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 2 }}>
       <NavigationBar />
-      
-      {/* Fixed Header Section */}
-      <Box sx={{ mb: 4, position: 'sticky', top: 0, backgroundColor: 'background.paper', zIndex: 100, pt: 2, pb: 2 }}>
+      <Box
+        sx={{
+          mb: 4,
+          position: "sticky",
+          top: 0,
+          backgroundColor: "background.paper",
+          zIndex: 100,
+          pt: 2,
+          pb: 2,
+        }}
+      >
         <Typography variant="h4" component="h1" fontWeight="700" gutterBottom>
           Beekeepers Management
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Manage all beekeepers in your system, view their details, and update their status.
+          Manage all beekeepers in your system, view their details, and update
+          their status.
         </Typography>
       </Box>
 
       {/* Stats Card */}
-      <Card sx={{ mb: 3, bgcolor: alpha("#FFB700", 0.05), position: 'sticky', top: 160, zIndex: 90 }}>
-        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Card
+        sx={{
+          mb: 3,
+          bgcolor: alpha("#FFB700", 0.05),
+          position: "sticky",
+          top: 160,
+          zIndex: 90,
+        }}
+      >
+        <CardContent
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Box>
             <Typography variant="h6" color="primary" gutterBottom>
               Beekeepers Overview
@@ -398,18 +421,27 @@ const Beekeepers: React.FC = () => {
               Total: {beekeepers.length} beekeepers
             </Typography>
           </Box>
-          <Chip 
-            label={`${beekeepers.filter(b => b.isActive).length} Active`} 
-            sx={{ backgroundColor: alpha("#FFB700", 0.2), color: 'text.primary' }}
+          <Chip
+            label={`${beekeepers.filter((b) => b.isActive).length} Active`}
+            sx={{
+              backgroundColor: alpha("#FFB700", 0.2),
+              color: "text.primary",
+            }}
             variant="outlined"
           />
         </CardContent>
       </Card>
 
       {/* Search and Actions Section - Fixed */}
-      <Card sx={{ mb: 2, position: 'sticky', top: 230, zIndex: 80 }}>
+      <Card sx={{ mb: 2, position: "sticky", top: 230, zIndex: 80 }}>
         <CardContent>
-          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            flexWrap="wrap"
+            useFlexGap
+          >
             <FormControl sx={{ minWidth: 150 }}>
               <InputLabel>Search by</InputLabel>
               <Select
@@ -458,11 +490,11 @@ const Beekeepers: React.FC = () => {
                 setNIC("");
                 setEmail("");
               }}
-              sx={{ 
+              sx={{
                 backgroundColor: "#FFB700",
-                '&:hover': {
+                "&:hover": {
                   backgroundColor: "#CC9200",
-                }
+                },
               }}
             >
               Add New
@@ -493,28 +525,34 @@ const Beekeepers: React.FC = () => {
       <Card>
         <CardContent sx={{ p: 0 }}>
           {isLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
               <CircularProgress />
             </Box>
           ) : beekeepers.length === 0 ? (
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              p: 4,
-              textAlign: 'center'
-            }}>
-              <VisibilityIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 4,
+                textAlign: "center",
+              }}
+            >
+              <VisibilityIcon
+                sx={{ fontSize: 60, color: "text.secondary", mb: 2 }}
+              />
               <Typography variant="h6" color="text.secondary" gutterBottom>
                 No beekeepers found
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {searchTerm ? 'Try adjusting your search query' : 'Add a new beekeeper to get started'}
+                {searchTerm
+                  ? "Try adjusting your search query"
+                  : "Add a new beekeeper to get started"}
               </Typography>
             </Box>
           ) : (
-            <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
+            <TableContainer sx={{ maxHeight: "calc(100vh - 340px)" }}>
               <Table stickyHeader aria-label="beekeepers table">
                 <TableHead>
                   <TableRow>
@@ -527,7 +565,9 @@ const Beekeepers: React.FC = () => {
                     <StyledTableCell>DOB</StyledTableCell>
                     <StyledTableCell>Contact No</StyledTableCell>
                     <StyledTableCell>Email</StyledTableCell>
-                    <StyledTableCell align="center">Availability</StyledTableCell>
+                    <StyledTableCell align="center">
+                      Availability
+                    </StyledTableCell>
                     <StyledTableCell align="center">Status</StyledTableCell>
                     <StyledTableCell align="center">Actions</StyledTableCell>
                   </TableRow>
@@ -541,13 +581,13 @@ const Beekeepers: React.FC = () => {
                         hover
                         onClick={(event) => handleClick(event, row._id || "")}
                         selected={isItemSelected}
-                        sx={{ 
-                          '&.Mui-selected': {
+                        sx={{
+                          "&.Mui-selected": {
                             backgroundColor: alpha("#FFB700", 0.08),
-                            '&:hover': {
+                            "&:hover": {
                               backgroundColor: alpha("#FFB700", 0.12),
-                            }
-                          }
+                            },
+                          },
                         }}
                       >
                         <TableCell>
@@ -568,7 +608,11 @@ const Beekeepers: React.FC = () => {
                         <TableCell>{row.contactNo}</TableCell>
                         <TableCell>{row.email}</TableCell>
                         <TableCell align="center">
-                          <Tooltip title={row.availability ? "Available" : "Not available"}>
+                          <Tooltip
+                            title={
+                              row.availability ? "Available" : "Not available"
+                            }
+                          >
                             <AvailabilitySwitch
                               checked={row.availability}
                               onChange={(e) =>
@@ -578,7 +622,9 @@ const Beekeepers: React.FC = () => {
                           </Tooltip>
                         </TableCell>
                         <TableCell align="center">
-                          <Tooltip title={row.isActive ? "Deactivate" : "Activate"}>
+                          <Tooltip
+                            title={row.isActive ? "Deactivate" : "Activate"}
+                          >
                             <CustomSwitch
                               checked={row.isActive}
                               onChange={() =>
@@ -601,8 +647,8 @@ const Beekeepers: React.FC = () => {
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="Delete">
-                            <IconButton 
-                              onClick={() => handleDeleteClick(row)} 
+                            <IconButton
+                              onClick={() => handleDeleteClick(row)}
                               color="error"
                               size="medium"
                             >
@@ -626,18 +672,19 @@ const Beekeepers: React.FC = () => {
         onClose={() => setIsConfirmationDialogOpen(false)}
         PaperProps={{
           sx: {
-            borderRadius: 2
-          }
+            borderRadius: 2,
+          },
         }}
       >
         <DialogTitle fontWeight="bold">Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete this beekeeper? This action cannot be undone.
+            Are you sure you want to delete this beekeeper? This action cannot
+            be undone.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button 
+          <Button
             onClick={() => setIsConfirmationDialogOpen(false)}
             variant="outlined"
           >
@@ -650,9 +697,9 @@ const Beekeepers: React.FC = () => {
             startIcon={<DeleteIcon />}
             sx={{
               backgroundColor: "#FFB700",
-              '&:hover': {
+              "&:hover": {
                 backgroundColor: "#CC9200",
-              }
+              },
             }}
           >
             Delete

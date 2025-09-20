@@ -7,21 +7,18 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  //Button,
-  //DialogTitle,
+
   styled,
   tableCellClasses,
   TextField,
   InputAdornment,
-  //DialogContent,
-  //DialogActions,
-  //Dialog,
+  
   Alert,
   Select,
   MenuItem,
   InputLabel,
   FormControl,
-  //IconButton,
+  
   Box,
   Card,
   CardContent,
@@ -32,12 +29,10 @@ import {
   alpha,
   useTheme,
   Stack,
-  //SelectChangeEvent
+ 
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-//import AddIcon from "@mui/icons-material/Add";
-//import EditIcon from "@mui/icons-material/Edit";
-//import DownloadIcon from "@mui/icons-material/Download";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import NavigationBar from "../components/NavigationBar";
 import jsPDF from "jspdf";
@@ -63,17 +58,17 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 // StyledTableRow component
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(even)': {
+  "&:nth-of-type(even)": {
     backgroundColor: theme.palette.action.hover,
   },
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
-  '&:hover': {
+  "&:hover": {
     backgroundColor: alpha("#FFB700", 0.05),
   },
-  cursor: 'pointer',
-  transition: 'background-color 0.2s ease',
+  cursor: "pointer",
+  transition: "background-color 0.2s ease",
 }));
 
 // Define the Hive interface
@@ -86,7 +81,7 @@ interface Hive {
   location: string;
   establishedYear: string;
   strength: number;
-  status: string; 
+  status: string;
   queenStatus: string;
   products: string;
   population: number;
@@ -265,9 +260,7 @@ const Hives: React.FC = () => {
         case "location":
           return hive?.location?.toLowerCase()?.includes(term) ?? false;
         case "queenBreed":
-          return (
-            hive?.queenStatus?.toLowerCase()?.includes(term) ?? false
-          );
+          return hive?.queenStatus?.toLowerCase()?.includes(term) ?? false;
         case "population":
           return hive?.population?.toString()?.includes(term) ?? false;
         case "hiveName":
@@ -293,16 +286,19 @@ const Hives: React.FC = () => {
 
   const updateHiveStatus = async (hiveId: string, newStatus: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/hive/${hiveId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      
+      const response = await fetch(
+        `http://localhost:3000/api/v1/hive/${hiveId}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
       const data = await response.json();
-      
+
       if (response.ok) {
         setSuccessMessage("Hive status updated successfully");
         setTimeout(() => setSuccessMessage(""), 3000);
@@ -340,20 +336,45 @@ const Hives: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 2 }}>
       <NavigationBar />
-      
+
       {/* Fixed Header Section */}
-      <Box sx={{ mb: 4, position: 'sticky', top: 0, backgroundColor: 'background.paper', zIndex: 100, pt: 2, pb: 2 }}>
+      <Box
+        sx={{
+          mb: 4,
+          position: "sticky",
+          top: 0,
+          backgroundColor: "background.paper",
+          zIndex: 100,
+          pt: 2,
+          pb: 2,
+        }}
+      >
         <Typography variant="h4" component="h1" fontWeight="700" gutterBottom>
           Hive Management
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Manage all hives in your system, view their details, and update their status.
+          Manage all hives in your system, view their details, and update their
+          status.
         </Typography>
       </Box>
 
       {/* Stats Card */}
-      <Card sx={{ mb: 3, bgcolor: alpha("#FFB700", 0.05), position: 'sticky', top: 160, zIndex: 90 }}>
-        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Card
+        sx={{
+          mb: 3,
+          bgcolor: alpha("#FFB700", 0.05),
+          position: "sticky",
+          top: 160,
+          zIndex: 90,
+        }}
+      >
+        <CardContent
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Box>
             <Typography variant="h6" color="primary" gutterBottom>
               Hives Overview
@@ -362,14 +383,14 @@ const Hives: React.FC = () => {
               Total: {hives.length} hives
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Chip 
-              label={`${hives.filter(h => h.status === "Active").length} Active`} 
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Chip
+              label={`${hives.filter((h) => h.status === "Active").length} Active`}
               color="success"
               variant="outlined"
             />
-            <Chip 
-              label={`${hives.filter(h => h.status === "Maintenance").length} Maintenance`} 
+            <Chip
+              label={`${hives.filter((h) => h.status === "Maintenance").length} Maintenance`}
               color="warning"
               variant="outlined"
             />
@@ -378,9 +399,15 @@ const Hives: React.FC = () => {
       </Card>
 
       {/* Search and Actions Section - Fixed */}
-      <Card sx={{ mb: 2, position: 'sticky', top: 230, zIndex: 80 }}>
+      <Card sx={{ mb: 2, position: "sticky", top: 230, zIndex: 80 }}>
         <CardContent>
-          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            flexWrap="wrap"
+            useFlexGap
+          >
             <FormControl sx={{ minWidth: 150 }} size="small">
               <InputLabel>Search by</InputLabel>
               <Select
@@ -396,7 +423,6 @@ const Hives: React.FC = () => {
                 <MenuItem value="queenBreed">Queen Breed</MenuItem>
                 <MenuItem value="broodPattern">Brood Pattern</MenuItem>
                 <MenuItem value="population">Population</MenuItem>
-                
               </Select>
             </FormControl>
 
@@ -415,8 +441,6 @@ const Hives: React.FC = () => {
               }}
             />
 
-            
-
             <FormControl sx={{ minWidth: 120 }} size="small">
               <InputLabel>Export</InputLabel>
               <Select
@@ -433,13 +457,21 @@ const Hives: React.FC = () => {
       </Card>
 
       {errorMessage && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setErrorMessage("")}>
+        <Alert
+          severity="error"
+          sx={{ mb: 2 }}
+          onClose={() => setErrorMessage("")}
+        >
           {errorMessage}
         </Alert>
       )}
-      
+
       {successMessage && (
-        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccessMessage("")}>
+        <Alert
+          severity="success"
+          sx={{ mb: 2 }}
+          onClose={() => setSuccessMessage("")}
+        >
           {successMessage}
         </Alert>
       )}
@@ -448,29 +480,39 @@ const Hives: React.FC = () => {
       <Card>
         <CardContent sx={{ p: 0 }}>
           {isLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
               <CircularProgress />
             </Box>
           ) : hives.length === 0 ? (
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              p: 4,
-              textAlign: 'center'
-            }}>
-              <VisibilityIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 4,
+                textAlign: "center",
+              }}
+            >
+              <VisibilityIcon
+                sx={{ fontSize: 60, color: "text.secondary", mb: 2 }}
+              />
               <Typography variant="h6" color="text.secondary" gutterBottom>
                 No hives found
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {searchTerm ? 'Try adjusting your search query' : 'Add a new hive to get started'}
+                {searchTerm
+                  ? "Try adjusting your search query"
+                  : "Add a new hive to get started"}
               </Typography>
             </Box>
           ) : (
-            <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
-              <Table stickyHeader aria-label="hives table" sx={{ minWidth: 1200 }}>
+            <TableContainer sx={{ maxHeight: "calc(100vh - 340px)" }}>
+              <Table
+                stickyHeader
+                aria-label="hives table"
+                sx={{ minWidth: 1200 }}
+              >
                 <TableHead>
                   <TableRow>
                     <StyledTableCell>Hive ID</StyledTableCell>
@@ -483,10 +525,14 @@ const Hives: React.FC = () => {
                     <StyledTableCell align="center">Population</StyledTableCell>
                     <StyledTableCell>Queen Status</StyledTableCell>
                     <StyledTableCell>Brood Pattern</StyledTableCell>
-                    <StyledTableCell align="center">Honey Stores</StyledTableCell>
+                    <StyledTableCell align="center">
+                      Honey Stores
+                    </StyledTableCell>
                     <StyledTableCell align="center">Pest Level</StyledTableCell>
-                    <StyledTableCell align="center">Disease Signs</StyledTableCell>
-                    
+                    <StyledTableCell align="center">
+                      Disease Signs
+                    </StyledTableCell>
+
                     <StyledTableCell align="center">Actions</StyledTableCell>
                   </TableRow>
                 </TableHead>
@@ -499,13 +545,13 @@ const Hives: React.FC = () => {
                         hover
                         onClick={(event) => handleClick(event, row._id || "")}
                         selected={isItemSelected}
-                        sx={{ 
-                          '&.Mui-selected': {
+                        sx={{
+                          "&.Mui-selected": {
                             backgroundColor: alpha("#FFB700", 0.08),
-                            '&:hover': {
+                            "&:hover": {
                               backgroundColor: alpha("#FFB700", 0.12),
-                            }
-                          }
+                            },
+                          },
                         }}
                       >
                         <TableCell>
@@ -519,10 +565,16 @@ const Hives: React.FC = () => {
                         <TableCell>{row.location}</TableCell>
                         <TableCell>{formatYear(row.establishedYear)}</TableCell>
                         <TableCell align="center">
-                          <Chip 
-                            label={`${row.strength}/10`} 
+                          <Chip
+                            label={`${row.strength}/10`}
                             size="small"
-                            color={row.strength > 7 ? "success" : row.strength > 4 ? "warning" : "error"}
+                            color={
+                              row.strength > 7
+                                ? "success"
+                                : row.strength > 4
+                                  ? "warning"
+                                  : "error"
+                            }
                             variant="outlined"
                           />
                         </TableCell>
@@ -531,26 +583,32 @@ const Hives: React.FC = () => {
                         <TableCell>{row.broodPattern}</TableCell>
                         <TableCell align="center">{row.honeyStores}</TableCell>
                         <TableCell align="center">
-                          <Chip 
-                            label={`${row.pestLevel}/10`} 
+                          <Chip
+                            label={`${row.pestLevel}/10`}
                             size="small"
-                            color={row.pestLevel > 7 ? "error" : row.pestLevel > 4 ? "warning" : "success"}
+                            color={
+                              row.pestLevel > 7
+                                ? "error"
+                                : row.pestLevel > 4
+                                  ? "warning"
+                                  : "success"
+                            }
                             variant="outlined"
                           />
                         </TableCell>
                         <TableCell align="center">
                           {row.diseaseSigns.length > 0 ? (
                             <Tooltip title={row.diseaseSigns.join(", ")}>
-                              <Chip 
-                                label={`${row.diseaseSigns.length} signs`} 
+                              <Chip
+                                label={`${row.diseaseSigns.length} signs`}
                                 size="small"
                                 color="error"
                                 variant="outlined"
                               />
                             </Tooltip>
                           ) : (
-                            <Chip 
-                              label="None" 
+                            <Chip
+                              label="None"
                               size="small"
                               color="success"
                               variant="outlined"
@@ -560,7 +618,9 @@ const Hives: React.FC = () => {
                         <TableCell align="center">
                           <Select
                             value={row.status || "Active"}
-                            onChange={(e) => updateHiveStatus(row.id, e.target.value)}
+                            onChange={(e) =>
+                              updateHiveStatus(row.id, e.target.value)
+                            }
                             size="small"
                             sx={{ minWidth: 120 }}
                           >
@@ -570,7 +630,6 @@ const Hives: React.FC = () => {
                             <MenuItem value="Quarantined">Quarantined</MenuItem>
                           </Select>
                         </TableCell>
-                        
                       </StyledTableRow>
                     );
                   })}

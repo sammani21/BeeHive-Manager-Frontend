@@ -1,10 +1,10 @@
 //DatePickerValue.tsx
-import * as React from 'react';
-import dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import * as React from "react";
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 interface DatePickerProps {
   label: string;
@@ -12,7 +12,11 @@ interface DatePickerProps {
   onDateChange: (date: Date | null) => void;
 }
 
-const DatePickerValue: React.FC<DatePickerProps> = ({ label, selectedDate, onDateChange }) => {
+const DatePickerValue: React.FC<DatePickerProps> = ({
+  label,
+  selectedDate,
+  onDateChange,
+}) => {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs(selectedDate));
 
   const handleDateChange = (newValue: Dayjs | null) => {
@@ -23,12 +27,7 @@ const DatePickerValue: React.FC<DatePickerProps> = ({ label, selectedDate, onDat
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div>
-        <DatePicker
-          label={label}
-          value={value}
-          onChange={handleDateChange}
-          
-        />
+        <DatePicker label={label} value={value} onChange={handleDateChange} />
       </div>
     </LocalizationProvider>
   );

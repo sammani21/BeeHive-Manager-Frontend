@@ -72,7 +72,7 @@ const ResetPassword: React.FC = () => {
         console.log(err.response.data.message);
         if (err.response.data.message === "User cannot be verified.") {
           setErrorMessage("User cannot be verified. Please try again.");
-        } 
+        }
       });
   };
 
@@ -123,7 +123,6 @@ const ResetPassword: React.FC = () => {
             >
               Reset Password
             </Typography>
-
             <TextField
               required
               type="text"
@@ -136,7 +135,6 @@ const ResetPassword: React.FC = () => {
               className="textfiledStyle"
               fullWidth
             />
-
             <TextField
               required
               type={showPassword ? "text" : "password"}
@@ -163,9 +161,7 @@ const ResetPassword: React.FC = () => {
                 ),
               }}
             />
-
             {password && <PasswordStrengthMeter password={password} />}
-
             <TextField
               required
               type={showConfirmPassword ? "text" : "password"}

@@ -1,46 +1,57 @@
+// NavigationBar.tsx
+// This file defines the navigation drawer and app bar for the BeeHive Manager app.
+// It provides sidebar navigation, top bar with notifications, account menu, and logout handling.
+
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonIcon from "@mui/icons-material/Person";
-import HiveIcon from "@mui/icons-material/Hive";
-import StorefrontIcon from "@mui/icons-material/Storefront";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import Badge from "@mui/material/Badge";
-import Popover from "@mui/material/Popover";
-import Menu from "@mui/material/Menu";
-import { Link, useNavigate } from "react-router-dom";
 import {
+  Box,
+  Drawer,
+  CssBaseline,
+  Toolbar,
+  List,
+  Divider,
+  IconButton,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Avatar,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Typography,
-  Avatar,
-  alpha,
+  Popover,
+  Menu,
   useMediaQuery,
+  Badge,
+  alpha,
 } from "@mui/material";
+
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+
+// Icons
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import HiveIcon from "@mui/icons-material/Hive";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+
+// Routing
+import { Link, useNavigate } from "react-router-dom";
+
+// Assets
 import BHMLogo from "../assets/BHM_logo.jpg";
-import { getAuth, signOut } from "firebase/auth";
 
 const drawerWidth = 260;
 
+// Main content area that shifts when drawer is open
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
@@ -60,6 +71,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
 }));
 
+// Extend MUI AppBar to support `open` prop
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -84,6 +96,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+// Drawer header (top part of sidebar)
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -93,6 +106,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   backgroundColor: "#ffffffff",
 }));
 
+// Custom Badge for notifications
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NotificationBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -102,6 +116,7 @@ const NotificationBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
+// Custom list item button for sidebar items
 const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   borderRadius: theme.spacing(1),
   margin: theme.spacing(0.5, 1),
@@ -123,12 +138,14 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
 
 export default function NavigationBar() {
   const theme = useTheme();
-   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  // States
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [notificationAnchorEl, setNotificationAnchorEl] =
-    React.useState<HTMLElement | null>(null);
+  const [notificationAnchorEl, setNotificationAnchorEl] = React.useState<HTMLElement | null>(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = React.useState(false);
+  
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -166,9 +183,8 @@ export default function NavigationBar() {
   };
 
   const handleLogout1 = () => {
-    // clear any auth tokens / session here if needed
-    localStorage.removeItem("token"); // example
-    navigate("/login"); // redirect to login page
+    localStorage.removeItem("token"); 
+    navigate("/login"); 
   };
 
   const notifications = [
@@ -179,7 +195,6 @@ export default function NavigationBar() {
   ];
 
   React.useEffect(() => {
-    // Adjust drawer state based on screen size
     setOpen(!isMobile);
   }, [isMobile]);
 
@@ -203,7 +218,6 @@ export default function NavigationBar() {
               alt="BHM Logo"
               style={{ height: "40px", marginRight: "12px" }}
             />
-            
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <IconButton
@@ -388,7 +402,13 @@ export default function NavigationBar() {
         open={open}
       >
         <DrawerHeader>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
             <Typography variant="h6" fontWeight="bold" color="#000">
               Welcome!
             </Typography>
@@ -406,11 +426,7 @@ export default function NavigationBar() {
         </DrawerHeader>
         <Divider sx={{ borderColor: alpha("#FFF", 0.2) }} />
         <List sx={{ px: 1, py: 2 }}>
-          <StyledListItemButton
-            component={Link}
-            to="/dashboard"
-            sx={{ mb: 1 }}
-          >
+          <StyledListItemButton component={Link} to="/dashboard" sx={{ mb: 1 }}>
             <ListItemIcon sx={{ color: "inherit" }}>
               <DashboardIcon />
             </ListItemIcon>
@@ -428,22 +444,14 @@ export default function NavigationBar() {
             <ListItemText primary="Bee Keepers" />
           </StyledListItemButton>
 
-          <StyledListItemButton
-            component={Link}
-            to="/hives"
-            sx={{ mb: 1 }}
-          >
+          <StyledListItemButton component={Link} to="/hives" sx={{ mb: 1 }}>
             <ListItemIcon sx={{ color: "inherit" }}>
               <HiveIcon />
             </ListItemIcon>
             <ListItemText primary="Hives" />
           </StyledListItemButton>
 
-          <StyledListItemButton
-            component={Link}
-            to="/products"
-            sx={{ mb: 1 }}
-          >
+          <StyledListItemButton component={Link} to="/products" sx={{ mb: 1 }}>
             <ListItemIcon sx={{ color: "inherit" }}>
               <StorefrontIcon />
             </ListItemIcon>
@@ -468,11 +476,10 @@ export default function NavigationBar() {
             <ListItemText primary="Profile" />
           </StyledListItemButton>
         </List>
-        <Box sx={{ mt: 'auto', p: 2 }}>
+        <Box sx={{ mt: "auto", p: 2 }}>
           <Divider sx={{ borderColor: alpha("#FFF", 0.2), mb: 2 }} />
           <Typography variant="body2" textAlign="center" color="#000">
-            BeeHive Manager v1.0 
-            Powered by @KaviRajasooriya
+            BeeHive Manager v1.0 Powered by @KaviRajasooriya
           </Typography>
         </Box>
       </Drawer>

@@ -55,17 +55,17 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 // StyledTableRow component
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(even)': {
+  "&:nth-of-type(even)": {
     backgroundColor: theme.palette.action.hover,
   },
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
-  '&:hover': {
+  "&:hover": {
     backgroundColor: alpha("#FFB700", 0.05),
   },
-  cursor: 'pointer',
-  transition: 'background-color 0.2s ease',
+  cursor: "pointer",
+  transition: "background-color 0.2s ease",
 }));
 
 // Define the Product interface based on your schema
@@ -99,7 +99,8 @@ const Products: React.FC = () => {
   const [allProducts, setAllProducts] = React.useState<Product[]>([]);
   const [errorMessage, setErrorMessage] = React.useState<string>("");
   const [successMessage, setSuccessMessage] = React.useState<string>("");
-  const [searchCategory, setSearchCategory] = React.useState<string>("productName");
+  const [searchCategory, setSearchCategory] =
+    React.useState<string>("productName");
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [exportFormat, setExportFormat] = React.useState<string>("");
@@ -149,7 +150,7 @@ const Products: React.FC = () => {
           "Quality Grade",
           "Harvest Date",
           "Origin",
-          "Status"
+          "Status",
         ],
       ],
       body: products.map((p) => [
@@ -179,7 +180,7 @@ const Products: React.FC = () => {
       "Quality Grade",
       "Harvest Date",
       "Origin",
-      "Status"
+      "Status",
     ];
     const rows = products.map((p) => [
       p.productName,
@@ -245,7 +246,9 @@ const Products: React.FC = () => {
         case "qualityGrade":
           return product?.qualityGrade?.toLowerCase()?.includes(term) ?? false;
         case "originLocation":
-          return product?.originLocation?.toLowerCase()?.includes(term) ?? false;
+          return (
+            product?.originLocation?.toLowerCase()?.includes(term) ?? false
+          );
         case "beekeeper":
           return product?.beekeeper?.toLowerCase()?.includes(term) ?? false;
         default:
@@ -254,7 +257,11 @@ const Products: React.FC = () => {
     });
 
     setProducts(filteredProducts);
-    setErrorMessage(filteredProducts.length === 0 ? "Cannot find the product in this category." : "");
+    setErrorMessage(
+      filteredProducts.length === 0
+        ? "Cannot find the product in this category."
+        : ""
+    );
   };
 
   const formatDate = (dateString: string) => {
@@ -282,20 +289,45 @@ const Products: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 2 }}>
       <NavigationBar />
-      
+
       {/* Fixed Header Section */}
-      <Box sx={{ mb: 4, position: 'sticky', top: 0, backgroundColor: 'background.paper', zIndex: 100, pt: 2, pb: 2 }}>
+      <Box
+        sx={{
+          mb: 4,
+          position: "sticky",
+          top: 0,
+          backgroundColor: "background.paper",
+          zIndex: 100,
+          pt: 2,
+          pb: 2,
+        }}
+      >
         <Typography variant="h4" component="h1" fontWeight="700" gutterBottom>
           Product Inventory
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Manage all products in your system, view their details, and track inventory.
+          Manage all products in your system, view their details, and track
+          inventory.
         </Typography>
       </Box>
 
       {/* Stats Card */}
-      <Card sx={{ mb: 3, bgcolor: alpha("#FFB700", 0.05), position: 'sticky', top: 160, zIndex: 90 }}>
-        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Card
+        sx={{
+          mb: 3,
+          bgcolor: alpha("#FFB700", 0.05),
+          position: "sticky",
+          top: 160,
+          zIndex: 90,
+        }}
+      >
+        <CardContent
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Box>
             <Typography variant="h6" color="primary" gutterBottom>
               Products Overview
@@ -304,14 +336,14 @@ const Products: React.FC = () => {
               Total: {products.length} products
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Chip 
-              label={`${products.filter(p => p.status === "approved").length} Approved`} 
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Chip
+              label={`${products.filter((p) => p.status === "approved").length} Approved`}
               color="success"
               variant="outlined"
             />
-            <Chip 
-              label={`${products.filter(p => p.status === "pending").length} Pending`} 
+            <Chip
+              label={`${products.filter((p) => p.status === "pending").length} Pending`}
               color="warning"
               variant="outlined"
             />
@@ -320,9 +352,15 @@ const Products: React.FC = () => {
       </Card>
 
       {/* Search and Actions Section - Fixed */}
-      <Card sx={{ mb: 2, position: 'sticky', top: 230, zIndex: 80 }}>
+      <Card sx={{ mb: 2, position: "sticky", top: 230, zIndex: 80 }}>
         <CardContent>
-          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            flexWrap="wrap"
+            useFlexGap
+          >
             <FormControl sx={{ minWidth: 150 }} size="small">
               <InputLabel>Search by</InputLabel>
               <Select
@@ -369,13 +407,21 @@ const Products: React.FC = () => {
       </Card>
 
       {errorMessage && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setErrorMessage("")}>
+        <Alert
+          severity="error"
+          sx={{ mb: 2 }}
+          onClose={() => setErrorMessage("")}
+        >
           {errorMessage}
         </Alert>
       )}
-      
+
       {successMessage && (
-        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccessMessage("")}>
+        <Alert
+          severity="success"
+          sx={{ mb: 2 }}
+          onClose={() => setSuccessMessage("")}
+        >
           {successMessage}
         </Alert>
       )}
@@ -384,28 +430,34 @@ const Products: React.FC = () => {
       <Card>
         <CardContent sx={{ p: 0 }}>
           {isLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
               <CircularProgress />
             </Box>
           ) : products.length === 0 ? (
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              p: 4,
-              textAlign: 'center'
-            }}>
-              <VisibilityIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                p: 4,
+                textAlign: "center",
+              }}
+            >
+              <VisibilityIcon
+                sx={{ fontSize: 60, color: "text.secondary", mb: 2 }}
+              />
               <Typography variant="h6" color="text.secondary" gutterBottom>
                 No products found
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {searchTerm ? 'Try adjusting your search query' : 'No products available in the system'}
+                {searchTerm
+                  ? "Try adjusting your search query"
+                  : "No products available in the system"}
               </Typography>
             </Box>
           ) : (
-            <TableContainer sx={{ maxHeight: 'calc(100vh - 340px)' }}>
+            <TableContainer sx={{ maxHeight: "calc(100vh - 340px)" }}>
               <Table stickyHeader aria-label="products table">
                 <TableHead>
                   <TableRow>
@@ -414,8 +466,12 @@ const Products: React.FC = () => {
                     <StyledTableCell align="center">Quantity</StyledTableCell>
                     <StyledTableCell align="center">Unit</StyledTableCell>
                     <StyledTableCell align="center">Price</StyledTableCell>
-                    <StyledTableCell align="center">Harvest Date</StyledTableCell>
-                    <StyledTableCell align="center">Quality Grade</StyledTableCell>
+                    <StyledTableCell align="center">
+                      Harvest Date
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      Quality Grade
+                    </StyledTableCell>
                     <StyledTableCell>Origin</StyledTableCell>
                     <StyledTableCell align="center">Status</StyledTableCell>
                     <StyledTableCell align="center">Beekeeper</StyledTableCell>
@@ -428,15 +484,17 @@ const Products: React.FC = () => {
                       <StyledTableRow
                         key={product._id}
                         hover
-                        onClick={(event) => handleClick(event, product._id || "")}
+                        onClick={(event) =>
+                          handleClick(event, product._id || "")
+                        }
                         selected={isItemSelected}
-                        sx={{ 
-                          '&.Mui-selected': {
+                        sx={{
+                          "&.Mui-selected": {
                             backgroundColor: alpha("#FFB700", 0.08),
-                            '&:hover': {
+                            "&:hover": {
                               backgroundColor: alpha("#FFB700", 0.12),
-                            }
-                          }
+                            },
+                          },
                         }}
                       >
                         <TableCell>
@@ -448,34 +506,41 @@ const Products: React.FC = () => {
                         <TableCell align="center">{product.quantity}</TableCell>
                         <TableCell align="center">{product.unit}</TableCell>
                         <TableCell align="center">
-                          <Chip 
-                            label={`$${product.price.toFixed(2)}`} 
+                          <Chip
+                            label={`$${product.price.toFixed(2)}`}
                             size="small"
                             color="primary"
                             variant="outlined"
                           />
                         </TableCell>
-                        <TableCell align="center">{formatDate(product.harvestDate)}</TableCell>
                         <TableCell align="center">
-                          <Chip 
-                            label={product.qualityGrade} 
+                          {formatDate(product.harvestDate)}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Chip
+                            label={product.qualityGrade}
                             size="small"
                             color={
-                              product.qualityGrade === "Premium" ? "success" : 
-                              product.qualityGrade === "Standard" ? "warning" : "default"
+                              product.qualityGrade === "Premium"
+                                ? "success"
+                                : product.qualityGrade === "Standard"
+                                  ? "warning"
+                                  : "default"
                             }
                             variant="outlined"
                           />
                         </TableCell>
                         <TableCell>{product.originLocation}</TableCell>
                         <TableCell align="center">
-                          <Chip 
-                            label={getStatusText(product.status)} 
+                          <Chip
+                            label={getStatusText(product.status)}
                             size="small"
                             color={getStatusColor(product.status)}
                           />
                         </TableCell>
-                        <TableCell align="center">{product.beekeeper || "N/A"}</TableCell>
+                        <TableCell align="center">
+                          {product.beekeeper || "N/A"}
+                        </TableCell>
                       </StyledTableRow>
                     );
                   })}
