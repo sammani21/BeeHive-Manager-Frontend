@@ -269,22 +269,7 @@ const Products: React.FC = () => {
     return new Date(dateString).toLocaleDateString();
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "approved":
-        return "success";
-      case "pending":
-        return "warning";
-      case "rejected":
-        return "error";
-      default:
-        return "default";
-    }
-  };
 
-  const getStatusText = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1);
-  };
 
   return (
     <Container maxWidth="xl" sx={{ mt: 2 }}>
@@ -473,7 +458,7 @@ const Products: React.FC = () => {
                       Quality Grade
                     </StyledTableCell>
                     <StyledTableCell>Origin</StyledTableCell>
-                    <StyledTableCell align="center">Status</StyledTableCell>
+                    
                     <StyledTableCell align="center">Beekeeper</StyledTableCell>
                   </TableRow>
                 </TableHead>
@@ -531,13 +516,8 @@ const Products: React.FC = () => {
                           />
                         </TableCell>
                         <TableCell>{product.originLocation}</TableCell>
-                        <TableCell align="center">
-                          <Chip
-                            label={getStatusText(product.status)}
-                            size="small"
-                            color={getStatusColor(product.status)}
-                          />
-                        </TableCell>
+                        
+                        
                         <TableCell align="center">
                           {product.beekeeper || "N/A"}
                         </TableCell>

@@ -8,29 +8,26 @@ import {
   Box,
   alpha,
   useTheme,
-  // Chip,
+  
   CircularProgress,
   Alert,
-  //IconButton,
+ 
   Divider,
-  //Tooltip,
-  //Stack,
-  //Divider,
+  
 } from "@mui/material";
 import {
   Hive as HiveIcon,
-  //TrendingUp as TrendingUpIcon,
+  
   Warning as WarningIcon,
   CheckCircle as CheckCircleIcon,
   BugReport as BugReportIcon,
-  //LocalFlorist as FloristIcon,
-  //Refresh as RefreshIcon,
+  
   People as PeopleIcon,
   Person as PersonIcon,
   EventAvailable as EventAvailableIcon,
   Inventory as InventoryIcon,
   AttachMoney as MoneyIcon,
-  //Grade as GradeIcon,
+ 
 } from "@mui/icons-material";
 import NavigationBar from "../components/NavigationBar";
 import {
@@ -266,11 +263,7 @@ const Dashboard: React.FC = () => {
       value: (product.price * product.quantity).toFixed(2),
     }));
 
-  // // Recent hives
-  // const recentHives = hives.slice(0, 5);
-
-  // // Recent products
-  // const recentProducts = products.slice(0, 5);
+  
 
   return (
     <Container maxWidth="xl" sx={{ mt: 2 }}>
