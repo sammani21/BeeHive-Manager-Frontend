@@ -313,10 +313,7 @@ const Hives: React.FC = () => {
     }
   };
 
-  const formatYear = (dateString: string) => {
-    return new Date(dateString).getFullYear();
-  };
-
+  
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -520,7 +517,7 @@ const Hives: React.FC = () => {
                     <StyledTableCell>Hive Name</StyledTableCell>
                     <StyledTableCell>Type</StyledTableCell>
                     <StyledTableCell>Location</StyledTableCell>
-                    <StyledTableCell>Est. Year</StyledTableCell>
+                    
                     <StyledTableCell align="center">Strength</StyledTableCell>
                     <StyledTableCell align="center">Population</StyledTableCell>
                     <StyledTableCell>Queen Status</StyledTableCell>
@@ -563,7 +560,7 @@ const Hives: React.FC = () => {
                         <TableCell>{row.hiveName}</TableCell>
                         <TableCell>{row.hiveType}</TableCell>
                         <TableCell>{row.location}</TableCell>
-                        <TableCell>{formatYear(row.establishedYear)}</TableCell>
+                        
                         <TableCell align="center">
                           <Chip
                             label={`${row.strength}/10`}
